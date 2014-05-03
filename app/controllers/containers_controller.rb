@@ -90,6 +90,9 @@ class ContainersController < ApplicationController
   # DELETE /containers/1.json
   def destroy
     @container.destroy
+    res = `curl -X POST http://cry.li:5422/containers/#{@container.instance_id}/stop?t=0`
+    response2 = `curl -X DELETE /containers/#{@container.instance_id}?v=1`  
+    Rails.logger.info res
     respond_to do |format|
       format.html { redirect_to containers_url, notice: 'Container was successfully destroyed.' }
       format.json { head :no_content }
