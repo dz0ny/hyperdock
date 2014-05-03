@@ -14,6 +14,8 @@ Offered Images:
  * mongodb
  * hosted hipchat (the open surce thing starts with k)
  * git lab
+ * sinopia
+ * geminabox
 
 Supported VPS Providers:
  * DigitalOcean
@@ -39,3 +41,8 @@ Password: 1
 Username: app
 Password: 2
 
+# Docker Test Host
+Linode
+domain: cry.li
+user: root
+password: 3
