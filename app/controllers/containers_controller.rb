@@ -42,13 +42,22 @@ class ContainersController < ApplicationController
   end
 
   def start
+   
     @container = Container.find(params[:id])
-    json = %{{
-      "PortBindings":{ "4873/tcp": [{ "HostPort": "0" }] },
-      "Dns": ["8.8.8.8"]
-    }}
+    if @container.port_bindings
+      json = %{{
+        "PortBindings": #{@container.port_bindings} ,
+        "Dns": ["8.8.8.8"]
+      }}
+    else
+      json = %{{
+        "PortBindings":{ #{@container.image.port_bindings} },
+        "Dns": ["8.8.8.8"]
+      }}
+    end
     res = `curl -X POST -H "Content-Type: application/json" -d '#{json}' http://cry.li:5422/containers/#{@container.instance_id}/start`
     Rails.logger.info res
+    @container.port_bindings = @container.get_port_bindings 
     @container.status = 'started'
     @container.save
     redirect_to @container

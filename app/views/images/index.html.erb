@@ -5,6 +5,7 @@
     <tr>
       <th>Name</th>
       <th>Description</th>
+      <th>Port Bindings</th>
       <th>Docker index</th>
       <th colspan="3"></th>
     </tr>
@@ -15,6 +16,7 @@
       <tr>
         <td><%= image.name %></td>
         <td><%= image.description %></td>
+        <td><%= image.port_bindings %></td>
         <td><%= image.docker_index %></td>
         <td><%= link_to 'Show', image %></td>
         <td><%= link_to 'Edit', edit_image_path(image) %></td>

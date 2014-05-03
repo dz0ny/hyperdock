@@ -24,8 +24,15 @@ class Container < ActiveRecord::Base
       }}
   end
 
+  def get_info
+    JSON.parse `curl http://cry.li:5422/containers/#{self.instance_id}/json`
+  end
+
+  def get_port_bindings
+    self.get_info["NetworkSettings"]["Ports"].to_json
+  end 
+
   def info
-    json = JSON.parse `curl http://cry.li:5422/containers/#{self.instance_id}/json`
-    JSON.pretty_generate(json);
+    JSON.pretty_generate(get_info) rescue "None"
   end
 end
