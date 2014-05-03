@@ -5,6 +5,7 @@
     <tr>
       <th>Image</th>
       <th>Status</th>
+      <th>Instance Id</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -14,6 +15,7 @@
       <tr>
         <td><%= container.image.name %></td>
         <td><%= container.status %></td>
+        <td><%= container.instance_id %></td>
         <td><%= link_to 'Show', container %></td>
         <td><%= link_to 'Edit', edit_container_path(container) %></td>
         <td><%= link_to 'Destroy', container, method: :delete, data: { confirm: 'Are you sure?' } %></td>

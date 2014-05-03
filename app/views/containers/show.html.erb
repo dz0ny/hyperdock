@@ -1,4 +1,7 @@
 <p id="notice"><%= notice %></p>
+  <%= link_to 'Start', start_container_path(@container) %>
+ <%= link_to 'Stop', stop_container_path(@container) %>
+
 
 <p>
   <strong>Image:</strong>
@@ -9,6 +12,15 @@
   <strong>Status:</strong>
   <%= @container.status %>
 </p>
-
+<p>
+  <strong>Instance Id:</strong>
+  <%= @container.instance_id %>
+  </p>
+<p>
+  <strong>Info:</strong>
+  <pre>
+    <%= @container.info %>
+  </pre>
+  </p
 <%= link_to 'Edit', edit_container_path(@container) %> |
 <%= link_to 'Back', containers_path %>

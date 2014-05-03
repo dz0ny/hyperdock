@@ -42,25 +42,15 @@ class ContainersController < ApplicationController
   end
 
   def start
-    @container = Container.find(params[:id])
     json = %{{
-      "PortBindings":{ "4873/tcp": [{ "HostPort": "0" }] },
+      "PortBindings":{ "4873/tcp": [{ "HostPort": "4873" }] },
       "Dns": ["8.8.8.8"]
     }}
-    res = `curl -X POST -H "Content-Type: application/json" -d '#{json}' http://cry.li:5422/containers/#{@container.instance_id}/start`
-    Rails.logger.info res
-    @container.status = 'started'
-    @container.save
-    redirect_to @container
+    `curl -X POST -H "Content-Type: application/json" -d http://`
   end
 
-  def stop
-    @container =Container.find(params[:id])
-    res = `curl -X POST http://cry.li:5422/containers/#{@container.instance_id}/stop?t=0`
-    Rails.logger.info res
-    @container.status = 'stopped'
-    @container.save
-    redirect_to @container
+  def start
+    `curl `
   end
 
   # PATCH/PUT /containers/1
