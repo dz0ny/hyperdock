@@ -23,8 +23,9 @@
 
       <tbody>
         <% @containers.each do |container| %>
-          <tr><td><%= link_to container.name, container %></td>
+          <tr>
             <td><%= container.instance_id %></td>
+            <td><%= link_to container.name, container %></td>
 
             <td><%= container.image.name %></td>
             <td><%= container.host.name %></td>
