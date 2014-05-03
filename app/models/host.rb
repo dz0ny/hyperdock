@@ -7,7 +7,7 @@ class Host < ActiveRecord::Base
   end
 
   validates :name, presence: true
-  validates :ip_address, :format => { :with => Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex) }
+  validates :ip_address, :format => { :with => Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex) }, uniqueness: { scope: :port, message: "and port belong to another host" }
   validates :port, numericality: { only_integer: true, less_than_or_equal_to: 65535, greater_than: 0  }
 
   def get_info
