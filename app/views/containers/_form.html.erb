@@ -10,6 +10,10 @@
       </ul>
     </div>
   <% end %>
+  <div class="field">
+    <%= f.label :host_id %><br>
+    <%= f.collection_select :host_id, @hosts.all, :id, :name %>
+  </div>
 
   <div class="field">
     <%= f.label :image_id %><br>

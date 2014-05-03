@@ -14,12 +14,14 @@ class ContainersController < ApplicationController
 
   # GET /containers/new
   def new
+    @hosts = Host.all
     @images = Image.all
     @container = Container.new
   end
 
   # GET /containers/1/edit
   def edit
+    @hosts = Host.all
     @images= Image.all
   end
 
@@ -108,6 +110,6 @@ class ContainersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def container_params
-      params.require(:container).permit(:image_id, :status, :name)
+      params.require(:container).permit(:image_id, :host_id, :status, :name)
     end
 end

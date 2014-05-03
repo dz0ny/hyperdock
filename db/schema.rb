@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140503172118) do
+ActiveRecord::Schema.define(version: 20140503175705) do
 
   create_table "containers", force: true do |t|
     t.integer  "image_id"
@@ -21,9 +21,19 @@ ActiveRecord::Schema.define(version: 20140503172118) do
     t.string   "instance_id"
     t.string   "port_bindings"
     t.string   "name"
+    t.integer  "host_id"
   end
 
+  add_index "containers", ["host_id"], name: "index_containers_on_host_id"
   add_index "containers", ["image_id"], name: "index_containers_on_image_id"
+
+  create_table "hosts", force: true do |t|
+    t.string   "name"
+    t.string   "ip_address"
+    t.integer  "port"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "images", force: true do |t|
     t.string   "name"

@@ -1,4 +1,5 @@
 class Container < ActiveRecord::Base
+  belongs_to :host
   belongs_to :image
 
   def config

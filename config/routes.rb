@@ -1,6 +1,8 @@
 
 Rails.application.routes.draw do
 
+  resources :hosts
+
   resources :containers do
     member do 
       get :start
