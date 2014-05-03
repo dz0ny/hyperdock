@@ -18,4 +18,8 @@ class Host < ActiveRecord::Base
     res = http.get('/info')
     JSON.parse(res.body)
   end
+
+  def info
+    JSON.pretty_generate(get_info) rescue "None"
+  end
 end

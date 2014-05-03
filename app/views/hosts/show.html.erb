@@ -1,19 +1,26 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
-  <%= @host.name %>
-</p>
+<div class="row">
+  <div class="container-fluid">
+    <h4 class="pull-left">
+      <%= @host.name %> <br>
+      <span class="small"><%= @host.docker_url %></span>
+    </h4>
+    <div class="pull-right">
+      <%= link_to 'Edit', edit_host_path(@host), class: 'btn btn-primary btn-sm' %>
+    </div>
+  </div>
+</div>
 
-<p>
-  <strong>Ip address:</strong>
-  <%= @host.ip_address %>
-</p>
+<hr/>
 
-<p>
-  <strong>Port:</strong>
-  <%= @host.port %>
-</p>
-
-<%= link_to 'Edit', edit_host_path(@host) %> |
-<%= link_to 'Back', hosts_path %>
+<div class="row">
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">Host Information</div>
+      <div class="panel-body">
+        <pre><%= @host.info %></pre>
+      </div>
+    </div>
+  </div>
+</div>
