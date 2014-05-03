@@ -2,12 +2,9 @@ class Provisioner
   include Sidekiq::Worker
   def perform(container_id)
     container = Container.find(container_id)
-    docker_url = "http://"+container.host.ip_address+":"+container.host.port.to_s
-    response = `curl -X POST #{docker_url}/images/create --data "fromImage=#{container.image.docker_index}"`
+    response = `curl -X POST #{container.host.docker_url}/images/create --data "fromImage=#{container.image.docker_index}"`
     Rails.logger.info response
-
-    cmd  = %{curl -H 'Content-Type: application/json' -X POST -d '#{container.config}' #{docker_url}/containers/create}
-    response2 = `#{cmd}`
+    response2 = `curl -H 'Content-Type: application/json' -X POST -d '#{container.config}' #{container.host.docker_url}/containers/create`
     Rails.logger.info response2
     res = JSON.parse(response2)
     if warning = res["Warnings"]

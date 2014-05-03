@@ -58,7 +58,7 @@ class ContainersController < ApplicationController
         "Dns": ["8.8.8.8"]
       }}
     end
-    res = `curl -X POST -H "Content-Type: application/json" -d '#{json}' http://cry.li:5422/containers/#{@container.instance_id}/start`
+    res = `curl -X POST -H "Content-Type: application/json" -d '#{json}' #{@container.host.docker_url}/containers/#{@container.instance_id}/start`
     Rails.logger.info res
     @container.port_bindings = @container.get_port_bindings 
     @container.status = 'started'
@@ -68,7 +68,7 @@ class ContainersController < ApplicationController
 
   def stop
     @container =Container.find(params[:id])
-    res = `curl -X POST http://cry.li:5422/containers/#{@container.instance_id}/stop?t=0`
+    res = `curl -X POST #{@container.host.docker_url}/containers/#{@container.instance_id}/stop?t=0`
     Rails.logger.info res
     @container.status = 'stopped'
     @container.save
@@ -93,7 +93,7 @@ class ContainersController < ApplicationController
   # DELETE /containers/1.json
   def destroy
     @container.destroy
-    res = `curl -X POST http://cry.li:5422/containers/#{@container.instance_id}/stop?t=0`
+    res = `curl -X POST #{@container.host.docker_url}:5422/containers/#{@container.instance_id}/stop?t=0`
     response2 = `curl -X DELETE /containers/#{@container.instance_id}?v=1`  
     Rails.logger.info res
     respond_to do |format|
