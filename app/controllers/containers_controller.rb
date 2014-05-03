@@ -20,6 +20,7 @@ class ContainersController < ApplicationController
 
   # GET /containers/1/edit
   def edit
+    @images= Image.all
   end
 
   # POST /containers
@@ -107,6 +108,6 @@ class ContainersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def container_params
-      params.require(:container).permit(:image_id, :status)
+      params.require(:container).permit(:image_id, :status, :name)
     end
 end

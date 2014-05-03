@@ -9,6 +9,7 @@
     <table class="table table-bordered table-condensed table-striped">
       <thead>
         <tr>
+          <th>Name</th>
           <th>Image</th>
           <th>Status</th>
           <th>Instance Id</th>
@@ -18,11 +19,10 @@
 
       <tbody>
         <% @containers.each do |container| %>
-          <tr>
+          <tr><td><%= link_to container.name, container %></td>
             <td><%= container.image.name %></td>
             <td><%= container.status %></td>
             <td><%= container.instance_id %></td>
-            <td><%= link_to 'Show', container %></td>
             <td><%= link_to 'Edit', edit_container_path(container) %></td>
             <td><%= link_to 'Destroy', container, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>

@@ -1,32 +1,28 @@
 <p id="notice"><%= notice %></p>
-  <%= link_to 'Start', start_container_path(@container) %>
- <%= link_to 'Stop', stop_container_path(@container) %>
-
-
-<p>
-  <strong>Image:</strong>
-  <%= @container.image.name %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @container.status %>
-</p>
-<p>
-  <strong>Instance Id:</strong>
-  <%= @container.instance_id %>
-  </p>
-  <p>
-<p>
-  <strong>Port Bindings:</strong>
-  <%= @container.port_bindings%>
-  </p>
-<p>
-
-  <strong>Info:</strong>
-  <pre>
-    <%= @container.info %>
-  </pre>
-  </p
-<%= link_to 'Edit', edit_container_path(@container) %> |
-<%= link_to 'Back', containers_path %>
+<div class="row">
+  <div class="container-fluid">
+    <h4 class="pull-left"><%= @container.name %></h4>
+    <div class='pull-right'>
+      <%= link_to 'Edit', edit_container_path(@container), class: 'btn btn-primary btn-sm' %>
+      <% if @container.status != 'started' %>
+        <%= link_to 'Start', start_container_path(@container), class: 'btn btn-success btn-sm' %>
+      <% end %>
+      <% if @container.status == 'started' %>
+        <%= link_to 'Stop', stop_container_path(@container), class: 'btn btn-danger btn-sm' %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<hr/>
+<div class="row">
+  <div class="container-fluid">
+    <div class="panel panel-default">
+      <div class="panel-heading">Container Information</div>
+      <div class="panel-body">
+        <pre>
+          <%= @container.info %>
+        </pre>
+      </div>
+    </div>
+  </div>
+</div>
