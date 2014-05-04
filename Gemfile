@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'pg'
+gem 'pg', group: :production
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.1.0'
@@ -31,7 +31,7 @@ gem 'spring',        group: :development
 # gem 'bcrypt', '~> 3.1.7'
 gem 'sidekiq'
 # Use unicorn as the app server
-gem 'unicorn'
+gem 'unicorn', group: :production
 gem 'devise'
 gem 'devise_invitable'
 # Use Capistrano for deployment
