@@ -3,11 +3,8 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :invitable, :database_authenticatable,
          :recoverable, :rememberable, :trackable, :validatable
-  has_many :containers
 
-  def invitation_token
-    ""
-  end
+  has_many :containers
 
   def admin?
     self.role == "admin"

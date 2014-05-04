@@ -62,3 +62,11 @@ password: 3
 
 Docker daemon logs are located at /var/log/upstart/docker.log
 
+# Deploy
+
+nginx postgresql libpq-dev
+https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres
+https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5
+
+rvm wrapper $(cat .ruby-version) unicorn_rails
+rvm wrapper $(cat .ruby-version) sidekiq
