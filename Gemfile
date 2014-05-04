@@ -46,6 +46,7 @@ group :development, :test do
   gem 'spring-commands-rspec'
   gem 'rspec-rails'
   gem 'simplecov'
+  gem 'database_cleaner'
 end
 gem 'guard-rspec', '~> 4.2.8', require: false
 gem 'guard-bundler', require: false
