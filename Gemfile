@@ -54,9 +54,6 @@ gem 'webmock', group: 'test'
 gem 'guard-rspec', '~> 4.2.8', require: false
 gem 'guard-bundler', require: false
 group :development do
+  gem 'git-deploy'
   gem 'quiet_assets'
-  gem 'capistrano',  '~> 3.1'
-  gem 'capistrano-rails', '~> 1.1'
-  gem 'capistrano-rvm'
-  gem 'capistrano-bundler'
 end
