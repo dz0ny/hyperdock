@@ -1,0 +1,6 @@
+<% @regions.each do |region| %>
+  <h3><%= region.name %></h3>
+  <% region.hosts.each do |host| %>
+    <%= host.name %> - UP<br/>
+  <% end %>
+<% end %>
