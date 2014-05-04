@@ -49,7 +49,14 @@ group :development, :test do
   gem 'simplecov'
   gem 'database_cleaner'
 end
+
 gem 'webmock', group: 'test'
 gem 'guard-rspec', '~> 4.2.8', require: false
 gem 'guard-bundler', require: false
-gem 'quiet_assets', :group => :development
+group :development do
+  gem 'quiet_assets'
+  gem 'capistrano'
+  gem 'capistrano-rvm'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
+end
