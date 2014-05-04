@@ -70,3 +70,5 @@ https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-u
 
 rvm wrapper $(cat .ruby-version) unicorn_rails
 rvm wrapper $(cat .ruby-version) sidekiq
+
+bin/rake assets:precompile RAILS_ENV=production
