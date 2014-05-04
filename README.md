@@ -18,8 +18,7 @@ Offered Images:
  * geminabox
 
 Supported VPS Providers:
- * DigitalOcean
- * Linode
+ * We support both virtual and dedicated servers, provider does not matter anymore.
 
 Tenant Signs Up
  - SaaSKit
