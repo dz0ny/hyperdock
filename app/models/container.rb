@@ -1,8 +1,12 @@
 class Container < ActiveRecord::Base
+  belongs_to :region
   belongs_to :host
   belongs_to :image
+  belongs_to :user
 
   before_destroy :delete_from_docker
+
+  before_save :select_host
 
   def config
     json = %{{
@@ -25,6 +29,11 @@ class Container < ActiveRecord::Base
          "NetworkDisabled": false,
          "ExposedPorts":{}
       }}
+  end
+
+  def select_host
+    # TODO: select most optimal host
+    self.host = self.region.hosts.last
   end
 
   def get_info
@@ -58,6 +67,10 @@ class Container < ActiveRecord::Base
   def stop
     self.host.docker.stop self.instance_id
     self.update(status: "stopped")
+  end
+
+  def exposed_ports
+    JSON.parse(self.port_bindings).values.map {|pair| pair[0]["HostPort"] }.join(', ') rescue "N/A"
   end
 
   private

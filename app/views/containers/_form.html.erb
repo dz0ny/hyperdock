@@ -11,10 +11,9 @@
     </div>
   <% end %>
   <div class="field">
-    <%= f.label :host_id %><br>
-    <%= f.collection_select :host_id, @hosts.all, :id, :name %>
+    <%= f.label :region_id %><br>
+    <%= f.collection_select :region_id, @regions.all, :id, :name %>
   </div>
-
   <div class="field">
     <%= f.label :image_id %><br>
     <%= f.collection_select :image_id, @images.all, :id, :name %>

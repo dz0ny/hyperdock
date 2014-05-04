@@ -4,6 +4,7 @@ class Host < ActiveRecord::Base
   include ActiveModel::Validations
   validates_with DockerHostValidator
   has_many :containers
+  belongs_to :region
 
   validates :name, presence: true
   validates :ip_address, :format => { :with => Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex) }, uniqueness: { scope: :port, message: "and port belong to another host" }

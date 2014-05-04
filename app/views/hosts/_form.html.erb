@@ -10,6 +10,11 @@
       </ul>
     </div>
   <% end %>
+  <div class="field">
+    <%= f.label :region_id %><br>
+    <%= f.collection_select :region_id, @regions.all, :id, :name %>
+  </div>
+
 
   <div class="field">
     <%= f.label :name %><br>

@@ -31,7 +31,8 @@ gem 'spring',        group: :development
 gem 'sidekiq'
 # Use unicorn as the app server
 # gem 'unicorn'
-
+gem 'devise'
+gem 'devise_invitable'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -50,3 +51,4 @@ end
 gem 'webmock', group: 'test'
 gem 'guard-rspec', '~> 4.2.8', require: false
 gem 'guard-bundler', require: false
+gem 'quiet_assets', :group => :development

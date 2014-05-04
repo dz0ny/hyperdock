@@ -16,6 +16,9 @@
           <th>Name</th>
           <th>Image</th>
           <th>Host</th>
+          <th>Region</th>
+          <th>IP Address</th>
+          <th>Ports</th>
           <th>Status</th>
           <th colspan="2"></th>
         </tr>
@@ -29,6 +32,9 @@
 
             <td><%= container.image.name %></td>
             <td><%= container.host.name %></td>
+            <td><%= container.region.name %></td>
+            <td><%= container.host.ip_address %></td>
+            <td><%= container.exposed_ports %></td>
             <td><%= container.status %></td>
             <td><%= link_to 'Edit', edit_container_path(container) %></td>
             <td><%= link_to 'Destroy', container, method: :delete, data: { confirm: 'Are you sure?' } %></td>

@@ -14,11 +14,13 @@ class HostsController < ApplicationController
 
   # GET /hosts/new
   def new
+    @regions = Region.all
     @host = Host.new
   end
 
   # GET /hosts/1/edit
   def edit
+    @regions = Region.all
   end
 
   # POST /hosts
@@ -69,6 +71,6 @@ class HostsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def host_params
-      params.require(:host).permit(:name, :ip_address, :port)
+      params.require(:host).permit(:name, :ip_address, :port, :region_id)
     end
 end

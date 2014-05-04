@@ -4,7 +4,7 @@ class ContainersController < ApplicationController
   # GET /containers
   # GET /containers.json
   def index
-    @containers = Container.all
+    @containers = current_user.containers
   end
 
   # GET /containers/1
@@ -14,21 +14,21 @@ class ContainersController < ApplicationController
 
   # GET /containers/new
   def new
-    @hosts = Host.all
+    @regions = Region.all
     @images = Image.all
     @container = Container.new
   end
 
   # GET /containers/1/edit
   def edit
-    @hosts = Host.all
+    @regions = Region.all
     @images= Image.all
   end
 
   # POST /containers
   # POST /containers.json
   def create
-    @container = Container.new(container_params)
+    @container = current_user.containers.build(container_params)
     @container.status = 'pending'
 
     respond_to do |format|
@@ -89,6 +89,6 @@ class ContainersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def container_params
-      params.require(:container).permit(:image_id, :host_id, :status, :name)
+      params.require(:container).permit(:image_id, :region_id, :status, :name)
     end
 end

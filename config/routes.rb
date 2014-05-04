@@ -1,5 +1,8 @@
 
 Rails.application.routes.draw do
+  devise_for :users
+  resources :regions
+
   root to: 'containers#index'
 
   resources :hosts
