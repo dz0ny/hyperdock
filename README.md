@@ -68,6 +68,10 @@ Docker daemon logs are located at /var/log/upstart/docker.log
 
 apt-get install nginx postgresql libpq-dev supervisor redis-server
 
+\curl -sSL https://get.rvm.io | bash -s stable
+
+rvm install 2.1
+
 CREATE USER tom WITH PASSWORD 'myPassword';
 
 bundle install --without development test
