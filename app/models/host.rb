@@ -1,6 +1,5 @@
 require('docker')
 
-
 class Host < ActiveRecord::Base
   include ActiveModel::Validations
   validates_with DockerHostValidator

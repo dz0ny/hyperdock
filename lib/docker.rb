@@ -4,6 +4,6 @@
 # Add security patterns, etc here
 class Docker
   def initialize host
-
+    
   end
 end
