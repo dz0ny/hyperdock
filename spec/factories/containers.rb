@@ -8,5 +8,6 @@ FactoryGirl.define do
     port_bindings nil
     name "My Container"
     association :host
+    association :region
   end
 end

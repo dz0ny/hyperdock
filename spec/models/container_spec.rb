@@ -1,8 +1,9 @@
 require 'spec_helper'
 
 describe Container do
-  let(:host) { build(:host) }
-  let(:container) { create(:container, host: host) }
+  let(:region) { build(:region) }
+  let(:host) { build(:host, region: region) }
+  let(:container) { create(:container, host: host, region: region) }
 
   before(:each) do
     stub_get_info host
@@ -15,8 +16,7 @@ describe Container do
 
   describe "#destroy" do
     it "stops and removes it from the host before removing it from the database" do
-      container.host.docker.should_receive(:stop).with(container.instance_id)
-      container.host.docker.should_receive(:rm).with(container.instance_id)
+      container.should_receive(:delete_from_docker)
       container.destroy
       container.should_not be_persisted
     end
