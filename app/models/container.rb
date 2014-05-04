@@ -40,6 +40,19 @@ class Container < ActiveRecord::Base
   end
 
   def start
+    if self.port_bindings
+      config = %{{
+        "PortBindings": #{self.port_bindings} ,
+        "Dns": ["8.8.8.8"]
+      }}
+    else
+      config = %{{
+        "PortBindings":{ #{self.image.port_bindings} },
+        "Dns": ["8.8.8.8"]
+      }}
+    end
+    self.host.docker.start self.instance_id, config
+    self.update(status: "started", port_bindings: self.get_port_bindings)
   end
 
   def stop
@@ -50,6 +63,7 @@ class Container < ActiveRecord::Base
   private
 
   def delete_from_docker
+    self.stop
     self.host.docker.rm self.instance_id
   end
 end

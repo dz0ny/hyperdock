@@ -47,6 +47,17 @@ module DockerApiMocks
     })
   end
 
+  def stub_docker_start container, config
+    stub_docker_request(:post, "#{container.host.docker_url}/containers/#{container.instance_id}/start", {
+      headers: { "Content-Type" => "application/json" },
+        body: config
+    }).to_return({
+      :status => 200,
+      :body => '{"Id":"e90e34656806", "Warnings":[]}',
+      :headers => { "Content-Type" => "application/json" }
+    })
+  end
+
   def stub_docker_stop container
     stub_docker_request(:post, "#{container.host.docker_url}/containers/#{container.instance_id}/stop?t=0").
       to_return({

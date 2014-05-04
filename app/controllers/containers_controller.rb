@@ -46,22 +46,7 @@ class ContainersController < ApplicationController
 
   def start
     @container = Container.find(params[:id])
-    if @container.port_bindings
-      json = %{{
-        "PortBindings": #{@container.port_bindings} ,
-        "Dns": ["8.8.8.8"]
-      }}
-    else
-      json = %{{
-        "PortBindings":{ #{@container.image.port_bindings} },
-        "Dns": ["8.8.8.8"]
-      }}
-    end
-    res = `curl -X POST -H "Content-Type: application/json" -d '#{json}' #{@container.host.docker_url}/containers/#{@container.instance_id}/start`
-    Rails.logger.info res
-    @container.port_bindings = @container.get_port_bindings 
-    @container.status = 'started'
-    @container.save
+    @container.start
     redirect_to @container
   end
 

@@ -49,6 +49,16 @@ class Docker
     JSON.parse response.body
   end
 
+  def start id, config
+    uri = URI.join(base_uri, "/containers/#{id}/start")
+    req = Net::HTTP::Post.new(uri)
+    req["Content-Type"] = "application/json"
+    req.body = config
+    http = Net::HTTP.new(uri.host, uri.port)
+    response = http.request(req)
+    response.body
+  end
+
   def stop id
     uri = URI.join(base_uri, "/containers/#{id}/stop?t=0")
     req = Net::HTTP::Post.new(uri)
