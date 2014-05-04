@@ -40,6 +40,7 @@ gem 'sidekiq'
 gem 'bootstrap-sass', '~> 3.1.1'
 gem 'pry-rails'
 group :development, :test do
+  gem 'shoulda-matchers', require: false
   gem 'factory_girl_rails'
   gem 'webmock'
   gem 'spring-commands-rspec'
