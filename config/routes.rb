@@ -1,9 +1,11 @@
 
 Rails.application.routes.draw do
+  get 'home/index'
+
   devise_for :users
   resources :regions
 
-  root to: 'containers#index'
+  root to: 'home#index'
 
   resources :hosts
 
