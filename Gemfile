@@ -40,7 +40,10 @@ gem 'sidekiq'
 gem 'bootstrap-sass', '~> 3.1.1'
 gem 'pry-rails'
 group :development, :test do
+  gem 'factory_girl_rails'
+  gem 'webmock'
   gem 'spring-commands-rspec'
   gem 'rspec-rails'
 end
-gem 'guard-rspec', '~> 4.2.8'
+gem 'guard-rspec', '~> 4.2.8', require: false
+gem 'guard-bundler', require: false
