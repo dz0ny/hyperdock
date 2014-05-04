@@ -58,6 +58,7 @@ password: 3
 * More info about logging https://blog.logentries.com/2014/03/the-state-of-logging-on-docker/
 * Setup rails and postgres https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres
 * Setup unicorn and nginx https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5
+* Collecting container metrics http://blog.docker.io/2013/10/gathering-lxc-docker-containers-metrics/
 
 # Notes
 
