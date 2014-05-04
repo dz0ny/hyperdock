@@ -2,6 +2,8 @@ class Container < ActiveRecord::Base
   belongs_to :host
   belongs_to :image
 
+  before_destroy :delete_from_docker
+
   def config
     json = %{{
          "Hostname":"",
@@ -26,7 +28,7 @@ class Container < ActiveRecord::Base
   end
 
   def get_info
-    self.host.docker.container_info self.instance_id
+    self.host.docker.inspect self.instance_id
   end
 
   def get_port_bindings
@@ -35,5 +37,19 @@ class Container < ActiveRecord::Base
 
   def info
     JSON.pretty_generate(get_info) rescue "None"
+  end
+
+  def start
+  end
+
+  def stop
+    self.host.docker.stop self.instance_id
+    self.update(status: "stopped")
+  end
+
+  private
+
+  def delete_from_docker
+    self.host.docker.rm self.instance_id
   end
 end

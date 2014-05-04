@@ -23,7 +23,7 @@ module DockerApiMocks
     end
   end
 
-  def stub_docker_pull host, image, ok=true
+  def stub_docker_pull host, image
     stub_docker_request(:post, "#{host.docker_url}/images/create", {
       :body => "fromImage=#{image.docker_index}"
     }).to_return({
@@ -37,13 +37,29 @@ module DockerApiMocks
     })
   end
 
-  def stub_docker_run host, image, ok=true
+  def stub_docker_run host, image
     stub_docker_request(:post, "#{host.docker_url}/containers/create", {
       headers: { "Content-Type" => "application/json" }
     }).to_return({
       :status => 200,
       :body => '{"Id":"e90e34656806", "Warnings":[]}',
       :headers => { "Content-Type" => "application/json" }
+    })
+  end
+
+  def stub_docker_stop container
+    stub_docker_request(:post, "#{container.host.docker_url}/containers/#{container.instance_id}/stop?t=0").
+      to_return({
+      :status => 200,
+      :body => 'OK'
+    })
+  end
+
+  def stub_docker_rm container
+    stub_docker_request(:delete, "#{container.host.docker_url}/containers/#{container.instance_id}?v=1&force=1").
+      to_return({
+      :status => 200,
+      :body => 'OK'
     })
   end
 end

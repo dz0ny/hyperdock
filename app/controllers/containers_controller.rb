@@ -45,7 +45,6 @@ class ContainersController < ApplicationController
   end
 
   def start
-   
     @container = Container.find(params[:id])
     if @container.port_bindings
       json = %{{
@@ -67,11 +66,8 @@ class ContainersController < ApplicationController
   end
 
   def stop
-    @container =Container.find(params[:id])
-    res = `curl -X POST #{@container.host.docker_url}/containers/#{@container.instance_id}/stop?t=0`
-    Rails.logger.info res
-    @container.status = 'stopped'
-    @container.save
+    @container = Container.find(params[:id])
+    @container.stop
     redirect_to @container
   end
 
@@ -93,9 +89,7 @@ class ContainersController < ApplicationController
   # DELETE /containers/1.json
   def destroy
     @container.destroy
-    res = `curl -X POST #{@container.host.docker_url}:5422/containers/#{@container.instance_id}/stop?t=0`
-    response2 = `curl -X DELETE /containers/#{@container.instance_id}?v=1`  
-    Rails.logger.info res
+    # What if i couldn't delete from docker?
     respond_to do |format|
       format.html { redirect_to containers_url, notice: 'Container was successfully destroyed.' }
       format.json { head :no_content }

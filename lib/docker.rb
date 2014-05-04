@@ -18,7 +18,7 @@ class Docker
     JSON.parse(res.body)
   end
 
-  def container_info id
+  def inspect id
     uri = URI.join(base_uri, "/containers/#{id}/json")
     req = Net::HTTP::Get.new(uri)
     req["Content-Type"] = "application/json"
@@ -33,7 +33,6 @@ class Docker
     uri = URI.join(base_uri, "/images/create")
     http = Net::HTTP.new(uri.host, uri.port)
     http.request_post(uri.request_uri, "fromImage=#{image.docker_index}") do |response|
-      Rails.logger.info response.inspect
       response.read_body do |chunk|
         yield chunk
       end
@@ -47,7 +46,22 @@ class Docker
     req.body = config
     http = Net::HTTP.new(uri.host, uri.port)
     response = http.request(req)
-    Rails.logger.info response.inspect
     JSON.parse response.body
+  end
+
+  def stop id
+    uri = URI.join(base_uri, "/containers/#{id}/stop?t=0")
+    req = Net::HTTP::Post.new(uri)
+    http = Net::HTTP.new(uri.host, uri.port)
+    response = http.request(req)
+    response.body
+  end
+
+  def rm id
+    uri = URI.join(base_uri, "/containers/#{id}?v=1&force=1")
+    req = Net::HTTP::Delete.new(uri)
+    http = Net::HTTP.new(uri.host, uri.port)
+    response = http.request(req)
+    response.body
   end
 end
