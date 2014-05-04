@@ -90,6 +90,10 @@ sudo ufw enable
 ```
 
 ```
+git remote add production "app@hyperdock.io:/home/app/hyperdock"
+```
+
+```
 git push production master
 ```
 
