@@ -3,6 +3,7 @@ require('docker')
 class Host < ActiveRecord::Base
   include ActiveModel::Validations
   validates_with DockerHostValidator
+  has_many :containers
 
   def docker_url
     "http://#{self.ip_address}:#{self.port.to_s}"
