@@ -1,4 +1,4 @@
-#!/home/app/.rvm/wrappers/ruby-2.1.1@hyperdoc/ruby
+#!/home/app/.rvm/wrappers/ruby-2.1.1@hyperdock/ruby
 oldrev, newrev = ARGV
 
 def run(cmd)
