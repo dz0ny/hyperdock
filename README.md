@@ -88,8 +88,7 @@ sudo ln -s /etc/nginx/sites-available/hyperdock /etc/nginx/sites-enabled/
 
 sudo ufw enable
 
-
-cap production deploy
+git push production master
 
 
 
