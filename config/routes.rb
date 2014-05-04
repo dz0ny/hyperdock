@@ -1,6 +1,7 @@
 
 Rails.application.routes.draw do
   get 'home/index'
+  get 'home/status'
 
   devise_for :users
   resources :regions

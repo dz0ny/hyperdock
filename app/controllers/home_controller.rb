@@ -3,4 +3,8 @@ class HomeController < ApplicationController
 
   def index
   end
+
+  def status
+    @regions = Region.all
+  end
 end
