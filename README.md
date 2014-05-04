@@ -57,6 +57,8 @@ password: 3
 * Securing Docker Remote API via Nginx Unix Proxy & Client Certs http://java.dzone.com/articles/securing-docker%E2%80%99s-remote-api
 * Important Info about Docker Logs http://jasonwilder.com/blog/2014/03/17/docker-log-management-using-fluentd/
 * More info about logging https://blog.logentries.com/2014/03/the-state-of-logging-on-docker/
+* Setup rails and postgres https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres
+* Setup unicorn and nginx https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5
 
 # Notes
 
@@ -64,11 +66,21 @@ Docker daemon logs are located at /var/log/upstart/docker.log
 
 # Deploy
 
-nginx postgresql libpq-dev
-https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres
-https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5
+apt-get install nginx postgresql libpq-dev supervisor redis-server
 
+CREATE USER tom WITH PASSWORD 'myPassword';
+
+bundle install --without development test
 rvm wrapper $(cat .ruby-version) unicorn_rails
 rvm wrapper $(cat .ruby-version) sidekiq
 
+bin/rake db:create db:migrate db:seed RAILS_ENV=production
+
 bin/rake assets:precompile RAILS_ENV=production
+
+sudo ln -s /home/app/hyperdock/config/nginx/hyperdock /etc/nginx/sites-available/
+sudo ln -s /home/app/hyperdock/config/supervisor/hyperdock.conf /etc/supervisor/conf.d/
+sudo ln -s /etc/nginx/sites-available/hyperdock /etc/nginx/sites-enabled/
+
+sudo ufw enable
+
