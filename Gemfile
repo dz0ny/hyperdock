@@ -44,6 +44,7 @@ group :development, :test do
   gem 'webmock'
   gem 'spring-commands-rspec'
   gem 'rspec-rails'
+  gem 'simplecov'
 end
 gem 'guard-rspec', '~> 4.2.8', require: false
 gem 'guard-bundler', require: false
