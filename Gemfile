@@ -40,5 +40,7 @@ gem 'sidekiq'
 gem 'bootstrap-sass', '~> 3.1.1'
 gem 'pry-rails'
 group :development, :test do
-  gem 'rspec-rails', '~> 3.0.0.beta'
+  gem 'spring-commands-rspec'
+  gem 'rspec-rails'
 end
+gem 'guard-rspec', '~> 4.2.8'
