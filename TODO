@@ -1,0 +1,26 @@
+* support volumes
+  - /volumes/(container_id if not shared / image_if if shared)
+  - shared volume ? bool
+  - test znc
+  
+Limit to 2 containers.....
+
+Default to 0 invites
+
+* install statsd on prod w/ supervisor
+  - use console backend
+  
+* use https://github.com/collectd/collectd to ship host-level data to statsd
+  - https://collectd.org/wiki/index.php/Plugin:StatsD
+   cpu memory disk network
+
+GET /containers/(id)/top
+http://hyperdock.io/containers/5
+
+have a block showing container performance, that show the top for the container.
+
+* fix port binding bug on edit image
+
+* restart button
+
+
