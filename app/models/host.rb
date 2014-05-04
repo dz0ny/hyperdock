@@ -14,11 +14,11 @@ class Host < ActiveRecord::Base
   validates :port, numericality: { only_integer: true, less_than_or_equal_to: 65535, greater_than: 0  }
 
   def get_info
-    uri = URI(self.docker_url)
+    uri = URI.join(self.docker_url, "/info")
     http = Net::HTTP.new(uri.host, uri.port)
     http.open_timeout = 2
     http.read_timeout = 2
-    res = http.get('/info')
+    res = http.get(uri.request_uri)
     JSON.parse(res.body)
   end
 
@@ -27,6 +27,6 @@ class Host < ActiveRecord::Base
   end
 
   def docker
-    Docker.new(self)
+    @docker ||= Docker.new(self)
   end
 end

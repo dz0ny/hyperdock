@@ -14,6 +14,8 @@ describe Provisioner do
   end
 
   it "provisions a container" do
+    stub_docker_pull @container.host, @container.image
+    stub_docker_run @container.host, @container.image
     worker.perform(@container.id)
   end
 end
