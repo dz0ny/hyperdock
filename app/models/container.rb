@@ -49,7 +49,7 @@ class Container < ActiveRecord::Base
   end
 
   def top
-    self.host.docker.top self.instance_id
+    JSON.pretty_generate(self.host.docker.top self.instance_id) rescue "None"
   end
 
 
