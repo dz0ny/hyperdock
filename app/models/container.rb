@@ -26,7 +26,7 @@ class Container < ActiveRecord::Base
   end
 
   def get_info
-    JSON.parse `curl #{self.host.docker_url}/containers/#{self.instance_id}/json`
+    self.host.docker.container_info self.instance_id
   end
 
   def get_port_bindings

@@ -1,10 +1,26 @@
 module DockerApiMocks
-  def stub_get_info host, ok=true, data={"Containers" => 0}
-    stub_docker_request(:get, "#{host.docker_url}/info").to_return({
-      :status => (ok ? 200 : 500),
-      :body => ( ok ? data : {}).to_json, 
-      :headers => { "Content-Type" => "application/json" }
-    })
+  def stub_docker_request meth, url, options={}
+    default_request_headers = {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}
+    defaults = { :headers => default_request_headers }
+    stub_request(meth, url).with(defaults.merge(options))
+  end
+
+  def stub_get_info model, ok=true, data=nil
+    if model.is_a? Container
+      data = (data ? data : {"Image" => "somesha1"})
+      stub_docker_request(:get, "#{model.host.docker_url}/containers/#{model.instance_id}/json").to_return({
+        :status => (ok ? 200 : 500),
+        :body => ( ok ? data : {}).to_json, 
+        :headers => { "Content-Type" => "application/json" }
+      })
+    elsif model.is_a? Host
+      data = (data ? data : {"Containers" => 0})
+      stub_docker_request(:get, "#{model.docker_url}/info").to_return({
+        :status => (ok ? 200 : 500),
+        :body => ( ok ? data : {}).to_json, 
+        :headers => { "Content-Type" => "application/json" }
+      })
+    end
   end
 
   def stub_docker_pull host, image, ok=true
@@ -29,11 +45,5 @@ module DockerApiMocks
       :body => '{"Id":"e90e34656806", "Warnings":[]}',
       :headers => { "Content-Type" => "application/json" }
     })
-  end
-
-  def stub_docker_request meth, url, options={}
-    default_request_headers = {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}
-    defaults = { :headers => default_request_headers }
-    stub_request(meth, url).with(defaults.merge(options))
   end
 end
