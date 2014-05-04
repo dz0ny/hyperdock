@@ -18,8 +18,7 @@ Offered Images:
  * geminabox
 
 Supported VPS Providers:
- * DigitalOcean
- * Linode
+ * We support both virtual and dedicated servers, provider does not matter anymore.
 
 Tenant Signs Up
  - SaaSKit
@@ -65,7 +64,7 @@ password: 3
 Docker daemon logs are located at /var/log/upstart/docker.log
 
 # Deploy
-
+```
 apt-get install nginx postgresql libpq-dev supervisor redis-server
 
 \curl -sSL https://get.rvm.io | bash -s stable
@@ -73,7 +72,6 @@ apt-get install nginx postgresql libpq-dev supervisor redis-server
 rvm install 2.1
 
 CREATE USER tom WITH PASSWORD 'myPassword';
-
 bundle install --without development test
 rvm wrapper $(cat .ruby-version) unicorn_rails
 rvm wrapper $(cat .ruby-version) sidekiq
@@ -85,10 +83,14 @@ bin/rake assets:precompile RAILS_ENV=production
 sudo ln -s /home/app/hyperdock/config/nginx/hyperdock /etc/nginx/sites-available/
 sudo ln -s /home/app/hyperdock/config/supervisor/hyperdock.conf /etc/supervisor/conf.d/
 sudo ln -s /etc/nginx/sites-available/hyperdock /etc/nginx/sites-enabled/
+```
 
+```
 sudo ufw enable
+```
 
+```
 git push production master
-
+```
 
 
