@@ -11,4 +11,12 @@ describe Image do
   #  image.should be_valid
   #end
 
+  describe "#format_port_bindings" do
+    it "converts comma separated list of ports to initial docker PortBindings value" do
+      image.port_bindings = "22 ,80, 8080"
+      image.format_port_bindings
+      image.port_bindings.should eq "\"22/tcp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }],\"80/tcp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }],\"8080/tcp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }]"
+    end
+  end
+
 end
