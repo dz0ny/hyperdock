@@ -42,11 +42,11 @@ gem 'pry-rails'
 group :development, :test do
   gem 'shoulda-matchers', require: false
   gem 'factory_girl_rails'
-  gem 'webmock'
   gem 'spring-commands-rspec'
   gem 'rspec-rails'
   gem 'simplecov'
   gem 'database_cleaner'
 end
+gem 'webmock', group: 'test'
 gem 'guard-rspec', '~> 4.2.8', require: false
 gem 'guard-bundler', require: false

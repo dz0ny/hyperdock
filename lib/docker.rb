@@ -33,17 +33,21 @@ class Docker
     uri = URI.join(base_uri, "/images/create")
     http = Net::HTTP.new(uri.host, uri.port)
     http.request_post(uri.request_uri, "fromImage=#{image.docker_index}") do |response|
+      Rails.logger.info response.inspect
       response.read_body do |chunk|
         yield chunk
       end
     end
   end
 
-  def run image
+  def run image, config
     uri = URI.join(base_uri, "/containers/create")
     req = Net::HTTP::Post.new(uri)
     req["Content-Type"] = "application/json"
+    req.body = config
     http = Net::HTTP.new(uri.host, uri.port)
-    http.request(req).body
+    response = http.request(req)
+    Rails.logger.info response.inspect
+    JSON.parse response.body
   end
 end
