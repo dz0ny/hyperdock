@@ -42,4 +42,6 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
   config.include FactoryGirl::Syntax::Methods
+  require './spec/support/docker_api_mocks'
+  config.include DockerApiMocks
 end
