@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
   factory :host do
-    name "MyString"
-    ip_address "MyString"
-    port 1
+    name "MyHost"
+    ip_address "10.0.0.12"
+    port 5544
   end
 end
