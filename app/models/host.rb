@@ -1,3 +1,6 @@
+require('docker')
+
+
 class Host < ActiveRecord::Base
   include ActiveModel::Validations
   validates_with DockerHostValidator
@@ -21,5 +24,9 @@ class Host < ActiveRecord::Base
 
   def info
     JSON.pretty_generate(get_info) rescue "None"
+  end
+
+  def docker
+    Docker.new(self)
   end
 end
