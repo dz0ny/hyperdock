@@ -48,6 +48,11 @@ class Container < ActiveRecord::Base
     JSON.pretty_generate(get_info) rescue "None"
   end
 
+  def top
+    self.host.docker.top self.instance_id
+  end
+
+
   def start
     if self.port_bindings
       config = %{{

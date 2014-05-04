@@ -29,6 +29,17 @@ class Docker
     JSON.parse(res.body)
   end
 
+  def top id
+    uri = URI.join(base_uri, "/containers/#{id}/top")
+    req = Net::HTTP::Get.new(uri)
+    req["Content-Type"] = "application/json"
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.open_timeout = 2
+    http.read_timeout = 2
+    res = http.request(req)
+    JSON.parse(res.body)
+  end
+
   def pull image
     uri = URI.join(base_uri, "/images/create")
     http = Net::HTTP.new(uri.host, uri.port)
