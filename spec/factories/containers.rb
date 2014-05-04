@@ -2,7 +2,7 @@
 
 FactoryGirl.define do
   factory :container do
-    # association :image
+    association :image
     status nil
     instance_id nil
     port_bindings nil
