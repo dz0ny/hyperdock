@@ -14,3 +14,22 @@
  *= require_self
  */
 @import "bootstrap";
+
+.footer {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-top: 40px;
+  border-top: 1px solid #eee;
+}
+
+.jumbotron {
+  text-align: center;
+  background-color: transparent;
+}
+
+.bg-danger, .bg-info {
+  padding-bottom: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+}
