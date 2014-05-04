@@ -1,4 +1,4 @@
-class HostsController < ApplicationController
+class HostsController < AdminController
   before_action :set_host, only: [:show, :edit, :update, :destroy]
 
   # GET /hosts

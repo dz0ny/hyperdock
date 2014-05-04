@@ -1,6 +1,6 @@
-class ContainersController < ApplicationController
+class ContainersController < AdminController
   before_action :set_container, only: [:show, :edit, :update, :destroy]
-
+  
   # GET /containers
   # GET /containers.json
   def index
