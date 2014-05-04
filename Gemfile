@@ -55,8 +55,8 @@ gem 'guard-rspec', '~> 4.2.8', require: false
 gem 'guard-bundler', require: false
 group :development do
   gem 'quiet_assets'
-  gem 'capistrano'
+  gem 'capistrano',  '~> 3.1'
+  gem 'capistrano-rails', '~> 1.1'
   gem 'capistrano-rvm'
   gem 'capistrano-bundler'
-  gem 'capistrano-rails'
 end
