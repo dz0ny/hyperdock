@@ -249,6 +249,7 @@ DEPENDENCIES
   guard-rspec (~> 4.2.8)
   jbuilder (~> 2.0)
   jquery-rails
+  net-ssh
   pg
   pry-rails
   quiet_assets
