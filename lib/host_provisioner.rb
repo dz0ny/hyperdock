@@ -3,7 +3,8 @@ require 'net/ssh'
 class HostProvisioner
   attr_accessor :ssh
   PORT = 5542
-  DOCKER_OPTS = "-H 0.0.0.0:#{PORT}"
+  DOCKER_HOST = "0.0.0.0:#{PORT}"
+  DOCKER_OPTS = "-H #{DOCKER_HOST}"
 
   def initialize host, user="root", password
     @host = host
@@ -113,6 +114,8 @@ class HostProvisioner
       mkdir -p /var/hyperdock/volumes
 
       ufw disable
+
+      echo 'export DOCKER_HOST="#{DOCKER_HOST}"' > /root/.bashrc
 
       service docker restart && sleep 1
     }
