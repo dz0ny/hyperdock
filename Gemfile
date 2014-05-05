@@ -42,8 +42,8 @@ gem 'devise_invitable'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 gem 'bootstrap-sass', '~> 3.1.1'
-gem 'pry-rails'
 group :development, :test do
+  gem 'pry-rails'
   gem 'shoulda-matchers', require: false
   gem 'factory_girl_rails'
   gem 'spring-commands-rspec'
