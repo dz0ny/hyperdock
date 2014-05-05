@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140504101840) do
+ActiveRecord::Schema.define(version: 20140505061346) do
 
   create_table "containers", force: true do |t|
     t.integer  "image_id"
@@ -49,6 +49,8 @@ ActiveRecord::Schema.define(version: 20140504101840) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "port_bindings"
+    t.string   "volumes"
+    t.boolean  "shared_volumes"
   end
 
   create_table "regions", force: true do |t|

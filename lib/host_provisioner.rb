@@ -106,9 +106,14 @@ class HostProvisioner
 
   def configure_docker!
     script = %{
-    cat /etc/init/docker.conf | sed 's/DOCKER_OPTS=/DOCKER_OPTS="#{DOCKER_OPTS}"/' > /root/docker.conf
-    cat /root/docker.conf > /etc/init/docker.conf
+      cat /etc/init/docker.conf | sed 's/DOCKER_OPTS=/DOCKER_OPTS="#{DOCKER_OPTS}"/' > /root/docker.conf
+      cat /root/docker.conf > /etc/init/docker.conf
       rm /root/docker.conf
+
+      mkdir -p /var/hyperdock/volumes
+
+      ufw disable
+
       service docker restart && sleep 1
     }
     log "Reconfiguring Docker to start with options #{DOCKER_OPTS}"
