@@ -99,3 +99,10 @@ git push production master
 ```
 
 
+## Host Setup
+
+First prepare the host or double check the configuration with the rake task:
+
+`bin/rake docker:setup host="198.199.112.194" password="awefawef"`
+
+Next login as admin and add it to the region

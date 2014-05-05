@@ -3,21 +3,7 @@
   - shared volume ? bool
   - test znc
 
-###
-Created a test droplet for this
-We will also create the provisioning script in this process.
-
-Provision a new host:
-
-```
-bin/rake host:provision host="198.199.112.194" password="bzsvdlaydnmr"
-```
-
-###
-
-
-  
-* Limit to 2 containers
+* Limit users to maximum of 2 containers
 
 * Default to 0 invites
 

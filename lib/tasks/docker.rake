@@ -1,12 +1,11 @@
-namespace :host do
+namespace :docker do
   desc %{
-    Add a new Ubuntu 12.04 LTS host to the system.
-    Docker will be setup automatically.
-    The host will not be tied to a region.
+    Setup or check a Ubuntu 12.04 LTS host with Docker
+
     Usage:
-      bin/rake host:add host="198.199.112.194" password="awefawef"
+      bin/rake docker:setup host="198.199.112.194" password="awefawef"
   }
-  task add: :environment do
+  task setup: :environment do
     require 'host_provisioner'
     hp = HostProvisioner.new(ENV['host'], ENV['password'])
     hp.provision!
@@ -14,6 +13,5 @@ namespace :host do
     # disable password auth
     # insert hyperdock's public key for future connections
     # add host to database
-    binding.pry
   end
 end
