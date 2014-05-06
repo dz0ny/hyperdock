@@ -1,12 +1,20 @@
 require 'spec_helper'
 
 describe Container do
-  let(:region) { build(:region) }
-  let(:host) { build(:host, region: region) }
-  let(:container) { create(:container, host: host, region: region) }
+  it { should validate_presence_of :name }
 
-  before(:each) do
-    stub_get_info host
+  let(:container) { build(:container) }
+
+  describe "factory" do
+    subject { container }
+    it { should be_valid }   
+    specify { subject.host.should be_a Host }
+    specify { subject.region.should be_a Region }
+    it "it gets assigned the host when saved" do
+      subject.region.hosts.last.should_not eq subject.host
+      subject.save
+      subject.region.hosts.last.should eq subject.host
+    end
   end
 
   it "#get_info uses docker api to inspect the container" do
@@ -15,7 +23,9 @@ describe Container do
   end
 
   describe "#destroy" do
+    before(:each) { container.save }
     it "stops and removes it from the host before removing it from the database" do
+      container.should be_persisted
       container.should_receive(:delete_from_docker)
       container.destroy
       container.should_not be_persisted

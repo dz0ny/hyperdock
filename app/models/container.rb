@@ -8,6 +8,8 @@ class Container < ActiveRecord::Base
 
   before_save :select_host
 
+  validates :name, presence: true
+
   def config
     json = %{{
          "Hostname":"",

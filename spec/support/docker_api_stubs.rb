@@ -1,4 +1,4 @@
-module DockerApiMocks
+module DockerApiStubs
   def stub_docker_request meth, url, options={}
     default_request_headers = {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Ruby'}
     defaults = { :headers => default_request_headers }

@@ -3,6 +3,7 @@
 # Communicates over the network
 # Add security patterns, etc here
 class Docker
+  class InvalidInstanceIdError < StandardError ; end
   attr_reader :base_uri
 
   def initialize base_uri
@@ -19,6 +20,7 @@ class Docker
   end
 
   def inspect id
+    raise InvalidInstanceIdError if id.nil?
     uri = URI.join(base_uri, "/containers/#{id}/json")
     req = Net::HTTP::Get.new(uri)
     req["Content-Type"] = "application/json"
@@ -30,6 +32,7 @@ class Docker
   end
 
   def top id
+    raise InvalidInstanceIdError if id.nil?
     uri = URI.join(base_uri, "/containers/#{id}/top")
     req = Net::HTTP::Get.new(uri)
     req["Content-Type"] = "application/json"
@@ -61,6 +64,7 @@ class Docker
   end
 
   def start id, config
+    raise InvalidInstanceIdError if id.nil?
     uri = URI.join(base_uri, "/containers/#{id}/start")
     req = Net::HTTP::Post.new(uri)
     req["Content-Type"] = "application/json"
@@ -71,6 +75,7 @@ class Docker
   end
 
   def stop id
+    raise InvalidInstanceIdError if id.nil?
     uri = URI.join(base_uri, "/containers/#{id}/stop?t=0")
     req = Net::HTTP::Post.new(uri)
     http = Net::HTTP.new(uri.host, uri.port)
@@ -79,6 +84,7 @@ class Docker
   end
 
   def restart id
+    raise InvalidInstanceIdError if id.nil?
     uri = URI.join(base_uri, "/containers/#{id}/restart?t=0")
     req = Net::HTTP::Post.new(uri)
     http = Net::HTTP.new(uri.host, uri.port)
@@ -88,6 +94,7 @@ class Docker
 
 
   def rm id
+    raise InvalidInstanceIdError if id.nil?
     uri = URI.join(base_uri, "/containers/#{id}?v=1&force=1")
     req = Net::HTTP::Delete.new(uri)
     http = Net::HTTP.new(uri.host, uri.port)

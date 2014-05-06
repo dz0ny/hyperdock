@@ -5,5 +5,6 @@ FactoryGirl.define do
     name "MyHost"
     ip_address "10.0.0.12"
     port 5544
+    association :region
   end
 end
