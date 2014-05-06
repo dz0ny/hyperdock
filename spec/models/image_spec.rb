@@ -17,6 +17,12 @@ describe Image do
       image.format_port_bindings
       image.port_bindings.should eq "\"22/tcp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }],\"80/tcp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }],\"8080/tcp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }]"
     end
+
+    it "supports explicit udp and tcp" do
+      image.port_bindings = "22 ,80/tcp, 8080/udp"
+      image.format_port_bindings
+      image.port_bindings.should eq "\"22/tcp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }],\"80/tcp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }],\"8080/udp\": [{ \"HostIp\": \"0.0.0.0\", \"HostPort\": \"0\" }]"
+    end
   end
 
 end
