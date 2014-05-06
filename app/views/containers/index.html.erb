@@ -27,7 +27,7 @@
       <tbody>
         <% @containers.each do |container| %>
           <tr>
-            <td><%= link_to container.instance_id, container %></td>
+            <td><i class="glyphicon glyphicon-hdd"/>&nbsp;<%= link_to container.instance_id, container %></td>
             <td><%= container.name %></td>
 
             <td><%= container.image.name %></td>
