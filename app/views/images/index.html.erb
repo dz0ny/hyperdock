@@ -15,7 +15,7 @@
       <tr>
         <td><%= image.name %></td>
         <td><%= image.description %></td>
-        <td><%= image.port_bindings %></td>
+        <td><%= simplify_port_bindings image.port_bindings %></td>
         <td><%= image.docker_index %></td>
         <td><%= link_to 'Show', image %></td>
         <td><%= link_to 'Edit', edit_image_path(image) %></td>
