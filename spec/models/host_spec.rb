@@ -5,6 +5,10 @@ describe Host do
 
   it { should have_many :containers }
 
+  it "has a valid factory" do
+    host.should be_valid
+  end
+
   it "#docker returns a Docker object" do
     subject.docker.should be_a Docker
   end
@@ -13,10 +17,22 @@ describe Host do
     subject.info.should eq "None"
   end
 
-  it "is invalid if #get_info does not have key containers" do
-    stub_get_info host, false
-    host.get_info.should_not have_key "Containers"
-    host.should_not be_valid
+  describe "#online?" do
+    describe "#get_info fails to produce expected output" do
+      before(:each) do
+        stub_get_info host, success: false
+        host.get_info.should_not have_key "Containers"
+      end
+      specify { host.online?.should be_false }
+    end
+
+    describe "#get_info produces expected output" do
+      before(:each) do
+        stub_get_info host, success: true
+        host.get_info.should have_key "Containers"
+      end
+      specify { host.online?.should be_true }
+    end
   end
 
   it "is valid if #get_info has key containers" do
