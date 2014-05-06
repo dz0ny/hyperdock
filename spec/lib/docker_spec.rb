@@ -2,7 +2,9 @@ require 'spec_helper'
 require 'docker'
 
 describe Docker do
-  let(:container) { build(:container) }
+  let(:region) { create(:region) }
+  let(:host) { create(:host, region: region ) }
+  let(:container) { create(:container, host: host, region: region) }
   let(:api) { container.host.docker }
 
   describe "HTTP API" do

@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe Provisioner do
   let(:worker) { Provisioner.new }
-  let(:region) { container.host.region }
-  let(:host) { container.host }
-  let(:container) { create(:container) }
+  let(:region) { create(:region) }
+  let(:host) { create(:host, region: region ) }
+  let(:container) { create(:container, host: host, region: region) }
 
   before(:each) do
     stub_get_info host

@@ -7,7 +7,6 @@ FactoryGirl.define do
     instance_id "id"
     port_bindings nil
     name "My Container"
-    association :host
     association :region
   end
 end

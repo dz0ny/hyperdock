@@ -2,8 +2,9 @@ require 'spec_helper'
 
 describe Container do
   it { should validate_presence_of :name }
-
-  let(:container) { build(:container) }
+  let(:region) { create(:region) }
+  let(:host) { create(:host, region: region ) }
+  let(:container) { build(:container, host: host, region: region) }
 
   describe "factory" do
     subject { container }
@@ -11,9 +12,9 @@ describe Container do
     specify { subject.host.should be_a Host }
     specify { subject.region.should be_a Region }
     it "it gets assigned the host when saved" do
-      subject.region.hosts.last.should_not eq subject.host
       subject.save
-      subject.region.hosts.last.should eq subject.host
+      subject.region.hosts.last.id.should eq subject.host.id
+      subject.host.should_not be_nil
     end
   end
 
