@@ -15,18 +15,17 @@
           <th>Ip address</th>
           <th>Port</th>
           <th>Region</th>
-          <th colspan="3"></th>
+          <th colspan="2"></th>
         </tr>
       </thead>
 
       <tbody>
         <% @hosts.each do |host| %>
           <tr>
-            <td><i class="glyphicon glyphicon-cloud"/></i>&nbsp;<%= host.name %></td>
+            <td><i class="glyphicon glyphicon-cloud"/></i>&nbsp;<%= link_to host.name, host %></td>
             <td><%= host.ip_address %></td>
             <td><%= host.port %></td>
             <td><%= host.region.name %></td>
-            <td><%= link_to 'Show', host %></td>
             <td><%= link_to 'Edit', edit_host_path(host) %></td>
             <td><%= link_to 'Destroy', host, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>
