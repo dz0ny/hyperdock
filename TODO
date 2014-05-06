@@ -5,8 +5,6 @@
 
 * Limit users to maximum of 2 containers
 
-* Default to 0 invites
-
 * install statsd on prod w/ supervisor
   - use console backend
   
