@@ -12,7 +12,5 @@
   - https://collectd.org/wiki/index.php/Plugin:StatsD
    cpu memory disk network
 
-* fix port binding bug on edit image
-
 * restart button
 
