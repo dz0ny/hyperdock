@@ -9,7 +9,7 @@
       <% end %>
       <% if @container.status == 'started' %>
         <%= link_to 'Stop', stop_container_path(@container), class: 'btn btn-danger btn-sm' %>
-        <%= link_to 'Restart', restart_container_path(@container), class: 'btn btn-primary btn-sm' %>
+        <%= link_to 'Restart', restart_container_path(@container), class: 'btn btn-warning btn-sm' %>
       <% end %>
 
     </div>
