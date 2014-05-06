@@ -79,10 +79,6 @@ class Container < ActiveRecord::Base
     self.update(status: "started")
   end
 
-  def exposed_ports
-    JSON.parse(self.port_bindings).values.map {|pair| pair[0]["HostPort"] }.join(', ') rescue "N/A"
-  end
-
   private
 
   def delete_from_docker

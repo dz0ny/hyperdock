@@ -25,7 +25,7 @@
       <tr>
         <td><i class="glyphicon glyphicon-th"/></i>&nbsp;<%= link_to image.name, image %></td>
         <td><%= image.description %></td>
-        <td><%= simplify_port_bindings image.port_bindings %></td>
+        <td><%= simplify_image_port_bindings image.port_bindings %></td>
         <td><%= image.docker_index %></td>
         <td><%= link_to 'Edit', edit_image_path(image) %></td>
         <td><%= link_to 'Destroy', image, method: :delete, data: { confirm: 'Are you sure?' } %></td>
