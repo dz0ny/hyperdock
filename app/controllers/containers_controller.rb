@@ -56,6 +56,14 @@ class ContainersController < AdminController
     redirect_to @container
   end
 
+  def restart 
+    @container = Container.find(params[:id])
+    @container.restart
+    redirect_to @container
+  end
+
+
+
   # PATCH/PUT /containers/1
   # PATCH/PUT /containers/1.json
   def update

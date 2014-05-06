@@ -78,6 +78,15 @@ class Docker
     response.body
   end
 
+  def restart id
+    uri = URI.join(base_uri, "/containers/#{id}/restart?t=0")
+    req = Net::HTTP::Post.new(uri)
+    http = Net::HTTP.new(uri.host, uri.port)
+    response = http.request(req)
+    response.body
+  end
+
+
   def rm id
     uri = URI.join(base_uri, "/containers/#{id}?v=1&force=1")
     req = Net::HTTP::Delete.new(uri)
