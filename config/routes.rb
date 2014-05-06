@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     member do 
       get :start
       get :stop
+      get :restart
     end
   end
 

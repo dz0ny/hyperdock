@@ -74,6 +74,11 @@ class Container < ActiveRecord::Base
     self.update(status: "stopped")
   end
 
+  def restart
+    self.host.docker.restart self.instance_id
+    self.update(status: "started")
+  end
+
   def exposed_ports
     JSON.parse(self.port_bindings).values.map {|pair| pair[0]["HostPort"] }.join(', ') rescue "N/A"
   end
