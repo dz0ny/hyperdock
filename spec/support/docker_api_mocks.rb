@@ -5,7 +5,8 @@ module DockerApiMocks
     stub_request(meth, url).with(defaults.merge(options))
   end
 
-  def stub_get_info model, ok=true, data=nil
+  def stub_get_info model, opts={success: true}, data=nil
+    ok = opts[:success]
     if model.is_a? Container
       data = (data ? data : {"Image" => "somesha1"})
       stub_docker_request(:get, "#{model.host.docker_url}/containers/#{model.instance_id}/json").to_return({

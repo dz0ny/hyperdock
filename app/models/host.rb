@@ -1,8 +1,6 @@
 require('docker')
 
 class Host < ActiveRecord::Base
-  include ActiveModel::Validations
-  validates_with DockerHostValidator
   has_many :containers
   belongs_to :region
 
@@ -20,6 +18,14 @@ class Host < ActiveRecord::Base
 
   def get_info
     docker.info
+  end
+
+  def online?
+    begin
+      self.get_info.has_key? "Containers"
+    rescue
+      false
+    end
   end
 
   def docker
