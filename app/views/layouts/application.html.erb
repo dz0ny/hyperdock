@@ -21,16 +21,17 @@
       </div>
 
       <% if current_user %>
-        <ul class="nav navbar-nav navbar-right">
-          <li><a href="#"><%= current_user.email %></a></li>
-          <% if current_user.has_invitations_left? %>
-            <li><%= link_to "Invite (#{current_user.invitation_limit})", new_user_invitation_path %></li> 
-          <% end %>
-          <li><%= link_to 'Logout', destroy_user_session_path, method: :delete %></li> 
-        </ul>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+
+          <ul class="nav navbar-nav navbar-right">
+            <% if current_user.has_invitations_left? %>
+              <li><%= link_to "Invite (#{current_user.invitation_limit})", new_user_invitation_path %></li> 
+            <% end %>
+            <li><%= link_to "Logout #{current_user.email.split('@')[0]}", destroy_user_session_path, method: :delete %></li> 
+          </ul>
+
           <ul class="nav navbar-nav">
             <% if current_user.admin? %>
               <li><%= link_to 'Regions', regions_path %></li>
