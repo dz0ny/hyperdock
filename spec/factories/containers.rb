@@ -8,5 +8,10 @@ FactoryGirl.define do
     port_bindings nil
     name "My Container"
     association :region
+    after(:build) do |container|
+      region = create(:region)
+      region.hosts.create attributes_for(:host)
+      container.region = region
+    end
   end
 end
