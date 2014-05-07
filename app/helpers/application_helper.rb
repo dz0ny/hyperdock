@@ -13,4 +13,8 @@ module ApplicationHelper
       flash_type.to_s
     end
   end
+
+  def container_capacity
+    "(#{current_user.containers.count}/#{current_user.container_limit})"
+  end
 end
