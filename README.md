@@ -12,8 +12,9 @@ Offered Images:
  * postgresql
  * redis
  * mongodb
- * hosted hipchat (the open surce thing starts with k)
- * git lab
+ * mysql
+ * kandan (hipchat alternative)
+ * gitlab
  * sinopia
  * geminabox
 
