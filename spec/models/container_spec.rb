@@ -2,23 +2,26 @@ require 'spec_helper'
 
 describe Container do
   it { should validate_presence_of :name }
-  let(:region) { create(:region) }
-  let(:host) { create(:host, region: region ) }
-  let(:container) { build(:container, host: host, region: region) }
+  let(:container) { build(:container) }
+
+  it { should belong_to :region }
+  it { should belong_to :host }
+  it { should belong_to :image }
+  it { should belong_to :user }
 
   describe "factory" do
     subject { container }
     it { should be_valid }   
-    specify { subject.host.should be_a Host }
-    specify { subject.region.should be_a Region }
-    it "it gets assigned the host when saved" do
-      subject.save
-      subject.region.hosts.last.id.should eq subject.host.id
-      subject.host.should_not be_nil
-    end
+  end
+
+  it "it gets assigned the host when saved" do
+    container.save
+    container.host.should be_a Host
+    container.region.hosts.last.id.should eq container.host.id
   end
 
   it "#get_info uses docker api to inspect the container" do
+    container.save
     container.host.docker.should_receive(:inspect).with(container.instance_id)
     container.get_info
   end
@@ -35,6 +38,7 @@ describe Container do
 
   describe "#stop" do
     it "stops the remote instance" do
+      container.save
       container.host.docker.should_receive(:stop).with(container.instance_id)
       container.stop
       container.status.should eq "stopped"
@@ -43,6 +47,7 @@ describe Container do
 
   describe "#start" do
     it "starts the remote instance and then fetches and persists the port bindings" do
+      container.save
       container.host.docker.should_receive(:start).with(container.instance_id, "{\n        \"PortBindings\":{  },\n        \"Dns\": [\"8.8.8.8\"]\n      }")
       container.stub(:get_port_bindings).and_return("random port")
       container.start

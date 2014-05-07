@@ -2,12 +2,9 @@ require 'spec_helper'
 
 describe Provisioner do
   let(:worker) { Provisioner.new }
-  let(:region) { create(:region) }
-  let(:host) { create(:host, region: region ) }
-  let(:container) { create(:container, host: host, region: region) }
+  let(:container) { create(:container) }
 
   before(:each) do
-    stub_get_info host
     stub_docker_pull container.host, container.image
     stub_docker_run container.host, container.image
   end
