@@ -1,9 +1,8 @@
 * install statsd on prod w/ supervisor
   - use console backend
+  - use this as a guide http://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/
   
 * use https://github.com/collectd/collectd to ship host-level data to statsd
   - https://collectd.org/wiki/index.php/Plugin:StatsD
    cpu memory disk network
-
-* restart button
 

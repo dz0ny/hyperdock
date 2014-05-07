@@ -57,6 +57,7 @@ password: 3
 * Setup rails and postgres https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres
 * Setup unicorn and nginx https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5
 * Collecting container metrics http://blog.docker.io/2013/10/gathering-lxc-docker-containers-metrics/
+* StatsD and Graphite, Matt Aimonetti http://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/
 
 # Notes
 
