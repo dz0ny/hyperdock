@@ -57,6 +57,7 @@ RSpec.configure do |config|
   require './spec/support/docker_api_stubs'
   config.include DockerApiStubs
 
+  config.include Devise::TestHelpers, :type => :controller
 
   require 'database_cleaner'
   config.before(:suite) do
