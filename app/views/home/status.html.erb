@@ -1,6 +1,20 @@
 <% @regions.each do |region| %>
-  <h3><%= region.name %></h3>
-  <% region.hosts.each do |host| %>
-    <%= host.name %> - UP<br/>
-  <% end %>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">
+        <i class="glyphicon glyphicon-globe"/></i>
+        <%= region.name %>
+      </h3>
+    </div>
+    <div class="panel-body">
+      All <%= region.name %> hosts are operational!
+    </div>
+    <ul class="list-group">
+      <% region.hosts.each do |host| %>
+      <li class="list-group-item">
+        <i class="glyphicon glyphicon-cloud"/></i>&nbsp;<%= host.name %>
+      </li>
+      <% end %>
+    </ul>
+  </div>
 <% end %>
