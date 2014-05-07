@@ -56,3 +56,10 @@ Image.create({
   port_bindings: "6379"
 })
 
+Image.create({
+  name: "ZNC",
+  description: "IRC Bouncer",
+  docker_index: "hyperdock/znc",
+  port_bindings: "36660"
+})
+
