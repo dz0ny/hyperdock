@@ -10,4 +10,8 @@ class User < ActiveRecord::Base
     self.role == "admin"
   end
 
+  def at_container_limit?
+    self.containers.count >= self.container_limit
+  end
+
 end

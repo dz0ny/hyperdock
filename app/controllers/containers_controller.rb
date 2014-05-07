@@ -28,18 +28,26 @@ class ContainersController < AdminController
   # POST /containers
   # POST /containers.json
   def create
-    @container = current_user.containers.build(container_params)
-    @container.status = 'pending'
+    if current_user.at_container_limit?
+      msg = "You are limited to #{current_user.container_limit} containers. You may upgrade or destroy an existing container and try again."
+      respond_to do |format|
+        format.html { redirect_to containers_path, alert: msg }
+        format.json { render json: {error: msg}, status: :forbidden }
+      end
+    else
+      @container = current_user.containers.build(container_params)
+      @container.status = 'pending'
 
-    respond_to do |format|
-      if @container.save
-        # send to sidekiq to provision
-        Provisioner.perform_async(@container.id) 
-        format.html { redirect_to @container, notice: 'Container was successfully created.' }
-        format.json { render :show, status: :created, location: @container }
-      else
-        format.html { render :new }
-        format.json { render json: @container.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @container.save
+          # send to sidekiq to provision
+          Provisioner.perform_async(@container.id) 
+          format.html { redirect_to @container, notice: 'Container was successfully created.' }
+          format.json { render :show, status: :created, location: @container }
+        else
+          format.html { render :new }
+          format.json { render json: @container.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -61,7 +69,6 @@ class ContainersController < AdminController
     @container.restart
     redirect_to @container
   end
-
 
 
   # PATCH/PUT /containers/1
