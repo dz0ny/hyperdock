@@ -5,7 +5,7 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-User.create(email: "admin@hyperdock.io", password: "12345678", role: "admin", invitation_limit: 100000)
+User.create(email: "admin@hyperdock.io", password: "12345678", role: "admin", invitation_limit: 100, container_limit: 100)
 
 ny = Region.create(name: "New York")
 ny.hosts.create({
