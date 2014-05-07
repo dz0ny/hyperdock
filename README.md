@@ -21,12 +21,9 @@ Offered Images:
 Supported VPS Providers:
  * We support both virtual and dedicated servers, provider does not matter anymore.
 
-Tenant Signs Up
- - SaaSKit
-
 Chooses Image
-Optionally edits/saves Dockerfile
-Selects a Datacenter and VPS Provider
+Configures environment variables if necessary depending on image
+Selects a region and optionally a VPS Provider
 Pays
 We provision and send detials via email
 
