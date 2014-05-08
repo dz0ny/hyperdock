@@ -1,3 +1,6 @@
+* Configuring environment variables, etc
+  - determine a way to pass in config data like env vars into a container from the new container menu.
+
 * install statsd on prod w/ supervisor
   - add statsd agent to hosts (collectd)
   - use https://github.com/collectd/collectd to ship host-level data to statsd
@@ -13,7 +16,7 @@
 * Display metrics and allow upgrades which will assist in scaling
   - containers/show - disk usage & disk upper limit (upgradable -- may require user-scheduleable downtime thru a form with a date picker)
   - hosts/index - disk usage vs max
-  - hosts/show - disk, cpu, ram
+  - hosts/show - disk, cpu, ram, processes on host
 
 * Autoscaler
   - we just CAN'T resize disks without downtime
@@ -26,9 +29,8 @@
   - the above strategies should solve disk-related scaling problems. this should force us to spread the load enough to the point where ram and cpu limits are less likely to be hit by the containers, but we'll have to monitor this in production to determine if we must devise a strategy for those as well.
   - also consider looking at https://coreos.com but this isn't supported on DO, but it is on rackspace: https://coreos.com/docs/running-coreos/cloud-providers/rackspace/
 
-* Configuring environment variables, etc
-  - determine a way to pass in config data like env vars into a container from the new container menu.
-  
+* https://en.wikipedia.org/wiki/Beowulf_cluster
+
 * Polish
   - email signup form
     - Name, Email, What should we have ready by the time you get your invite for you to be happy (certain image(s), feature X) ? Thanks!
