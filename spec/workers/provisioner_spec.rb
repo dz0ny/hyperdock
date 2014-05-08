@@ -6,10 +6,18 @@ describe Provisioner do
 
   before(:each) do
     stub_docker_pull container.host, container.image
-    stub_docker_run container.host, container.image
+    stub_docker_run container.host
   end
 
-  it "provisions a container" do
+  it "sets an instance id" do
+    prev_id = container.instance_id
     worker.perform(container.id)
+    container.reload.instance_id.should_not eq prev_id
+  end
+
+  it "sets a status" do
+    container.status.should eq "pending"
+    worker.perform(container.id)
+    container.reload.status.should eq "created"
   end
 end
