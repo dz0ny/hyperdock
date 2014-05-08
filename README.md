@@ -49,6 +49,7 @@ password: 3
 
 # References
 
+* Does a nice job of explaining Docker http://3ofcoins.net/2013/09/22/flat-docker-images/
 * Docker Remote API Docs: http://docs.docker.io/reference/api/docker_remote_api/
 * Securing Docker Remote API via SSH Tunnel http://blog.tutum.co/2013/11/23/remote-and-secure-use-of-docker-api-with-python-part-ii/
 * Securing Docker Remote API via Nginx Unix Proxy & Client Certs http://java.dzone.com/articles/securing-docker%E2%80%99s-remote-api
