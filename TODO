@@ -1,8 +1,16 @@
 * install statsd on prod w/ supervisor
+  - add statsd agent to hosts (collectd)
+  - use https://github.com/collectd/collectd to ship host-level data to statsd
+    - https://collectd.org/wiki/index.php/Plugin:StatsD
+    - cpu memory disk network
+  - use this as a guide for how to name stuff coming in from statsd agents http://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/
   - use console backend
-  - use this as a guide http://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/
+  - feed data to http://influxdb.org/
+    - http://influxdb.org/docs/api/http.html
+    - https://github.com/FGRibreau/influxdb-cli
+    - github.com/damm/docker-influxdb
   
-* use https://github.com/collectd/collectd to ship host-level data to statsd
-  - https://collectd.org/wiki/index.php/Plugin:StatsD
-   cpu memory disk network
+
+* Templating Language
+  - use fig http://orchardup.github.io/fig/
 
