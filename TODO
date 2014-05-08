@@ -9,8 +9,27 @@
     - http://influxdb.org/docs/api/http.html
     - https://github.com/FGRibreau/influxdb-cli
     - github.com/damm/docker-influxdb
+
+* Autoscaling
+  - we just CAN'T resize disks without downtime
+  - we CAN check container size and display it to user
+  - we CAN offer price tiers based on storage upper limit
+  - we CAN allow upgrad storage upper limit
+
+* Display metrics gathered by autoscaling requirement
+
+* Configuring environment variables, etc
+  - determine a way to pass in config data like env vars into a container from the new container menu.
   
+* Multi-image templates
+  - look at fig.yml http://orchardup.github.io/fig/yml.html
 
-* Templating Language
-  - use fig http://orchardup.github.io/fig/
+* Container file editing
 
+* Polish
+  - email signup form
+    - Name, Email, What should we have ready by the time you get your invite for you to be happy (certain image(s), feature X) ? Thanks!
+  - splash page design by a professional
+
+* Launch
+  - post to reddit, hackernews, etc
