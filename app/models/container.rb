@@ -10,34 +10,6 @@ class Container < ActiveRecord::Base
 
   validates :name, presence: true
 
-  def config
-    json = %{{
-         "Hostname":"",
-         "User":"",
-         "Memory":0,
-         "MemorySwap":0,
-         "AttachStdin":false,
-         "AttachStdout":true,
-         "AttachStderr":true,
-         "PortSpecs":null,
-         "Tty":false,
-         "OpenStdin":false,
-         "StdinOnce":false,
-         "Env":null,
-         "Cmd":"",
-         "Image":"#{self.image.docker_index}",
-         "Volumes":{},
-         "WorkingDir":"",
-         "NetworkDisabled": false,
-         "ExposedPorts":{}
-      }}
-  end
-
-  def select_host
-    # TODO: select most optimal host
-    self.host = self.region.hosts.last
-  end
-
   def get_info
     self.host.docker.inspect self.instance_id
   end
@@ -54,20 +26,19 @@ class Container < ActiveRecord::Base
     JSON.pretty_generate(self.host.docker.top self.instance_id) rescue "None"
   end
 
-
   def start
     if self.port_bindings
-      config = %{{
+      pb = %{{
         "PortBindings": #{self.port_bindings} ,
         "Dns": ["8.8.8.8"]
       }}
     else
-      config = %{{
+      pb = %{{
         "PortBindings":{ #{self.image.port_bindings} },
         "Dns": ["8.8.8.8"]
       }}
     end
-    self.host.docker.start self.instance_id, config
+    self.host.docker.start(self.instance_id, pb)
     self.update(status: "started", port_bindings: self.get_port_bindings)
   end
 
@@ -83,8 +54,17 @@ class Container < ActiveRecord::Base
 
   private
 
+  def select_host
+    # TODO: select most optimal host
+    self.host = self.region.hosts.last
+  end
+
   def delete_from_docker
-    self.stop
-    self.host.docker.rm self.instance_id
+    if self.host.online?
+      self.stop
+      self.host.docker.rm self.instance_id
+    end
+  rescue Docker::InvalidInstanceIdError
+    # The container was never created
   end
 end

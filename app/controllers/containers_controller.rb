@@ -14,15 +14,11 @@ class ContainersController < AdminController
 
   # GET /containers/new
   def new
-    @regions = Region.all
-    @images = Image.all
     @container = Container.new
   end
 
   # GET /containers/1/edit
   def edit
-    @regions = Region.all
-    @images= Image.all
   end
 
   # POST /containers
@@ -54,8 +50,9 @@ class ContainersController < AdminController
 
   def start
     @container = Container.find(params[:id])
-    @container.start
-    redirect_to @container
+    redirect_to @container, notice: "Container has been started"
+  rescue => ex
+    redirect_to @container, alert: "#{ex.class.to_s} #{ex.message}"
   end
 
   def stop

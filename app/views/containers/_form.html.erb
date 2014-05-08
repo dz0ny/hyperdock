@@ -16,11 +16,11 @@
       <% end %>
       <div class="form-group col-lg-12">
         <%= f.label :region_id %>
-        <%= f.collection_select :region_id, @regions.all, :id, :name, {}, { class: 'form-control input-lg' } %>
+        <%= f.collection_select :region_id, Region.all, :id, :name, {}, { class: 'form-control input-lg' } %>
       </div>
       <div class="form-group col-lg-12">
         <%= f.label :image_id %>
-        <%= f.collection_select :image_id, @images.all, :id, :name, {}, { class: 'form-control input-lg' } %>
+        <%= f.collection_select :image_id, Image.all, :id, :name, {}, { class: 'form-control input-lg' } %>
       </div>
       <div class="form-group col-lg-12">
         <%= f.label :name %>

@@ -4,6 +4,8 @@
 # Add security patterns, etc here
 class Docker
   class InvalidInstanceIdError < StandardError ; end
+  class NoSuchContainerError < StandardError ; end
+  class ServerError < StandardError ; end
   attr_reader :base_uri
 
   def initialize base_uri
@@ -53,11 +55,11 @@ class Docker
     end
   end
 
-  def run image, config
+  def create container
     uri = URI.join(base_uri, "/containers/create")
     req = Net::HTTP::Post.new(uri)
     req["Content-Type"] = "application/json"
-    req.body = config
+    req.body = container.creation_config
     http = Net::HTTP.new(uri.host, uri.port)
     response = http.request(req)
     JSON.parse response.body
@@ -92,7 +94,6 @@ class Docker
     response.body
   end
 
-
   def rm id
     raise InvalidInstanceIdError if id.nil?
     uri = URI.join(base_uri, "/containers/#{id}?v=1&force=1")
@@ -100,5 +101,40 @@ class Docker
     http = Net::HTTP.new(uri.host, uri.port)
     response = http.request(req)
     response.body
+  end
+
+  def self.default_creation_config
+    {
+      Hostname: '',
+      User: '',
+      Memory: 0,
+      MemorySwap: 0,
+      AttachStdin: false,
+      AttachStdout: true,
+      AttachStderr: true,
+      PortSpecs: nil,
+      Tty: false,
+      OpenStdin: false,
+      StdinOnce: false,
+      Env: nil,
+      Cmd: '',
+      Image: '',
+      Volumes: {},
+      WorkingDir: '',
+      NetworkDisabled: false,
+      ExposedPorts: {}
+    }
+  end
+
+  def self.default_start_config
+    {
+      Binds: [],
+      LxcConf: {},
+      PortBindings: {},
+      PublishAllPorts: false,
+      Privileged: false,
+      Dns: ["8.8.8.8"],
+      VolumesFrom: []
+    }
   end
 end
