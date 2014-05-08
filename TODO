@@ -28,6 +28,7 @@
   - we CAN email users when a container is close to reaching upper limit
   - the above strategies should solve disk-related scaling problems. this should force us to spread the load enough to the point where ram and cpu limits are less likely to be hit by the containers, but we'll have to monitor this in production to determine if we must devise a strategy for those as well.
   - also consider looking at https://coreos.com but this isn't supported on DO, but it is on rackspace: https://coreos.com/docs/running-coreos/cloud-providers/rackspace/
+  - we CAN set runtime constraints: http://docs.docker.io/reference/run/#runtime-constraints-on-cpu-and-memory
 
 * https://en.wikipedia.org/wiki/Beowulf_cluster
 
