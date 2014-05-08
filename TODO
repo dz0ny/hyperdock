@@ -10,22 +10,25 @@
     - https://github.com/FGRibreau/influxdb-cli
     - github.com/damm/docker-influxdb
 
-* Autoscaling
+* Display metrics and allow upgrades which will assist in scaling
+  - containers/show - disk usage & disk upper limit (upgradable -- may require user-scheduleable downtime thru a form with a date picker)
+  - hosts/index - disk usage vs max
+  - hosts/show - disk, cpu, ram
+
+* Autoscaler
   - we just CAN'T resize disks without downtime
   - we CAN check container size and display it to user
   - we CAN offer price tiers based on storage upper limit
-  - we CAN allow upgrad storage upper limit
-
-* Display metrics gathered by autoscaling requirement
+  - we CAN allow upgrading storage upper limit
+    - requires user-acknowledged downtime
+    - does not impact other users because it happens by means of an export/import onto another virtual server that has the given free space
+  - we CAN email users when a container is close to reaching upper limit
+  - the above strategies should solve disk-related scaling problems. this should force us to spread the load enough to the point where ram and cpu limits are less likely to be hit by the containers, but we'll have to monitor this in production to determine if we must devise a strategy for those as well.
+  - also consider looking at https://coreos.com but this isn't supported on DO, but it is on rackspace: https://coreos.com/docs/running-coreos/cloud-providers/rackspace/
 
 * Configuring environment variables, etc
   - determine a way to pass in config data like env vars into a container from the new container menu.
   
-* Multi-image templates
-  - look at fig.yml http://orchardup.github.io/fig/yml.html
-
-* Container file editing
-
 * Polish
   - email signup form
     - Name, Email, What should we have ready by the time you get your invite for you to be happy (certain image(s), feature X) ? Thanks!
@@ -33,3 +36,14 @@
 
 * Launch
   - post to reddit, hackernews, etc
+
+---
+
+## Post Launch features
+
+* Multi-image templates
+  - look at fig.yml http://orchardup.github.io/fig/yml.html
+
+* Container file editing
+
+* Ability to commit a container (thus producing an Image, this is a docker feature) which is then tied to your user so as to become available in your Images list.
