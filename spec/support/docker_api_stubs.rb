@@ -38,7 +38,7 @@ module DockerApiStubs
     })
   end
 
-  def stub_docker_run host, image
+  def stub_docker_run host
     stub_docker_request(:post, "#{host.docker_url}/containers/create", {
       headers: { "Content-Type" => "application/json" }
     }).to_return({
