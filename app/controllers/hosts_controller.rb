@@ -14,13 +14,11 @@ class HostsController < AdminController
 
   # GET /hosts/new
   def new
-    @regions = Region.all
     @host = Host.new
   end
 
   # GET /hosts/1/edit
   def edit
-    @regions = Region.all
   end
 
   # POST /hosts
