@@ -1,0 +1,17 @@
+.row
+  .container-fluid
+    %h4.pull-left
+      = @host.name
+      %br/
+      %span.small= @host.docker_url
+    .pull-right
+      = link_to 'Edit', edit_host_path(@host), class: 'btn btn-primary btn-sm'
+%hr/
+.row
+  .container-fluid
+    .panel.panel-default
+      .panel-heading Containers
+      .panel-body
+        %ul
+          - @host.remote_containers.each do |c|
+            %li= c

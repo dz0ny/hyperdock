@@ -1,0 +1,35 @@
+= form_for(@image) do |f|
+  - if @image.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(@image.errors.count, "error")
+        prohibited this image from being saved:
+      %ul
+        - @image.errors.full_messages.each do |message|
+          %li= message
+  .field
+    = f.label :port_bindings
+    %br/
+    = f.text_field :port_bindings
+  .field
+    = f.label :volumes
+    %br/
+    = f.text_field :volumes
+  .field
+    = f.label :shared_volumes
+    %br/
+    = f.check_box :shared_volumes
+  .field
+    = f.label :name
+    %br/
+    = f.text_field :name
+  .field
+    = f.label :description
+    %br/
+    = f.text_area :description
+  .field
+    = f.label :docker_index
+    %br/
+    = f.text_field :docker_index
+  .actions
+    = f.submit

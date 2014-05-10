@@ -1,0 +1,35 @@
+.row
+  .container-fluid
+    %h4.pull-left
+      My Containers
+    .pull-right
+      = link_to 'New Container', new_container_path, class: 'pull-right btn btn-primary btn-sm'
+%hr/
+.row
+  .container-fluid
+    %table.table.table-bordered.table-condensed.table-striped
+      %thead
+        %tr
+          %th Name
+          %th Image
+          %th Host
+          %th Region
+          %th IP Address
+          %th Ports
+          %th Status
+          %th{:colspan => "2"}
+      %tbody
+        - @containers.each do |container|
+          %tr
+            %td
+              %i.glyphicon.glyphicon-hdd>
+              \&nbsp;#{link_to container.name, container}
+            %td= container.image.name
+            %td= container.host.name
+            %td= container.region.name
+            %td= container.host.ip_address
+            %td= simplify_container_port_bindings container.port_bindings
+            %td= container.status
+            %td= link_to 'Edit', edit_container_path(container)
+            %td= link_to 'Destroy', container, method: :delete, data: { confirm: 'Are you sure?' }
+    %br/

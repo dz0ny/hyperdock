@@ -1,0 +1,27 @@
+.row
+  .container-fluid
+    %h4.pull-left Images
+    .pull-right
+      = link_to 'New Image', new_image_path, class: 'btn btn-primary btn-sm'
+%hr/
+.row
+  .container-fluid
+    %table.table.table-bordered.table-striped.tabled-condensed
+      %thead
+        %tr
+          %th Name
+          %th Description
+          %th Port Bindings
+          %th Docker index
+          %th{:colspan => "2"}
+      %tbody
+        - @images.each do |image|
+          %tr
+            %td
+              %i.glyphicon.glyphicon-th>
+              \&nbsp;#{link_to image.name, image}
+            %td= image.description
+            %td= simplify_image_port_bindings image.port_bindings
+            %td= image.docker_index
+            %td= link_to 'Edit', edit_image_path(image)
+            %td= link_to 'Destroy', image, method: :delete, data: { confirm: 'Are you sure?' }

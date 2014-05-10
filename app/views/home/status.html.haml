@@ -1,0 +1,18 @@
+- @regions.each do |region|
+  - if region.hosts.any?
+    .panel.panel-default
+      .panel-heading
+        %h3.panel-title
+          %i.glyphicon.glyphicon-globe
+          = region.name
+      .panel-body
+        - if region.healthy?
+          All #{region.name} hosts are operational!
+        - else
+          = region.unhealthy_hosts.count
+          hosts are currently experiencing issues
+      %ul.list-group
+        - region.hosts.each do |host|
+          %li.list-group-item
+            %i.glyphicon.glyphicon-cloud>
+            \&nbsp;#{host.name} is #{host.healthy ? "healthy" : "unhealthy"}

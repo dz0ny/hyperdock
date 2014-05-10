@@ -1,0 +1,31 @@
+!!!
+%html
+  %head
+    %title Hyperdock
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  %body
+    %nav.navbar.navbar-inverse.navbar-static-top{:role => "navigation"}
+      .container
+        / Brand and toggle get grouped for better mobile display
+        .navbar-header
+          %button.navbar-toggle{"data-target" => "#bs-example-navbar-collapse-1", "data-toggle" => "collapse", :type => "button"}
+            %span.sr-only Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          %a.navbar-brand{:href => "/"} HyperDock
+        / Collect the nav links, forms, and other content for toggling
+        #bs-example-navbar-collapse-1.collapse.navbar-collapse
+          %ul.nav.navbar-nav
+            %li
+              %a{:href => "/home/status"} System Status
+          %ul.nav.navbar-nav.navbar-right
+            %li= link_to 'Login', new_user_session_path
+        / /.container-fluid
+    .container-fluid
+      = render partial: "shared/flash_messages", flash: flash
+      = yield
+      .footer
+        %p © HyperDock 2014

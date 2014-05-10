@@ -1,0 +1,12 @@
+%p
+  %strong Name:
+  = @image.name
+%p
+  %strong Description:
+  = @image.description
+%p
+  %strong Docker index:
+  = @image.docker_index
+= link_to 'Edit', edit_image_path(@image)
+|
+\#{link_to 'Back', images_path}

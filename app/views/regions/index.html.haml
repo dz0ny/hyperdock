@@ -1,0 +1,25 @@
+.row
+  .container-fluid
+    %h4.pull-left Regions
+    .pull-right
+      = link_to 'New Region', new_region_path, class: 'btn btn-primary btn-sm'
+%hr/
+.row
+  .container-fluid
+    %table.table.table-bordered.table-striped.tabled-condensed
+      %thead
+        %tr
+          %th Name
+          %th Healthy Hosts
+          %th Unhealthy Hosts
+          %th{:colspan => "2"}
+      %tbody
+        - @regions.each do |region|
+          %tr
+            %td
+              %i.glyphicon.glyphicon-globe>
+              \&nbsp;#{link_to region.name, region}
+            %td= region.healthy_hosts.count
+            %td= region.unhealthy_hosts.count
+            %td= link_to 'Edit', edit_region_path(region)
+            %td= link_to 'Destroy', region, method: :delete, data: { confirm: 'Are you sure?' }

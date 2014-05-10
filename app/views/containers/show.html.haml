@@ -1,0 +1,21 @@
+.row
+  .container-fluid
+    %h4.pull-left= @container.name
+    .pull-right
+      = link_to 'Edit', edit_container_path(@container), class: 'btn btn-primary btn-sm'
+      - if @container.status != 'started'
+        = link_to 'Start', start_container_path(@container), class: 'btn btn-success btn-sm'
+      - if @container.status == 'started'
+        = link_to 'Stop', stop_container_path(@container), class: 'btn btn-danger btn-sm'
+        = link_to 'Restart', restart_container_path(@container), class: 'btn btn-warning btn-sm'
+%hr/
+.row
+  .container-fluid
+    .panel.panel-default
+      .panel-heading Performance
+      .panel-body
+        %pre= @container.top
+    .panel.panel-default
+      .panel-heading Container Information
+      .panel-body
+        %pre= @container.info
