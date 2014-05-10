@@ -6,8 +6,8 @@ namespace :docker do
       bin/rake docker:setup host="198.199.112.194" password="awefawef"
   }
   task setup: :environment do
-    require 'host_provisioner'
-    hp = HostProvisioner.new(ENV['host'], ENV['password'])
+    require 'docker/host_provisioner'
+    hp = Docker::HostProvisioner.new(ENV['host'], ENV['password'])
     hp.provision!
     # stuff still left to do:
     # disable password auth

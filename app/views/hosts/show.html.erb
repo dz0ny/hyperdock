@@ -15,9 +15,13 @@
 <div class="row">
   <div class="container-fluid">
     <div class="panel panel-default">
-      <div class="panel-heading">Host Information</div>
+      <div class="panel-heading">Containers</div>
       <div class="panel-body">
-        <pre><%= @host.info %></pre>
+        <ul>
+          <% @host.remote_containers.each do |c| %>
+            <li><%= c %></li>
+          <% end %>
+        </ul>
       </div>
     </div>
   </div>

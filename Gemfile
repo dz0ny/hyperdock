@@ -4,6 +4,8 @@ gem 'pg', group: :production
 
 gem 'net-ssh'
 
+gem 'haml'
+gem "erb2haml", :group => :development
 gem "select2-rails"
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

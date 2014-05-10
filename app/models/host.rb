@@ -1,4 +1,4 @@
-require('docker')
+require 'docker/client'
 
 class Host < ActiveRecord::Base
   has_many :containers
@@ -12,7 +12,7 @@ class Host < ActiveRecord::Base
   validates :port, numericality: { only_integer: true, less_than_or_equal_to: 65535, greater_than: 0  }
 
   def info
-    JSON.pretty_generate(docker.info) rescue "None"
+    OpenStruct.new(get_info)
   end
 
   def docker_url
@@ -20,7 +20,7 @@ class Host < ActiveRecord::Base
   end
 
   def get_info
-    docker.info
+    @info ||= docker.info
   end
 
   def online?
@@ -36,7 +36,15 @@ class Host < ActiveRecord::Base
   end
 
   def docker
-    @docker ||= Docker.new(docker_url)
+    @client ||= Docker::Client.new(docker_url)
+  end
+
+  def remote_containers
+    docker.containers(all: true, size: true).map do |c|
+      rc = OpenStruct.new(c)
+      rc.hyperdock_container = Container.where(instance_id: c.Id).first rescue nil
+      rc
+    end
   end
 
   private
