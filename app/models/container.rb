@@ -31,18 +31,7 @@ class Container < ActiveRecord::Base
   end
 
   def start
-    if self.port_bindings
-      pb = %{{
-        "PortBindings": #{self.port_bindings} ,
-        "Dns": ["8.8.8.8"]
-      }}
-    else
-      pb = %{{
-        "PortBindings":{ #{self.image.port_bindings} },
-        "Dns": ["8.8.8.8"]
-      }}
-    end
-    self.host.docker.start(self.instance_id, pb)
+    self.host.docker.start(self.instance_id, config[:for_start])
     self.update(status: "started", port_bindings: self.get_port_bindings)
   end
 
@@ -57,8 +46,13 @@ class Container < ActiveRecord::Base
   end
 
   def config
-    { for_create: { Env: env_settings, Image: self.image.docker_index },
-      for_start: { } }
+    pb = self.port_bindings ? self.port_bindings : self.image.port_bindings
+    { for_create: {
+        Env: env_settings.map{|k,v| "#{k}=#{v}" },
+        Image: self.image.docker_index },
+      for_start: {
+        PortBindings: JSON.parse("{#{pb}}"),
+        Dns: ['8.8.8.8'] } }
   end
 
   private

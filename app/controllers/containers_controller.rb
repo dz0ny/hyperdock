@@ -53,6 +53,7 @@ class ContainersController < AdminController
 
   def start
     @container = Container.find(params[:id])
+    @container.start
     redirect_to @container, notice: "Container has been started"
   rescue => ex
     redirect_to @container, alert: "#{ex.class.to_s} #{ex.message}"

@@ -50,7 +50,7 @@ describe Container do
   describe "#start" do
     it "starts the remote instance and then fetches and persists the port bindings" do
       container.save
-      container.host.docker.should_receive(:start).with(container.instance_id, "{\n        \"PortBindings\":{  },\n        \"Dns\": [\"8.8.8.8\"]\n      }")
+      container.host.docker.should_receive(:start).with(container.instance_id, {:PortBindings=>{}, :Dns=>["8.8.8.8"]})
       container.stub(:get_port_bindings).and_return("random port")
       container.start
       container.port_bindings.should eq "random port"
