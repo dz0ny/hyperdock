@@ -59,7 +59,7 @@ class Docker
     uri = URI.join(base_uri, "/containers/create")
     req = Net::HTTP::Post.new(uri)
     req["Content-Type"] = "application/json"
-    req.body = container.creation_config
+    req.body = container.config.start
     http = Net::HTTP.new(uri.host, uri.port)
     response = http.request(req)
     JSON.parse response.body

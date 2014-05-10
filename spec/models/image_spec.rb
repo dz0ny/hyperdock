@@ -3,13 +3,7 @@ require 'spec_helper'
 describe Image do
   let(:image) { build(:image) }
 
-  #it "#docker_index must exist on the official docker index" do
-  #  image.docker_index = "invalid"
-  #  image.should_not be_valid
-
-  #  image.docker_index = "valid"
-  #  image.should be_valid
-  #end
+  it { should serialize(:env_defaults).as(Array) }
 
   describe "#format_port_bindings" do
     it "converts comma separated list of ports to initial docker PortBindings value" do
