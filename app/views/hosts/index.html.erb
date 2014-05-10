@@ -12,6 +12,7 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Healthy?</th>
           <th>Ip address</th>
           <th>Port</th>
           <th>Region</th>
@@ -23,6 +24,7 @@
         <% @hosts.each do |host| %>
           <tr>
             <td><i class="glyphicon glyphicon-cloud"/></i>&nbsp;<%= link_to host.name, host %></td>
+            <td><%= host.healthy ? "yes" : "no" %></td>
             <td><%= host.ip_address %></td>
             <td><%= host.port %></td>
             <td><%= host.region.name %></td>

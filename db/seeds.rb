@@ -24,7 +24,7 @@ else
   sf.hosts.create({
     name: "test.hyperdock.io",
     ip_address: "198.199.112.194",
-    port: "5422"
+    port: "5542"
   })
 end
 

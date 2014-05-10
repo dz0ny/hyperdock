@@ -19,6 +19,8 @@ class Docker
     http.read_timeout = 2
     res = http.get(uri.request_uri)
     JSON.parse(res.body)
+  rescue => ex
+    return nil
   end
 
   def inspect id

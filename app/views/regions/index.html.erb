@@ -12,6 +12,8 @@
       <thead>
         <tr>
           <th>Name</th>
+          <th>Healthy Hosts</th>
+          <th>Unhealthy Hosts</th>
           <th colspan="2"></th>
         </tr>
       </thead>
@@ -20,6 +22,8 @@
         <% @regions.each do |region| %>
           <tr>
             <td><i class="glyphicon glyphicon-globe"/></i>&nbsp;<%= link_to region.name, region %></td>
+            <td><%= region.healthy_hosts.count %></td>
+            <td><%= region.unhealthy_hosts.count %></td>
             <td><%= link_to 'Edit', edit_region_path(region) %></td>
             <td><%= link_to 'Destroy', region, method: :delete, data: { confirm: 'Are you sure?' } %></td>
           </tr>
