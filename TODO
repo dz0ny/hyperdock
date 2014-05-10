@@ -18,6 +18,11 @@
   - hosts/index - disk usage vs max
   - hosts/show - disk, cpu, ram, processes on host
 
+* Public Status Page
+  - need to expose a host attribute: online?
+  - need stats system to modify this attribute based on health findings
+  - need view to use this attribute and not actually do its own health check on render
+
 * Autoscaler
   - we just CAN'T resize disks without downtime
   - we CAN check container size and display it to user
