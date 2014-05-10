@@ -23,18 +23,26 @@
         %ul
           - @host.remote_containers.each do |c|
             %li
-              %p
-                - if c.hyperdock_container
-                  %b= c.hyperdock_container.name
-                - else
+              - if c.proxy
+                %p
+                  Name: 
+                  %b= link_to c.proxy.name, container_path(c.proxy)
+                %p
+                  Owner:
+                  = link_to c.proxy.user.email, rails_admin.show_path(model_name: 'user', id: c.proxy.user.id)
+                %p
+                  Status:
+                  = c.proxy.status.capitalize
+              - else
+                %p
                   %i(title="Zombie containers are those on the host for which no object exists in Hyperdock") Zombie!
                   = link_to 'Discard', "/hosts/#{@host.id}/zombie/#{c.Id}/discard"
+                %p
+                  Status:
+                  = c.Status =~ /Exited/ ? c.Status : "Unknown"
               %p
                 Command:
                 = c.Command
-              %p
-                Status:
-                = c.Status =~ /Exited/ ? c.Status : "Unknown"
               %p
                 Image:
                 = c.Image
