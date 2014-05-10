@@ -16,7 +16,7 @@ describe Provisioner do
   end
 
   it "sets a status" do
-    container.status.should eq "pending"
+    container.status.should_not eq "created"
     worker.perform(container.id)
     container.reload.status.should eq "created"
   end
