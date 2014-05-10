@@ -10,8 +10,38 @@
 .row
   .container-fluid
     .panel.panel-default
+      .panel-heading Usage
+      .panel-body
+        %ul
+          %li Current Disk ...
+          %li Current CPU ...
+          %li Current RAM ...
+
+    .panel.panel-default
       .panel-heading Containers
       .panel-body
         %ul
           - @host.remote_containers.each do |c|
-            %li= c
+            %li
+              %p
+                - if c.hyperdock_container
+                  %b= c.hyperdock_container.name
+                - else
+                  %i(title="Zombie containers are those on the host for which no object exists in Hyperdock") Zombie!
+                  = link_to 'Reclaim', "/hosts/#{@host.id}/zombie/#{c.Id}/reclaim"
+                  = link_to 'Discard', "/hosts/#{@host.id}/zombie/#{c.Id}/discard"
+              %p
+                Command:
+                = c.Command
+              %p
+                Status:
+                = c.Status =~ /Exited/ ? c.Status : "Unknown"
+              %p
+                Image:
+                = c.Image
+              %p(title="SizeRootFs is the total size of all the files in the container, in bytes. If you were to export the filesystem of the container as a tarball, it would be about that size.")
+                SizeRootFs:
+                = c.SizeRw 
+              %p(title="SizeRw is the size of the files which have been created or changed, if you compare the container to its base image. Just after creation, this should be zero; as you modify (or create) files, this will increase.")
+                SizeRw:
+                = c.SizeRw 
