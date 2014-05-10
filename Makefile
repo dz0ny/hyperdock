@@ -5,6 +5,6 @@ deploy:
 	git push production master
 
 reset:
-	bin/rake db:reset
-	bin/rake db:reset RAILS_ENV=test
+	bin/rake db:drop db:migrate db:seed
+	bin/rake db:drop db:migrate db:seed RAILS_ENV=test
 	redis-cli flushall
