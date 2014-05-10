@@ -1,6 +1,3 @@
-* Configuring environment variables, etc
-  - determine a way to pass in config data like env vars into a container from the new container menu.
-
 * install statsd on prod w/ supervisor
   - add statsd agent to hosts (collectd)
   - use https://github.com/collectd/collectd to ship host-level data to statsd
