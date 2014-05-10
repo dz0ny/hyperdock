@@ -6,7 +6,7 @@ class Provisioner
       logger.info chunk
       # http://mycatwantstolearnrails.blogspot.com/2013/04/rails-faye-sidekiq-redis.html
     end
-    res = container.host.docker.create(container)
+    res = container.host.docker.create(container, container.config[:for_create])
     logger.info res
     if warning = res["Warnings"]
       logger.warn warning

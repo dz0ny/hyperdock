@@ -57,11 +57,11 @@ class Docker
     end
   end
 
-  def create container
+  def create container, config
     uri = URI.join(base_uri, "/containers/create")
     req = Net::HTTP::Post.new(uri)
     req["Content-Type"] = "application/json"
-    req.body = container.config.start
+    req.body = default_creation_config.merge(config).to_json
     http = Net::HTTP.new(uri.host, uri.port)
     response = http.request(req)
     JSON.parse response.body
@@ -72,7 +72,7 @@ class Docker
     uri = URI.join(base_uri, "/containers/#{id}/start")
     req = Net::HTTP::Post.new(uri)
     req["Content-Type"] = "application/json"
-    req.body = config
+    req.body = default_start_config.merge(config).to_json
     http = Net::HTTP.new(uri.host, uri.port)
     response = http.request(req)
     response.body
@@ -105,7 +105,7 @@ class Docker
     response.body
   end
 
-  def self.default_creation_config
+  def default_creation_config
     {
       Hostname: '',
       User: '',
@@ -128,7 +128,7 @@ class Docker
     }
   end
 
-  def self.default_start_config
+  def default_start_config
     {
       Binds: [],
       LxcConf: {},

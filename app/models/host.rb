@@ -27,9 +27,9 @@ class Host < ActiveRecord::Base
     info = self.get_info
     if self.persisted?
       if info && info.has_key?("Containers")
-        self.update_column(:healthy, true)
+        self.update(healthy: true)
       else
-        self.update_column(:healthy, false)
+        self.update(healthy: false)
       end
     end
     self.healthy

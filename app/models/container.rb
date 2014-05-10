@@ -4,11 +4,15 @@ class Container < ActiveRecord::Base
   belongs_to :image
   belongs_to :user
 
+  serialize :env_settings, Hash
+
   before_destroy :delete_from_docker
 
   before_save :select_host
 
   validates :name, presence: true
+  validates :region, presence: true
+  validates :image, presence: true
 
   def get_info
     self.host.docker.inspect self.instance_id
@@ -53,12 +57,8 @@ class Container < ActiveRecord::Base
   end
 
   def config
-    Module.new do
-      def self.start
-      end
-      def self.create
-      end
-    end
+    { for_create: { Env: env_settings, Image: self.image.docker_index },
+      for_start: { } }
   end
 
   private

@@ -1,3 +1,4 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://coffeescript.org/
+App.ready ->
+  $('#container_image_id').on 'change', ->
+    $("#env_settings").html $(".image_env_form[data-image-id=#{$(@).val()}]").html()
+

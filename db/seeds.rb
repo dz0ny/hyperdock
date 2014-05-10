@@ -57,11 +57,11 @@ Image.create({
   description: "SQL Database",
   docker_index: "orchardup/docker-postgresql",
   port_bindings: "5432",
-  env_defaults: [
+  env_defaults: {
     POSTGRESQL_USER: "my_user",
     POSTGRESQL_PASS: "my_password",
     POSTGRESQL_DB: "my_database"
-  ]
+  }
 })
 
 Image.create({
@@ -69,9 +69,9 @@ Image.create({
   description: "IRC Bouncer",
   docker_index: "hyperdock/znc",
   port_bindings: "36660",
-  env_defaults: [
+  env_defaults: {
     ZNC_USER: "my_admin",
     ZNC_PASS: "my_password"
-  ]
+  }
 })
 

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Image do
   let(:image) { build(:image) }
 
-  it { should serialize(:env_defaults).as(Array) }
+  it { should serialize(:env_defaults).as(Hash) }
 
   describe "#format_port_bindings" do
     it "converts comma separated list of ports to initial docker PortBindings value" do

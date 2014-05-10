@@ -9,7 +9,11 @@ Rails.application.routes.draw do
 
   root to: 'home#index'
 
-  resources :hosts
+  resources :hosts do
+    member do
+      get :healthcheck
+    end
+  end
 
   resources :containers do
     member do 

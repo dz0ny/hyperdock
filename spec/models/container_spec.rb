@@ -9,6 +9,8 @@ describe Container do
   it { should belong_to :image }
   it { should belong_to :user }
 
+  it { should serialize(:env_settings).as(Hash) }
+
   describe "factory" do
     subject { container }
     it { should be_valid }   
@@ -58,7 +60,7 @@ describe Container do
 
   describe "#config" do
     subject { container.config }
-    it { should respond_to :start }
-    it { should respond_to :create }
+    it { should have_key :for_start }
+    it { should have_key :for_create }
   end
 end

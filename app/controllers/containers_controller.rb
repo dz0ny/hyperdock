@@ -1,5 +1,6 @@
 class ContainersController < AdminController
   before_action :set_container, only: [:show, :edit, :update, :destroy]
+  before_action :set_form_requirements, only: [:new, :edit, :create]
   
   # GET /containers
   # GET /containers.json
@@ -14,7 +15,9 @@ class ContainersController < AdminController
 
   # GET /containers/new
   def new
-    @container = Container.new
+    if @regions.empty?
+      redirect_to :back, alert: "We have reached our capacity! We will notify you as soon as we have provisioned additional resources! Thank you!"
+    end
   end
 
   # GET /containers/1/edit
@@ -101,6 +104,16 @@ class ContainersController < AdminController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def container_params
-      params.require(:container).permit(:image_id, :region_id, :status, :name)
+      params.require(:container).permit(:image_id, :region_id, :status, :name, env_settings: image_env.keys)
+    end
+
+    def image_env
+      Image.find(params[:container][:image_id]).env_defaults rescue {}
+    end
+
+    def set_form_requirements
+      @regions = Region.all_available
+      @images = Image.all
+      @container = Container.new
     end
 end

@@ -17,24 +17,6 @@ describe Host do
     subject.info.should eq "None"
   end
 
-  describe "#online?" do
-    describe "#get_info fails to produce expected output" do
-      before(:each) do
-        stub_get_info host, success: false
-        host.get_info.should_not have_key "Containers"
-      end
-      specify { host.online?.should be_false }
-    end
-
-    describe "#get_info produces expected output" do
-      before(:each) do
-        stub_get_info host, success: true
-        host.get_info.should have_key "Containers"
-      end
-      specify { host.online?.should be_true }
-    end
-  end
-
   it "is valid if #get_info has key containers" do
     stub_get_info host
     host.get_info.should have_key "Containers"

@@ -1,5 +1,5 @@
 class HostsController < AdminController
-  before_action :set_host, only: [:show, :edit, :update, :destroy]
+  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck]
 
   # GET /hosts
   # GET /hosts.json
@@ -58,6 +58,15 @@ class HostsController < AdminController
     respond_to do |format|
       format.html { redirect_to hosts_url, notice: 'Host was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def healthcheck
+    if @host.online?
+      flash[:success] = "#{@host.name} is healthy"
+      redirect_to :back
+    else
+      redirect_to :back, alert: "#{@host.name} is unhealthy"
     end
   end
 
