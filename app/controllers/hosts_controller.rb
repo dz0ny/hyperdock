@@ -1,5 +1,5 @@
 class HostsController < AdminController
-  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck]
+  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container]
 
   # GET /hosts
   # GET /hosts.json
@@ -68,6 +68,15 @@ class HostsController < AdminController
     else
       redirect_to :back, alert: "#{@host.name} is unhealthy"
     end
+  end
+
+  def discard_zombie_container
+    @host.docker.rm params[:instance_id]  
+    flash[:success] = "Discarded zombie."
+  rescue
+    flash[:error] = "Failed to discard zombie!"
+  ensure
+    redirect_to :back
   end
 
   private

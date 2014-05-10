@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :hosts do
     member do
       get :healthcheck
+      get 'zombie/:instance_id/discard', action: :discard_zombie_container
     end
   end
 

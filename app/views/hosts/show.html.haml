@@ -28,7 +28,6 @@
                   %b= c.hyperdock_container.name
                 - else
                   %i(title="Zombie containers are those on the host for which no object exists in Hyperdock") Zombie!
-                  = link_to 'Reclaim', "/hosts/#{@host.id}/zombie/#{c.Id}/reclaim"
                   = link_to 'Discard', "/hosts/#{@host.id}/zombie/#{c.Id}/discard"
               %p
                 Command:
