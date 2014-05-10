@@ -52,6 +52,15 @@ class Container < ActiveRecord::Base
     self.update(status: "started")
   end
 
+  def config
+    Module.new do
+      def self.start
+      end
+      def self.create
+      end
+    end
+  end
+
   private
 
   def select_host

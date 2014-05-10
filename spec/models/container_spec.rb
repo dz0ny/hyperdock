@@ -55,4 +55,10 @@ describe Container do
       container.status.should eq "started"
     end
   end
+
+  describe "#config" do
+    subject { container.config }
+    it { should respond_to :start }
+    it { should respond_to :create }
+  end
 end
