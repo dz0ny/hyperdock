@@ -1,3 +1,7 @@
+* Port bindings should work with spaces too (so you can just copy EXPOSE line)
+* Port bindings needs to be migrated to a text field, i just hit varchar 255 limit on https://index.docker.io/u/blalor/influxdb/
+
+
 * install statsd on prod w/ supervisor
   - add statsd agent to hosts (collectd)
   - use https://github.com/collectd/collectd to ship host-level data to statsd
