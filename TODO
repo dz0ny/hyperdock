@@ -1,18 +1,40 @@
-Monitoring: Found something that seems to be much better
-  http://sensuapp.org/docs/0.12/guide
-  Following this guide...
+This list is not exactly in order of importance (Several non-important items have been added to the top).
+See STATUS for information on what is being worked on at the current moment. When that is cleared, TODO is used.
 
-* install statsd on prod w/ supervisor
-  - add statsd agent to hosts (collectd)
-  - use https://github.com/collectd/collectd to ship host-level data to statsd
-    - https://collectd.org/wiki/index.php/Plugin:StatsD
-    - cpu memory disk network
-  - use this as a guide for how to name stuff coming in from statsd agents http://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/
-  - use console backend
-  - feed data to http://influxdb.org/
-    - http://influxdb.org/docs/api/http.html
-    - https://github.com/FGRibreau/influxdb-cli
-    - github.com/damm/docker-influxdb
+* Volume mounting
+  - some docker images require may configuration after gaining knowledge of the port #
+    - e.g. some influxdb ones were hardcoded, but that was my error. with this one i was able to connect
+      also at this point i noticed i can enter host/port https://index.docker.io/u/blalor/influxdb/
+  - we can't edit the files on the actual container without having a volume mount
+  - we don't want to slipstream an ssh daemon
+  - http://pyd.io/ & http://ace.c9.io/
+  - Implementation Requirements:
+    - Image needs to define director(ies) that should show up in the "root"
+    - These directories are mounted in /var/hyperdock/containers/id/(path)
+    - A docker container must be created with software that that serves as an endpoint for ace and pyd
+    - it must mount /var/hyperdock/
+
+* Need to display container logs, especially if users can edit certain configs
+
+* Need to show creation status
+
+* Monitoring:
+  - Integrate Sensu
+  - Install guide: http://sensuapp.org/docs/0.12/guide
+  - Application-level stuff I want to track:
+      each time a container was added:
+        - which image, which user
+      each time a container was removed: 
+        - which container, which image, which user
+  - Container-level stuff:
+    - Which containers are using the most
+      - storage
+      - memory
+      - cpu
+    - Which users have the most resource-intensive containers
+  - Host-level stuff
+    See below
+  
 
 * Display metrics and allow upgrades which will assist in scaling
   - containers/show - disk usage & disk upper limit (upgradable -- may require user-scheduleable downtime thru a form with a date picker)
@@ -37,6 +59,11 @@ Monitoring: Found something that seems to be much better
   - we CAN set runtime constraints: http://docs.docker.io/reference/run/#runtime-constraints-on-cpu-and-memory
 
 * https://en.wikipedia.org/wiki/Beowulf_cluster
+
+* Virtual Firewall
+  - By default, firewall is disabled
+  - Firewall can be enabled which blocks all hosts onto container's exposed ports
+  - a textfield allows adding ip addresses, whitelisting them in the firewall
 
 * Polish
   - email signup form

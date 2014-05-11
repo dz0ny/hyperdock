@@ -1,0 +1,4 @@
+influxdb is looking good (installed as a docker image in dev, working) waiting on sensu to continue with this
+sensu is looking good (research results are positive, have yet to install) check links in TODO to pick up on this
+we want to get sensu and influxdb working well, use this https://github.com/lusis/sensu_influxdb_handler
+we cannot use highcharts due to licensing issues, so we will be using https://github.com/masayuki0812/c3 instead
