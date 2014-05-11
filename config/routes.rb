@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :regions
 
   root to: 'home#index'
-  get '/status' => 'home#status'
+  get '/status' => 'home#status', as: :status
 
   resources :hosts do
     member do

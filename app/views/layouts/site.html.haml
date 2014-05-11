@@ -20,7 +20,7 @@
         #bs-example-navbar-collapse-1.collapse.navbar-collapse
           %ul.nav.navbar-nav
             %li
-              %a{:href => "/home/status"} System Status
+              = link_to 'System Status', status_path
           %ul.nav.navbar-nav.navbar-right
             %li= link_to 'Login', new_user_session_path
         / /.container-fluid
