@@ -24,7 +24,11 @@
             %td
               %i.glyphicon.glyphicon-hdd>
               \&nbsp;#{link_to container.name, container}
-            %td= container.image.name
+            %td
+              - if container.image
+                = container.image.name
+              - else
+                %i Image Not Found
             %td= container.host.name
             %td= container.region.name
             %td= container.host.ip_address
