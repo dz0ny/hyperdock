@@ -1,18 +1,17 @@
 
 Rails.application.routes.draw do
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
-  get 'home/index'
-  get 'home/status'
-
   devise_for :users
   resources :regions
 
   root to: 'home#index'
+  get '/status' => 'home#status'
 
   resources :hosts do
     member do
       get :healthcheck
       get 'zombie/:instance_id/discard', action: :discard_zombie_container
+      get 'zombie/:instance_id/reclaim', action: :reclaim_zombie_container
     end
   end
 

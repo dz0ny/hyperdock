@@ -10,6 +10,6 @@ describe Host do
   end
 
   it "#docker returns a Docker object" do
-    subject.docker.should be_a Docker
+    subject.docker.should be_a Docker::Client
   end
 end

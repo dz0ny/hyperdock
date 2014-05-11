@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'docker'
+require 'docker/client'
 
-describe Docker do
+describe Docker::Client do
   let(:container) { create(:container) }
   let(:api) { container.host.docker }
 end

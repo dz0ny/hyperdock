@@ -1,5 +1,5 @@
 class HostsController < AdminController
-  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container]
+  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container]
 
   # GET /hosts
   # GET /hosts.json
@@ -70,13 +70,33 @@ class HostsController < AdminController
     end
   end
 
+  def reclaim_zombie_container
+    c = OpenStruct.new @host.docker.inspect params[:instance_id]  
+    container = current_user.containers.build({
+      instance_id: c.ID,
+      host: @host,
+      region: @host.region,
+      image: Image.where(docker_index: c.Config["Image"]).first,
+      env_settings: Hash[c.Config["Env"].map {|pair| pair.split('=') }],
+      port_bindings: c.NetworkSettings["Ports"].to_json,
+      status: c.State["Running"] ? "started" : "stopped",
+      name: "Reclaimed Container!"
+    })
+    if container.save
+      flash[:success] = "Container reclaimed successfully!"
+    else
+      flash[:alert] = "Failed to reclaim container. #{container.errors.full_messages}"
+    end
+    redirect_to @host
+  end
+
   def discard_zombie_container
     @host.docker.rm params[:instance_id]  
     flash[:success] = "Discarded zombie."
   rescue
     flash[:error] = "Failed to discard zombie!"
   ensure
-    redirect_to :back
+    redirect_to @host
   end
 
   private

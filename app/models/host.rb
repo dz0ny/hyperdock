@@ -42,6 +42,7 @@ class Host < ActiveRecord::Base
   def remote_containers
     docker.containers(all: true, size: true).map do |c|
       rc = OpenStruct.new(c)
+      rc.image = Image.where(docker_index: rc.Image.split(':').first) rescue nil
       rc.proxy = self.containers.where(instance_id: rc.Id).first if rc.Id
       rc
     end

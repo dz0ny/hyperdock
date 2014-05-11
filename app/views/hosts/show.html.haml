@@ -33,10 +33,22 @@
                 %p
                   Status:
                   = c.proxy.status.capitalize
+                %p
+                  Image:
+                  - if c.image
+                    = link_to c.image.name, image_path(c.image)
+                  - else
+                    %i(title="This image does not exist in the database")
+                      = c.Image
               - else
                 %p
                   %i(title="Zombie containers are those on the host for which no object exists in Hyperdock") Zombie!
                   = link_to 'Discard', "/hosts/#{@host.id}/zombie/#{c.Id}/discard"
+                  - if c.image
+                    = link_to 'Reclaim', "/hosts/#{@host.id}/zombie/#{c.Id}/reclaim"
+                  - else
+                    %i(title="Image must exist in order to reclaim container")
+                      Cannot reclaim
                 %p
                   Status:
                   = c.Status =~ /Exited/ ? c.Status : "Unknown"

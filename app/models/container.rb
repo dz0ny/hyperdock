@@ -58,8 +58,10 @@ class Container < ActiveRecord::Base
   private
 
   def select_host
-    # TODO: select most optimal host
-    self.host = self.region.hosts.last
+    unless self.host
+      # TODO: select most optimal host
+      self.host = self.region.hosts.last
+    end
   end
 
   def delete_from_docker
@@ -67,7 +69,7 @@ class Container < ActiveRecord::Base
       self.stop
       self.host.docker.rm self.instance_id
     end
-  rescue Docker::InvalidInstanceIdError
+  rescue Docker::Client::InvalidInstanceIdError
     # The container was never created
   end
 end

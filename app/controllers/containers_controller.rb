@@ -1,6 +1,7 @@
-class ContainersController < AdminController
-  before_action :set_container, only: [:show, :edit, :update, :destroy]
+class ContainersController < ApplicationController
+  before_action :set_container, only: [:show, :edit, :update, :destroy, :stop, :restart]
   before_action :set_form_requirements, only: [:new, :edit, :create]
+  before_filter :authenticate_user!
   
   # GET /containers
   # GET /containers.json
@@ -18,6 +19,7 @@ class ContainersController < AdminController
     if @regions.empty?
       redirect_to :back, alert: "We have reached our capacity! We will notify you as soon as we have provisioned additional resources! Thank you!"
     end
+    @container = Container.new
   end
 
   # GET /containers/1/edit
@@ -60,13 +62,11 @@ class ContainersController < AdminController
   end
 
   def stop
-    @container = Container.find(params[:id])
     @container.stop
     redirect_to @container
   end
 
   def restart 
-    @container = Container.find(params[:id])
     @container.restart
     redirect_to @container
   end
@@ -100,7 +100,7 @@ class ContainersController < AdminController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_container
-      @container = Container.find(params[:id])
+      @container = current_user.containers.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
@@ -115,6 +115,5 @@ class ContainersController < AdminController
     def set_form_requirements
       @regions = Region.all_available
       @images = Image.all
-      @container = Container.new
     end
 end

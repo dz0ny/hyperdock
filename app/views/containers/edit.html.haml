@@ -1,7 +1,21 @@
 %h1 Editing container
 
-%p
-  File editor goes here
+.row
+  .container-fluid
+    = form_for @container, html: {class: 'form-horizontal'} do |f|
+      - if @container.errors.any?
+        #error_explanation
+          %h2
+            = pluralize(@container.errors.count, "error")
+            prohibited this container from being saved:
+          %ul
+            - @container.errors.full_messages.each do |message|
+              %li= message
+      .form-group.col-lg-12
+        = f.label :name
+        = f.text_field :name, class: 'form-control input-lg'
+      .form-group.col-lg-12
+        = f.submit 'Submit', class: 'btn btn-success pull-right'
 
 = link_to 'Show', @container
 |
