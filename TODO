@@ -51,4 +51,16 @@
 
 * Container file editing
 
-* Ability to commit a container (thus producing an Image, this is a docker feature) which is then tied to your user so as to become available in your Images list.
+* Private Images (see below use cases)
+
+* Mobile Strategy
+  * Ability to upload a Dockerfile as a private image (let's find out what's best for customers)
+
+  * expose an API to spin up and spin down hyperdock containers
+
+  * An iOS library that implements the Hyperdock API
+    - the idea behind this is to allow mobile developers to easily outsource backend complexity for their customers to us
+    - e.g. iOS app offers in-app purchase for a hosted service, that uses hyperdock's api, etc.
+
+* Ability to commit a container (thus producing an Image, this is a docker feature) which is then tied to your user so as to become available in your Images list as a private image.
+  - In essence this is a "Snapshot" and can be classified and labelled as such.
