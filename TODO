@@ -1,6 +1,6 @@
-* Port bindings should work with spaces too (so you can just copy EXPOSE line)
-* Port bindings needs to be migrated to a text field, i just hit varchar 255 limit on https://index.docker.io/u/blalor/influxdb/
-
+Monitoring: Found something that seems to be much better
+  http://sensuapp.org/docs/0.12/guide
+  Following this guide...
 
 * install statsd on prod w/ supervisor
   - add statsd agent to hosts (collectd)

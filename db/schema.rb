@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140510090932) do
+ActiveRecord::Schema.define(version: 20140511081130) do
 
   create_table "containers", force: true do |t|
     t.integer  "image_id"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 20140510090932) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "instance_id"
-    t.string   "port_bindings"
+    t.text     "port_bindings", limit: 255
     t.string   "name"
     t.integer  "host_id"
     t.integer  "region_id"
@@ -50,8 +50,8 @@ ActiveRecord::Schema.define(version: 20140510090932) do
     t.string   "docker_index"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "port_bindings"
-    t.string   "volumes"
+    t.text     "port_bindings",  limit: 255
+    t.text     "volumes",        limit: 255
     t.boolean  "shared_volumes"
     t.text     "env_defaults"
   end
