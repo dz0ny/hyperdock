@@ -26,6 +26,11 @@ else
     ip_address: "198.199.112.194",
     port: "5542"
   })
+  sf.hosts.create({
+    name: "boot2docker",
+    ip_address: "192.168.33.10",
+    port: "4243"
+  })
 end
 
 ##
