@@ -8,12 +8,9 @@ def format_env env
   %{-e #{env.map{|e| "\"#{e}\"" }.join(' -e ')}}
 end
 
-def boot2docker config
-    #conf.vm.box_url = "https://github.com/mitchellh/boot2docker-vagrant-box/releases/download/v0.8.0/boot2docker_virtualbox.box"
-    #conf.vm.box = "mitchellh/boot2docker"
-    config.vm.box_url = "https://github.com/YungSang/boot2docker-vagrant-box/releases/download/yungsang%2Fv0.9.0/boot2docker-virtualbox.box"
-    config.vm.box = "yungsang/boot2docker"
-    # config.vm.synced_folder ".", "/vagrant", type: "nfs"
+def boot2docker conf
+  conf.vm.box_url = "https://github.com/mitchellh/boot2docker-vagrant-box/releases/download/v0.8.0/boot2docker_virtualbox.box"
+  conf.vm.box = "mitchellh/boot2docker"
 end
 
 def precise64 conf
@@ -23,16 +20,17 @@ end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.define "db" do |db|
-    precise64 db
+    boot2docker db
     db.vm.synced_folder ".", "/vagrant", disabled: true
     db.vm.network "private_network", ip: "192.168.33.10"
-    db.vm.provision 'docker' do |d|
-      d.pull_images 'orchardup/postgresql'
-      env = [ 'POSTGRESQL_USER=hyperdock',
-              'POSTGRESQL_PASS=hyperdock',
-              'POSTGRESQL_DB=hyperdock_production' ]
-      d.run 'orchardup/postgresql', args: format_env(env)
-    end
+    db.vm.network "forwarded_port", guest: 5432, host: 5432
+    env = [ 'POSTGRESQL_USER=hyperdock',
+            'POSTGRESQL_PASS=hyperdock',
+            'POSTGRESQL_DB=hyperdock' ]
+    db.vm.provision 'shell', inline: <<-EOF
+      docker pull orchardup/postgresql
+      docker run #{format_env(env)} -d -p 5432:5432 -t orchardup/postgresql
+    EOF
   end
 
   config.vm.define "redis" do |redis|
