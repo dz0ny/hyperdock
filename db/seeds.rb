@@ -60,7 +60,7 @@ end
 Image.create({
   name: "PostgreSQL",
   description: "SQL Database",
-  docker_index: "orchardup/docker-postgresql",
+  docker_index: "orchardup/postgresql",
   port_bindings: "5432",
   env_defaults: {
     POSTGRESQL_USER: "my_user",
