@@ -18,6 +18,9 @@ See STATUS for information on what is being worked on at the current moment. Whe
 
 * Need to show creation status
 
+* Log routing:
+  - https://github.com/progrium/logspout
+
 * Monitoring:
   - Integrate Sensu
   - Install guide: http://sensuapp.org/docs/0.12/guide
