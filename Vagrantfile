@@ -4,8 +4,10 @@
 # Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
 VAGRANTFILE_API_VERSION = "2"
 
+##
+# Docker env array formatter
 def format_env env
-  %{-e #{env.map{|e| "\"#{e}\"" }.join(' -e ')}}
+  env.map{|e| "\"#{e}\"" }.join(' -e ')
 end
 
 def boot2docker conf
@@ -13,38 +15,34 @@ def boot2docker conf
   conf.vm.box = "mitchellh/boot2docker"
 end
 
-def precise64 conf
-  conf.vm.box_url = "http://files.vagrantup.com/precise64.box"
-  conf.vm.box = "precise64"
-end
-
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.define "db" do |db|
+
+  ##
+  # Provide a Data VM to house redis and postgresql containers
+  # TODO: create a custom redis container that allows setting AUTH value
+  config.vm.define "data" do |db|
     boot2docker db
     db.vm.synced_folder ".", "/vagrant", disabled: true
     db.vm.network "private_network", ip: "192.168.33.10"
-    db.vm.network "forwarded_port", guest: 5432, host: 5432
-    env = [ 'POSTGRESQL_USER=hyperdock',
-            'POSTGRESQL_PASS=hyperdock',
-            'POSTGRESQL_DB=hyperdock' ]
+    env = format_env([ 'POSTGRESQL_USER=hyperdock',
+                       'POSTGRESQL_PASS=hyperdock',
+                       'POSTGRESQL_DB=hyperdock' ])
     db.vm.provision 'shell', inline: <<-EOF
+      docker pull dockerfile/redis
+      docker run           -d -p 6379:6379 -t dockerfile/redis
       docker pull orchardup/postgresql
-      docker run #{format_env(env)} -d -p 5432:5432 -t orchardup/postgresql
+      docker run -e #{env} -d -p 5432:5432 -t orchardup/postgresql
     EOF
   end
 
-  config.vm.define "redis" do |redis|
-    boot2docker redis
-    redis.vm.network "private_network", ip: "192.168.33.11"
-    redis.vm.provision 'docker' do |d|
-      d.pull_images 'dockerfile/redis'
-      d.run 'dockerfile/redis'
-    end
-  end
-
+  ## 
+  # Provide a Web VM to house nginx container and unicorn workers
+  # TODO add unicorn
   config.vm.define "web" do |web|
     boot2docker web
-    web.vm.network "forwarded_port", guest: 80, host: 3000
+    web.vm.network :forwarded_port, guest: 4243, host: 4244
+    web.vm.network "forwarded_port", guest: 80, host: 3080
+    web.vm.network "forwarded_port", guest: 443, host: 3443
     web.vm.network "private_network", ip: "192.168.33.12"
     web.vm.provision 'docker' do |d|
       env = [ 'SUPERVISOR_PROGRAM=app-unicorn',
@@ -52,9 +50,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
               'POSTGRESQL_IP=192.168.33.10',
               'POSTGRESQL_USER=hyperdock',
               'POSTGRESQL_PASS=hyperdock',
-              'POSTGRESQL_DB=hyperdock_production' ]
-      d.build_image "/vagrant/app"
-      d.run "hyperdock", args: format_env(env)
+              'POSTGRESQL_DB=hyperdock' ]
+    web.vm.provision 'shell', inline: <<-EOF
+      docker pull dockerfile/nginx
+      docker run           -d -p 80:80 -p 443:443 -v /vagrant/config/nginx:/etc/nginx/sites-enabled -v /vagrant/log/nginx.log:/var/log/nginx -t dockerfile/nginx
+    EOF
     end
   end
 
