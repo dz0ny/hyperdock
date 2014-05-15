@@ -21,7 +21,7 @@ test:
   database: db/test.sqlite3
 
 production:
-  host: <%= ENV["POSTGRESQL_IP"] %>
+  host: <%= ENV["PG_PORT_5432_TCP_ADDR"] || ENV["PG_IP"] || "127.0.0.1" %>
   adapter: postgresql
   encoding: unicode
   database: <%= ENV["POSTGRESQL_DB"] %>
