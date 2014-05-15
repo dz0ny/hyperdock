@@ -4,4 +4,4 @@ ADD Gemfile /apps/rails/Gemfile
 ADD Gemfile.lock /apps/rails/Gemfile.lock
 ENV NOKOGIRI_USE_SYSTEM_LIBRARIES 1
 RUN bundle install --deployment --without development test
-ADD . /apps/rails
+RUN erb config/database.yml.erb > config/database.yml
