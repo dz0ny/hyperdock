@@ -10,9 +10,12 @@ def format_env env
   env.map{|e| "\"#{e}\"" }.join(' -e ')
 end
 
+##
+# A boot2docker base box that supports shared folders
+# and auto-corrects port collections of docker hosts (perfect)
 def boot2docker conf
-  conf.vm.box_url = "https://github.com/mitchellh/boot2docker-vagrant-box/releases/download/v0.8.0/boot2docker_virtualbox.box"
-  conf.vm.box = "mitchellh/boot2docker"
+  conf.vm.box_url = "https://vagrantcloud.com/dduportal/boot2docker/version/4/provider/virtualbox.box"
+  conf.vm.box = "dduportal/boot2docker"
 end
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
@@ -22,7 +25,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # TODO: create a custom redis container that allows setting AUTH value
   config.vm.define "data" do |db|
     boot2docker db
-    db.vm.synced_folder ".", "/vagrant", disabled: true
     db.vm.network "private_network", ip: "192.168.33.10"
     env = format_env([ 'POSTGRESQL_USER=hyperdock',
                        'POSTGRESQL_PASS=hyperdock',
@@ -40,7 +42,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # TODO add unicorn
   config.vm.define "web" do |web|
     boot2docker web
-    web.vm.network :forwarded_port, guest: 4243, host: 4244
     web.vm.network "forwarded_port", guest: 80, host: 3080
     web.vm.network "forwarded_port", guest: 443, host: 3443
     web.vm.network "private_network", ip: "192.168.33.12"
@@ -69,8 +70,12 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     end
   end
 
-  config.vm.define "docker1" do |d|
+  ##
+  # Region Pool #1
+  # Docker Host #1
+  config.vm.define "r1h1" do |d|
     boot2docker d
+    d.vm.network "forwarded_port", guest: 4243, host: 10001
     d.vm.network "private_network", ip: "192.168.33.20"
   end
 end
