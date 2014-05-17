@@ -17,7 +17,7 @@ class SshWrapper
   end
 
   def err msg
-    $stderr.puts "[#{self.class.to_s} ERR] "+msg
+    $stderr.puts "[#{self.class.to_s} ERR]: "+msg
   end
 
   def connect
