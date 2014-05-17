@@ -1,4 +1,5 @@
 require 'net/ssh'
+require 'net/scp'
 
 class SshWrapper
   attr_accessor :ssh
@@ -57,5 +58,9 @@ class SshWrapper
       end
       channel.wait
     end
+  end
+
+  def upload local, remote
+    Net::SCP.upload!(@host, @user, local, remote, :ssh => { :password => @password })
   end
 end
