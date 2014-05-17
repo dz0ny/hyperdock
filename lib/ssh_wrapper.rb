@@ -60,7 +60,8 @@ class SshWrapper
     end
   end
 
-  def upload local, remote
-    Net::SCP.upload!(@host, @user, local, remote, :ssh => { :password => @password })
+  def remote_write remote_path, content
+    ssh.exec! "cat > #{remote_path} << EOF\n#{content}\nEOF\n"
+    log "Wrote #{content.length} bytes to #{@host}:#{remote_path}"
   end
 end
