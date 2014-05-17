@@ -1,6 +1,6 @@
 namespace :docker do
   desc %{
-    Setup or check a Ubuntu 12.04 LTS host with Docker
+    Setup or check a Ubuntu LTS host with Docker
 
     Usage:
       bin/rake docker:setup host="198.199.112.194" password="awefawef"

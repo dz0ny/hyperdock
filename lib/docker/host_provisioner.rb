@@ -9,7 +9,7 @@ module Docker
     def provision!
       log "Connecting over SSH"
       connect do
-        if ubuntu_1204?
+        if ubuntu_lts?
           if kernel_upgraded?
             if command_missing?('docker')
               install_docker!
@@ -42,8 +42,8 @@ module Docker
       exit(0)
     end
 
-    def ubuntu_1204?
-      ssh.exec!('lsb_release -rs') =~ /12.04/
+    def ubuntu_lts?
+      ssh.exec!('lsb_release -rs') =~ /1(2|4).04/
     end
 
     def kernel_upgraded?
