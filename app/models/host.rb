@@ -1,7 +1,7 @@
 require 'docker/client'
 
 class Host < ActiveRecord::Base
-  has_many :containers
+  has_many :containers, dependent: :destroy
   belongs_to :region
 
   after_save :update_region
