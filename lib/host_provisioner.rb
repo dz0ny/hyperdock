@@ -1,9 +1,12 @@
 require 'ssh_wrapper'
+require 'hyperdock/sensu'
 
 class HostProvisioner < SshWrapper
   PORT = 5542
   DOCKER_HOST = "0.0.0.0:#{PORT}"
   DOCKER_OPTS = "-H #{DOCKER_HOST}"
+
+  include Hyperdock::Sensu
 
   def provision!
     log "Connecting over SSH"
@@ -22,9 +25,9 @@ class HostProvisioner < SshWrapper
           upgrade_kernel!
           install_docker!
         end
-        wait_for_docker
+        wait_for_docker { use_sensu! }
       else
-        err "This is not an Ubuntu 12.04 server! Cannot continue."
+        err "This is not an Ubuntu LTS server! Cannot continue."
         exit(2)
       end
     end
@@ -38,7 +41,7 @@ class HostProvisioner < SshWrapper
       sleep 1
     end
     log "Docker remote API is listening on #{@host}:#{PORT}"
-    exit(0)
+    yield if block_given?
   end
 
   def ubuntu_lts?
