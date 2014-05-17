@@ -12,16 +12,13 @@ class HostProvisioner < SshWrapper
     log "Connecting over SSH"
     connect do
       if ubuntu_lts?
-        if kernel_upgraded?
+        if ubuntu_1404? || kernel_upgraded?
           if command_missing?('docker')
             install_docker!
-          else
-            if docker_listening?
-            else
-              configure_docker!
-            end
+          elsif ! docker_listening?
+            configure_docker!
           end
-        else
+        elsif ubuntu_1204?
           upgrade_kernel!
           install_docker!
         end
