@@ -1,23 +1,14 @@
+require 'hyperdock/sensu_setup_common'
+
 module Hyperdock
   module SensuSetup
-    INSTALL_SCRIPT = <<-EOF
-      wget -q http://repos.sensuapp.org/apt/pubkey.gpg -O- | sudo apt-key add -
-      echo "deb     http://repos.sensuapp.org/apt sensu main" > /etc/apt/sources.list.d/sensu.list
-      apt-get update
-      export DEBIAN_FRONTEND=noninteractive
-      apt-get install -y sensu
-    EOF
-    SSL_KEY = Rails.root.join('config/sensu/client/ssl/key.pem')
-    SSL_CERT = Rails.root.join('config/sensu/client/ssl/cert.pem')
-    RABBIT_CONF = Rails.root.join('config/sensu/client/conf.d/rabbitmq.json')
-    CLIENT_CONF = Rails.root.join('config/sensu/client.json')
+    include SensuSetupCommon
+    DIR = SENSU_CONFIG_DIR.join('client')
+    SSL_KEY = DIR.join('/ssl/key.pem')
+    SSL_CERT = DIR.join('ssl/cert.pem')
+    RABBIT_CONF = DIR.join('conf.d/rabbitmq.json')
+    CLIENT_CONF = SENSU_CONFIG_DIR.join('client.json')
 
-    ##
-    # this is called once we are sure docker is installed
-    # similar to the docker provisoning, we want to be able to run this
-    # at any time -- on a fresh box, partially setup box, or a complete box
-    # to install, continue installing, or cleanly upgrade the monitoring system
-    # -- at this point we are still connected by SSH as well
     def use_sensu!
       if package_installed? "sensu"
         configure_sensu_client!
