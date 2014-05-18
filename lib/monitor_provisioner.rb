@@ -2,7 +2,7 @@ require 'ssh_wrapper'
 require 'hyperdock/sensu_monitor_setup'
 
 class MonitorProvisioner < SshWrapper
-  include Hyperdock::SensuSetup
+  include Hyperdock::SensuMonitorSetup
 
   def provision!
     start do
