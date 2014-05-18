@@ -295,6 +295,7 @@ DEPENDENCIES
   haml
   jbuilder (~> 2.0)
   jquery-rails
+  net-scp
   net-ssh
   pg
   pry-rails

@@ -1,9 +1,10 @@
 require 'net/ssh'
 require 'net/scp'
 require "resolv"
+require 'tempfile'
 
 class SshWrapper
-  attr_accessor :ssh
+  attr_accessor :ssh, :scp
   NAME_PATTERN = /^[a-zA-Z0-9][a-zA-Z\-\_0-9]*[a-zA-Z0-9]$/
 
   def initialize ip, user="root", password, name
@@ -24,11 +25,11 @@ class SshWrapper
   protected
 
   def log msg
-    $stdout.puts "[#{self.class.to_s} LOG]: "+msg.strip
+    $stdout.puts "[#{self.class.to_s} LOG]: "+msg.to_s.strip
   end
 
   def err msg
-    $stderr.puts "[#{self.class.to_s} ERR]: "+msg.strip
+    $stderr.puts "[#{self.class.to_s} ERR]: "+msg.to_s.strip
   end
 
   def connect
@@ -36,6 +37,7 @@ class SshWrapper
       Net::SSH.start(@host, 'root', password: ENV['password']) do |ssh|
         log "Connected to #{@name}"
         @ssh = ssh
+        @scp = Net::SCP.new(@ssh)
         yield
       end
     rescue Net::SSH::HostKeyMismatch => ex
@@ -72,7 +74,14 @@ class SshWrapper
   end
 
   def remote_write remote_path, content
-    ssh.exec! "cat > #{remote_path} << EOF\n#{content}\nEOF\n"
-    log "Wrote #{content.length} bytes to #{@host}:#{remote_path}"
+    file = Tempfile.new('remote_write')
+    begin
+      file.write content
+      file.close
+      scp.upload! file.path, remote_path
+      log "Wrote #{content.length} bytes to #{@host}:#{remote_path}"
+    ensure
+      file.unlink
+    end
   end
 end

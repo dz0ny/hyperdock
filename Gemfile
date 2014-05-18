@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'pg', group: :production
 
 gem 'net-ssh'
+gem 'net-scp'
 
 gem 'haml'
 gem "erb2haml", :group => :development
