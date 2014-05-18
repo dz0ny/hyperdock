@@ -40,18 +40,12 @@ module Hyperdock
     end
 
     def configure_docker!
+      ssh.exec!('service docker stop')
+      remote_write '/etc/default/docker', %{DOCKER_OPTS="#{DOCKER_OPTS}"}
+      ssh.exec!('ufw disable')
       script = %{
-          cat /etc/init/docker.conf | sed 's/DOCKER_OPTS=/DOCKER_OPTS="#{DOCKER_OPTS}"/' > /root/docker.conf
-          cat /root/docker.conf > /etc/init/docker.conf
-          rm /root/docker.conf
-
-          mkdir -p /var/hyperdock/volumes
-
-          ufw disable
-
-          echo 'export DOCKER_HOST="#{DOCKER_HOST}"' > /root/.bashrc
-
-          service docker restart && sleep 1
+      echo 'export DOCKER_HOST="#{DOCKER_HOST}"' > /root/.bashrc
+      service docker start
       }
       log "Reconfiguring Docker to start with options #{DOCKER_OPTS}"
       stream_exec(script)
