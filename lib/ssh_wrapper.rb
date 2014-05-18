@@ -205,28 +205,28 @@ class SshWrapper
     end
   end
 
-  def execute_batch cmd, instance
+  def execute_batch cmd
     if cmd.respond_to? :call
-      instance.instance_eval &cmd 
+      instance_eval &cmd 
     elsif cmd.is_a? Hash
-      execute_scripts_hash cmd, instance
+      execute_scripts_hash cmd
     elsif cmd.is_a? Array
-      execute_scripts_array cmd, instance
+      execute_scripts_array cmd
     else
       log ssh.exec!(cmd)
     end
   end
 
-  def execute_scripts_array scripts_array, instance
+  def execute_scripts_array scripts_array
     scripts_array.each do |cmd|
-      execute_batch cmd, instance
+      execute_batch cmd
     end
   end
 
-  def execute_scripts_hash scripts_hash, instance
+  def execute_scripts_hash scripts_hash
     scripts_hash.each do |desc, cmd|
       log desc.to_s if desc.to_s.length > 0
-      execute_batch cmd, instance
+      execute_batch cmd
     end
   end
 end

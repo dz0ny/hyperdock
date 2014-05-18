@@ -51,7 +51,7 @@ module Hyperdock
 
     def setup_rabbitmq
       if package_installed? "rabbitmq-server"
-        execute_scripts_hash RABBITMQ_CONFIG_STEPS, self
+        execute_batch RABBITMQ_CONFIG_STEPS
       else
         log "Installing rabbitmq-server"
         stream_exec(RABBITMQ_INSTALL_SCRIPT) { setup_rabbitmq }
