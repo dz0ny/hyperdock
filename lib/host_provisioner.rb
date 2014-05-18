@@ -1,11 +1,13 @@
 require 'ssh_wrapper'
 require 'hyperdock/sensu_setup'
 require 'hyperdock/docker_setup'
+require 'hyperdock/logstash_forwarder_setup'
 require 'hyperdock/provisioner_helpers'
 
 class HostProvisioner < SshWrapper
   include Hyperdock::SensuSetup
   include Hyperdock::DockerSetup
+  include Hyperdock::LogstashForwarderSetup
   include Hyperdock::ProvisionerHelpers
 
   def provision!
@@ -22,7 +24,10 @@ class HostProvisioner < SshWrapper
           upgrade_kernel!
           install_docker!
         end
-        wait_for_docker { use_sensu! }
+        wait_for_docker do
+          use_sensu!
+          use_logstash_forwarder!
+        end
       else
         err "This is not an Ubuntu LTS server! Cannot continue."
         exit(2)
