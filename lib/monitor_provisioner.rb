@@ -5,9 +5,9 @@ class MonitorProvisioner < SshWrapper
   include Hyperdock::SensuMonitorSetup
 
   def provision!
-    start do
-      #needs_package 'wget'
-      #unless package_installed? "influxdb
+    start( version: '14.04' ) do
+      use_sensu!
     end
   end
+
 end
