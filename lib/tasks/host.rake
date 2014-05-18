@@ -16,14 +16,14 @@ namespace :host do
     hp = HostProvisioner.new(ENV['ip'], ENV['password'], ENV['name'])
     hp.provision!
     # what it does:
+    # * disable ssh password auth
+    # * insert a public key for future connections
     # * installs docker on a fresh ubuntu LTS host
     # * configures docker to listen on port 5542
     # * install sensu client
     # * configure sensu client
     #
-    # what it doesn't do (yet):
-    # * disable ssh password auth
-    # * insert a public key for future connections
+    # what it doesn't do:
     # * add host to the database
   end
 end
