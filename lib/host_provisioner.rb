@@ -11,26 +11,20 @@ class HostProvisioner < SshWrapper
   include Hyperdock::ProvisionerHelpers
 
   def provision!
-    log "Connecting over SSH"
-    connect do
-      if ubuntu_lts?
-        if ubuntu_1404? || kernel_upgraded?
-          if command_missing?('docker')
-            install_docker!
-          elsif ! docker_listening?
-            configure_docker!
-          end
-        elsif ubuntu_1204?
-          upgrade_kernel!
+    provisioner do
+      if ubuntu_1404? || kernel_upgraded?
+        if command_missing?('docker')
           install_docker!
+        elsif ! docker_listening?
+          configure_docker!
         end
-        wait_for_docker do
-          use_sensu!
-          use_logstash_forwarder!
-        end
-      else
-        err "This is not an Ubuntu LTS server! Cannot continue."
-        exit(2)
+      elsif ubuntu_1204?
+        upgrade_kernel!
+        install_docker!
+      end
+      wait_for_docker do
+        use_sensu!
+        use_logstash_forwarder!
       end
     end
   end

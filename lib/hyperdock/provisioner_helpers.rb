@@ -1,5 +1,16 @@
 module Hyperdock
   module ProvisionerHelpers
+    def provisioner
+      connect do
+        if ubuntu_lts?
+          yield
+        else
+          err "This is not an Ubuntu LTS server! Cannot continue."
+          exit(2)
+        end
+      end
+    end
+
     def ubuntu_lts?
       ssh.exec!('lsb_release -rs') =~ /1(2|4).04/
     end

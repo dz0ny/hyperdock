@@ -43,6 +43,7 @@ class SshWrapper
   end
 
   def connect
+    log "Connecting over SSH"
     begin
       Net::SSH.start(@host, 'root', password: ENV['password']) do |ssh|
         log "Connected to #{@name}"
