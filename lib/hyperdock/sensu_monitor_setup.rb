@@ -1,5 +1,5 @@
 module Hyperdock
-  module SensuSetup
+  module SensuMonitorSetup
     INSTALL_SCRIPT = <<-EOF
       wget -q http://repos.sensuapp.org/apt/pubkey.gpg -O- | sudo apt-key add -
       echo "deb     http://repos.sensuapp.org/apt sensu main" > /etc/apt/sources.list.d/sensu.list
