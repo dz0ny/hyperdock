@@ -4,6 +4,9 @@ namespace :host do
 
     Usage:
       bin/rake host:provision name="ny-02" ip="162.243.85.251" password="gpexurxttorr"
+      bin/rake host:provision name="ny-01" ip="162.243.161.151" password="vshwpkubhvqz"
+      bin/rake host:provision name="sf-01" ip="107.170.249.184" password="bzcwfgknqdcy"
+      bin/rake host:provision name="am-01" ip="188.226.227.62" password="vuemvozgsplx"
   }
   task provision: :environment do
     require 'host_provisioner'
