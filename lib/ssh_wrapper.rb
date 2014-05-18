@@ -107,12 +107,8 @@ class SshWrapper
     rescue Net::SSH::AuthenticationFailed
       err "Passwordless login failed. Attempting to login with password"
       begin
-        generate_keypair unless PRIVATE_KEY.exist?
-        Net::SSH.start(@host, 'root', password: ENV['password']) do |ssh|
-          connected ssh
-          ssh.exec!("mkdir ~/.ssh")
-          remote_append "~/.ssh/authorized_keys", PUBLIC_KEY.read
-        end
+        configure_passwordless_login
+        sleep 1
         retry
       rescue Net::SSH::AuthenticationFailed
         err "Incorrect password. Giving up."
@@ -180,6 +176,19 @@ class SshWrapper
     else
       log "Generated private key #{PRIVATE_KEY}"
       log "Generated public key #{PUBLIC_KEY}"
+    end
+  end
+
+  def configure_passwordless_login
+    generate_keypair unless PRIVATE_KEY.exist?
+    Net::SSH.start(@host, 'root', password: ENV['password']) do |ssh|
+      connected ssh
+      ssh.exec!("mkdir ~/.ssh")
+      remote_append "~/.ssh/authorized_keys", PUBLIC_KEY.read
+      log "Disabling future password authentication attempts"
+      remote_append "/etc/ssh/sshd_config", "PasswordAuthentication no"
+      ssh.exec!("service ssh restart")
+      log "Restarting ssh..."
     end
   end
 end
