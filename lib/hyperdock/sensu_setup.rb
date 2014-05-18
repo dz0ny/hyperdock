@@ -7,8 +7,10 @@ module Hyperdock
       export DEBIAN_FRONTEND=noninteractive
       apt-get install -y sensu
     EOF
-    SSL_KEY = Rails.root.join('config/sensu/client_keypair/key.pem').to_s
-    SSL_CERT = Rails.root.join('config/sensu/client_keypair/cert.pem').to_s
+    SSL_KEY = Rails.root.join('config/sensu/client/ssl/key.pem').to_s
+    SSL_CERT = Rails.root.join('config/sensu/client/ssl/cert.pem').to_s
+    RABBIT_CONF = Rails.root.join('config/sensu/client/conf.d/rabbitmq.json').to_s
+    CLIENT_CONF = Rails.root.join('config/sensu/client.json').to_s
 
     ##
     # this is called once we are sure docker is installed
@@ -32,24 +34,30 @@ module Hyperdock
     end
 
     def configure_sensu!
-      if sensu_client_certs_installed?
-
-      else
-        log "SSL keypair not found: /etc/sensu/ssl/key.pem /etc/sensu/ssl/cert.pem"
-        install_sensu_client_certs!
-      end
-      # Check version, check configuration, make changed if warranted.
-      #
-      # check version
-      # check configuration
+      write_sensu_client_certs!
+      write_rabbit_config!
+      write_client_config!
+    end
+    
+    def write_rabbit_config!
+      conf = JSON.parse File.read(RABBIT_CONF)
+      # change stuff as needed via conf["rabbitmq"] ... e.g. insert password via envvars
+      conf = JSON.pretty_generate(conf)
+      remote_write '/etc/sensu/conf.d/rabbitmq.json', conf
     end
 
-    def install_sensu_client_certs!
-      log "Creating SSL keypair directory /etc/sensu/ssl"
+    def write_client_config!
+      conf = JSON.parse File.read(CLIENT_CONF)
+      conf["client"]["name"] = @name
+      conf["client"]["address"] = @host
+      conf = JSON.pretty_generate(conf)
+      remote_write '/etc/sensu/conf.d/client.json', conf
+    end
+
+    def write_sensu_client_certs!
       ssh.exec!("rm -rf /etc/sensu/ssl ; mkdir -p /etc/sensu/ssl")
-      log "Transferring SSL keypair (config/sensu/client_keypair)"
-      upload(SSL_KEY, '/etc/sensu/ssl/key.pem')
-      upload(SSL_CERT, '/etc/sensu/ssl/cert.pem')
+      remote_write '/etc/sensu/ssl/key.pem', File.read(SSL_KEY)
+      remote_write '/etc/sensu/ssl/cert.pem', File.read(SSL_CERT)
     end
 
     def sensu_client_certs_installed?
