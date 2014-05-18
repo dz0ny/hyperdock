@@ -29,10 +29,19 @@ class SshWrapper
     end
   end
 
-  def start
+  def start options
     connect do
       if ubuntu_lts?
-        yield
+        if v = options[:version]
+          if ubuntu_version_matches?(v)
+            yield
+          else
+            err "Requires Ubuntu #{v}!"
+            exit(2)
+          end
+        else
+          yield
+        end
       else
         err "This is not an Ubuntu LTS server! Cannot continue."
         exit(2)
@@ -45,11 +54,15 @@ class SshWrapper
   end
 
   def ubuntu_1204?
-    ssh.exec!('lsb_release -rs') =~ /12.04/
+    ubuntu_version_matches? "12.04"
   end
 
   def ubuntu_1404?
-    ssh.exec!('lsb_release -rs') =~ /14.04/
+    ubuntu_version_matches? "14.04"
+  end
+
+  def ubuntu_version_matches? str
+    ssh.exec!('lsb_release -rs') =~ /#{str}/
   end
 
   def package_installed? name
