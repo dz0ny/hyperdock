@@ -20,7 +20,7 @@ module Hyperdock
     # -- at this point we are still connected by SSH as well
     def use_sensu!
       if package_installed? "sensu"
-        configure_sensu!
+        configure_sensu_client!
       else
         install_sensu!
       end
@@ -29,14 +29,15 @@ module Hyperdock
     def install_sensu!
       log "Installing sensu (client)"
       stream_exec(INSTALL_SCRIPT) do
-        configure_sensu!
+        configure_sensu_client!
       end
     end
 
-    def configure_sensu!
+    def configure_sensu_client!
       write_sensu_client_certs!
       write_rabbit_config!
       write_client_config!
+
     end
     
     def write_rabbit_config!
