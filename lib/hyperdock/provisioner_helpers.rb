@@ -20,5 +20,16 @@ module Hyperdock
     def command_missing? cmd
       !ssh.exec!(%{hash #{cmd} 2>&1 /dev/null || echo "MISSING"}).nil?
     end
+
+    def file_exists? remote_path
+      !!!ssh.exec!("stat #{remote_path}").match(/No such file or directory/)
+    end
+
+    def needs_package pkg
+      unless package_installed? pkg
+        log "Installing package: #{pkg}"
+        ssh.exec!("DEBIAN_FRONTEND=noninteractive apt-get install -y #{pkg}")
+      end
+    end
   end
 end
