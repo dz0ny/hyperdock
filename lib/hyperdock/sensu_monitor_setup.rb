@@ -13,7 +13,7 @@ module Hyperdock
       export DEBIAN_FRONTEND=noninteractive
       apt-get install rabbitmq-server
     EOF
-    RABBITMQ_POSTINSTALL_SCRIPT = {
+    RABBITMQ_CONFIG_STEPS = {
       "Creating SSL directory on RabbitMQ server" => "mkdir -p /etc/rabbitmq/ssl",
       "Copying generated SSL files for RabbitMQ server" => %{
         cp /tmp/ssl_certs/sensu_ca/cacert.pem /etc/rabbitmq/ssl
@@ -22,7 +22,15 @@ module Hyperdock
       },
       "Configuring RabbitMQ SSL Listener" => ->(k){
         scp.upload! MONITOR_DIR.join('rabbitmq/rabbitmq.config').to_s, "/etc/rabbitmq/rabbitmq.config"
-      }
+      },
+      "Restarting RabbitMQ ... " => "/etc/init.d/rabbitmq-server restart",
+      "Modifying user permissions" => [
+        "rabbitmqctl delete_user guest",
+        "rabbitmqctl delete_user sensu",
+        "rabbitmqctl add_vhost /sensu",
+        "rabbitmqctl add_user sensu mypass",
+        %{rabbitmqctl set_permissions -p /sensu sensu ".*" ".*" ".*"}
+      ]
     }
 
     def use_sensu!
@@ -43,7 +51,7 @@ module Hyperdock
 
     def setup_rabbitmq
       if package_installed? "rabbitmq-server"
-        execute_scripts_hash RABBITMQ_POSTINSTALL_SCRIPT, self
+        execute_scripts_hash RABBITMQ_CONFIG_STEPS, self
       else
         log "Installing rabbitmq-server"
         stream_exec(RABBITMQ_INSTALL_SCRIPT) { setup_rabbitmq }
