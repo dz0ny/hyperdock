@@ -38,6 +38,13 @@ module Hyperdock
       write_rabbit_config!
       write_client_config!
       use_sensu_embedded_ruby!
+      enable_sensu_client!
+    end
+
+    def enable_sensu_client!
+      log ssh.exec!("update-rc.d sensu-client defaults")
+      log ssh.exec!("/etc/init.d/sensu-client stop")
+      log ssh.exec!("/etc/init.d/sensu-client start")
     end
 
     def use_sensu_embedded_ruby!
