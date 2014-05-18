@@ -2,16 +2,14 @@ require 'ssh_wrapper'
 require 'hyperdock/sensu_setup'
 require 'hyperdock/docker_setup'
 require 'hyperdock/logstash_forwarder_setup'
-require 'hyperdock/provisioner_helpers'
 
 class HostProvisioner < SshWrapper
   include Hyperdock::SensuSetup
   include Hyperdock::DockerSetup
   include Hyperdock::LogstashForwarderSetup
-  include Hyperdock::ProvisionerHelpers
 
   def provision!
-    provisioner do
+    start do
       if ubuntu_1404? || kernel_upgraded?
         if command_missing?('docker')
           install_docker!
