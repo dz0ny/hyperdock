@@ -16,10 +16,6 @@ module Hyperdock
     SSL_CERT = Rails.root.join('config/logstash/ssl/cert.pem')
     LOGSTASH_CONF = Rails.root.join('config/logstash/config.rb')
 
-    LOGSTASH_SERVERS = [
-      "monitor.hyperdock.io:5043"
-    ]
-
     def use_logstash_forwarder!
       if logstash_forwarder_installed?
         configure_logstash_forwarder!
@@ -52,7 +48,8 @@ module Hyperdock
 
     def write_logstash_forwarder_config!
       conf = JSON.parse(LOGSTASH_CONF.readlines.reject{|l| l.strip.match(/^\#/) }.join)
-      conf["network"]["servers"] = LOGSTASH_SERVERS
+      # make changes here if you want
+      # e.g. conf["network"]["servers"] << ALT_LOGSTASH_SERVER
       remote_write '/etc/logstash-forwarder', JSON.pretty_generate(conf)
     end
 

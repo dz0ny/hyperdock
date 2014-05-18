@@ -4,7 +4,7 @@
     # A list of downstream servers listening for our messages.
     # logstash-forwarder will pick one at random and only switch if
     # the selected one appears to be dead or unresponsive
-    "servers": [ "localhost:5043" ],
+    "servers": [ "monitor.hyperdock.io:5043" ],
 
     # The path to your client ssl certificate (optional)
     "ssl certificate": "/opt/logstash-forwarder/ssl/cert.pem",
@@ -44,9 +44,16 @@
       "fields": { "type": "stdin" }
     }, {
       "paths": [
-        "/var/log/apache/httpd-*.log"
+        # Collect logs for the docker daemon
+        "/var/log/upstart/docker.log"
       ],
-      "fields": { "type": "apache" }
+      "fields": { "type": "docker-upstart" }
+    }, {
+      "paths": [
+        # Collect logs for each docker container
+        "/var/lib/docker/containers/*/*-json.log"
+      ],
+      "fields": { "type": "docker-container-json" }
     }
   ]
 }
