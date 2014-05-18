@@ -1,6 +1,9 @@
 This list is not exactly in order of importance (Several non-important items have been added to the top).
 See STATUS for information on what is being worked on at the current moment. When that is cleared, TODO is used.
 
+* Container Migration
+  - i want to migrate ny-01 to ny-02 and then rebuild all 01 hosts with the new scripts
+
 * Volume mounting
   - some docker images require may configuration after gaining knowledge of the port #
     - e.g. some influxdb ones were hardcoded, but that was my error. with this one i was able to connect
