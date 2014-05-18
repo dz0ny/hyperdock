@@ -204,4 +204,15 @@ class SshWrapper
       log "Restarting ssh..."
     end
   end
+
+  def execute_scripts_hash scripts_hash, instance
+    scripts_hash.each do |desc, cmd|
+      log desc
+      if cmd.respond_to? :call
+        instance.instance_eval &cmd 
+      else
+        log ssh.exec!(cmd)
+      end
+    end
+  end
 end
