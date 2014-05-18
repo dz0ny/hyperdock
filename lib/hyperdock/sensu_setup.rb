@@ -7,10 +7,10 @@ module Hyperdock
       export DEBIAN_FRONTEND=noninteractive
       apt-get install -y sensu
     EOF
-    SSL_KEY = Rails.root.join('config/sensu/client/ssl/key.pem').to_s
-    SSL_CERT = Rails.root.join('config/sensu/client/ssl/cert.pem').to_s
-    RABBIT_CONF = Rails.root.join('config/sensu/client/conf.d/rabbitmq.json').to_s
-    CLIENT_CONF = Rails.root.join('config/sensu/client.json').to_s
+    SSL_KEY = Rails.root.join('config/sensu/client/ssl/key.pem')
+    SSL_CERT = Rails.root.join('config/sensu/client/ssl/cert.pem')
+    RABBIT_CONF = Rails.root.join('config/sensu/client/conf.d/rabbitmq.json')
+    CLIENT_CONF = Rails.root.join('config/sensu/client.json')
 
     ##
     # this is called once we are sure docker is installed
@@ -52,14 +52,14 @@ module Hyperdock
     end
     
     def write_rabbit_config!
-      conf = JSON.parse File.read(RABBIT_CONF)
+      conf = JSON.parse RABBIT_CONF.read
       # change stuff as needed via conf["rabbitmq"] ... e.g. insert password via envvars
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/rabbitmq.json', conf
     end
 
     def write_client_config!
-      conf = JSON.parse File.read(CLIENT_CONF)
+      conf = JSON.parse CLIENT_CONF.read
       conf["client"]["name"] = @name
       conf["client"]["address"] = @host
       conf = JSON.pretty_generate(conf)
@@ -68,8 +68,8 @@ module Hyperdock
 
     def write_sensu_client_certs!
       ssh.exec!("rm -rf /etc/sensu/ssl ; mkdir -p /etc/sensu/ssl")
-      remote_write '/etc/sensu/ssl/key.pem', File.read(SSL_KEY)
-      remote_write '/etc/sensu/ssl/cert.pem', File.read(SSL_CERT)
+      scp.upload! SSL_KEY.to_s, '/etc/sensu/ssl/key.pem'
+      scp.upload! SSL_CERT.to_s, '/etc/sensu/ssl/cert.pem'
     end
 
     def sensu_client_certs_installed?
