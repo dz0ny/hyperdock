@@ -27,22 +27,18 @@ module Hyperdock
 
     def use_sensu!
       if package_installed? "sensu"
-        configure_sensu_monitor!
+        reconfigure!
       else
-        install_sensu!
+        log "Installing sensu (monitor)"
+        stream_exec(INSTALL_SCRIPT) do
+          configure_sensu_monitor!
+        end
       end
     end
 
-    def configure_sensu_monitor!
+    def reconfigure!
       generate_new_certificates
       setup_rabbitmq
-    end
-
-    def install_sensu!
-      log "Installing sensu (monitor)"
-      stream_exec(INSTALL_SCRIPT) do
-        configure_sensu_monitor!
-      end
     end
 
     def setup_rabbitmq
