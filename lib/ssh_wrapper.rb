@@ -2,6 +2,12 @@ require 'net/ssh'
 require 'net/scp'
 require "resolv"
 require 'tempfile'
+require 'term/ansicolor'
+
+class String
+  include Term::ANSIColor
+end
+
 
 class SshWrapper
   attr_accessor :ssh, :scp
@@ -25,11 +31,15 @@ class SshWrapper
   protected
 
   def log msg
-    $stdout.puts "[#{self.class.to_s} LOG]: "+msg.to_s.strip
+    msg.to_s.split("\n").each do |line|
+      $stdout.puts "[#{@user}@#{@host}]: #{line}".green
+    end
   end
 
   def err msg
-    $stderr.puts "[#{self.class.to_s} ERR]: "+msg.to_s.strip
+    msg.to_s.split("\n").each do |line|
+      $stdout.puts "[#{@user}@#{@host}]: #{line}".red
+    end
   end
 
   def connect

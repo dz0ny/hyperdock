@@ -42,7 +42,7 @@ module Hyperdock
     end
 
     def enable_sensu_client!
-      log ssh.exec!("chown -R sensu:sensu /etc/sensu")
+      ssh.exec!("chown -R sensu:sensu /etc/sensu")
       log ssh.exec!("update-rc.d sensu-client defaults")
       log ssh.exec!("/etc/init.d/sensu-client stop")
       log ssh.exec!("/etc/init.d/sensu-client start")
