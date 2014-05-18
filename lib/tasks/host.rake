@@ -2,6 +2,9 @@ namespace :host do
   desc %{
     Setup or check a Ubuntu LTS host with Docker
 
+    Please ensure that you've already provisioned the monitor and that
+    all required services are listening on host monitor.hyperdock.io
+
     Usage:
       bin/rake host:provision name="ny-02" ip="162.243.85.251" password="gpexurxttorr"
       bin/rake host:provision name="ny-01" ip="162.243.161.151" password="vshwpkubhvqz"
