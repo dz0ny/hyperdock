@@ -37,7 +37,11 @@ module Hyperdock
       write_sensu_client_certs!
       write_rabbit_config!
       write_client_config!
+      use_sensu_embedded_ruby!
+    end
 
+    def use_sensu_embedded_ruby!
+      remote_write '/etc/default/sensu', "EMBEDDED_RUBY=true"
     end
     
     def write_rabbit_config!
