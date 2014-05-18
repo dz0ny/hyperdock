@@ -24,11 +24,11 @@ class SshWrapper
   protected
 
   def log msg
-    $stdout.puts "[#{self.class.to_s} LOG]: "+msg
+    $stdout.puts "[#{self.class.to_s} LOG]: "+msg.strip
   end
 
   def err msg
-    $stderr.puts "[#{self.class.to_s} ERR]: "+msg
+    $stderr.puts "[#{self.class.to_s} ERR]: "+msg.strip
   end
 
   def connect
