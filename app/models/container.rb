@@ -51,7 +51,7 @@ class Container < ActiveRecord::Base
         Env: env_settings.map{|k,v| "#{k}=#{v}" },
         Image: self.image.docker_index },
       for_start: {
-        PortBindings: JSON.parse("{#{pb}}"),
+        PortBindings: JSON.parse(pb[0] == "{" ? pb : "{#{pb}}")),
         Dns: ['8.8.8.8'] } }
   end
 
