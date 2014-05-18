@@ -1,5 +1,6 @@
 https://www.kernel.org/doc/Documentation/cgroups/
 http://blog.docker.io/2013/10/gathering-lxc-docker-containers-metrics/
+http://michael.bouvy.net/blog/en/2013/12/06/use-lumberjack-logstash-forwarder-to-forward-logs-logstash/
 
 setting up vagrant to model a sane production multi-machine deploy
 need to add dotenv
