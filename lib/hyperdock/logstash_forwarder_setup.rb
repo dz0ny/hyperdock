@@ -5,10 +5,17 @@ module Hyperdock
       rm -rf /opt/logstash-forwarder
       rm -f /etc/logstash-forwarder
       rm -f /etc/init.d/logstash-forwarder
+      rm -rf /opt/go /opt/go*
+      rm -rf /usr/local/go
       cd /opt
+
+      wget https://storage.googleapis.com/golang/go1.2.2.linux-amd64.tar.gz 2>/dev/null
+      tar -zxvf go1.2.2.linux-amd64.tar.gz 1>/dev/null
+      ln -s /opt/go /usr/local/go
+
       git clone https://github.com/elasticsearch/logstash-forwarder.git
       cd logstash-forwarder
-      go build
+      /opt/go/bin/go build
       mkdir bin
       mv logstash-forwarder bin
     EOF
@@ -25,7 +32,6 @@ module Hyperdock
     end
 
     def install_logstash_forwarder!
-      needs_package 'golang'
       needs_package 'git'
       stream_exec(INSTALL_SCRIPT) do
         configure_logstash_forwarder!
