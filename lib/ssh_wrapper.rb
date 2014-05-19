@@ -11,10 +11,13 @@ end
 class SshWrapper
   attr_accessor :ssh, :scp
   NAME_PATTERN = /^[a-zA-Z0-9][a-zA-Z\-\_0-9]*[a-zA-Z0-9]$/
-  SSH_PRIVATE_KEY = Rails.root.join("config/ssh_keypair/id_rsa")
-  SSH_PUBLIC_KEY = Rails.root.join("config/ssh_keypair/id_rsa.pub")
+  SSH_PRIVATE_KEY = Rails.root.join("config/ssh/id_rsa")
+  SSH_PUBLIC_KEY = Rails.root.join("config/ssh/id_rsa.pub")
+  SSH_KNOWN_HOSTS_FILE = Rails.root.join("config/ssh/known_hosts")
 
   def initialize ip, user="root", password, name
+    ssh_dir = Rails.root.join("config/ssh")
+    FileUtils.mkdir ssh_dir unless ssh_dir.exist?
     if ip =~ Resolv::IPv4::Regex
       @host = ip
     else
@@ -119,7 +122,8 @@ class SshWrapper
   def connect
     begin
       log "Attempting password-less login"
-      Net::SSH.start(@host, 'root', keys: [SSH_PRIVATE_KEY.to_s]) do |ssh|
+      Net::SSH.start(@host, 'root', { keys: [SSH_PRIVATE_KEY.to_s], keys_only: true, timeout: 5000,
+                                      user_known_hosts_file: SSH_KNOWN_HOSTS_FILE.to_s }) do |ssh|
         connected ssh
         yield
       end
@@ -193,13 +197,13 @@ class SshWrapper
 
   def generate_keypair
     log "Generating local keypair"
-    log system(%{ssh-keygen -t rsa -f #{SSH_PRIVATE_KEY} -N ""})
+    system(%{ssh-keygen -t rsa -f #{SSH_PRIVATE_KEY} -N ""})
     unless SSH_PRIVATE_KEY.exist? 
       err "Failed to generate keypair"
       exit(2)
     else
-      log "Generated private key #{SSH_PRIVATE_KEY}"
-      log "Generated public key #{SSH_PUBLIC_KEY}"
+      log log_after "Generated new private key #{SSH_PRIVATE_KEY}"
+      log log_after "Generated new public key #{SSH_PUBLIC_KEY}"
     end
   end
 
