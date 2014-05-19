@@ -1,6 +1,5 @@
 module Hyperdock
   module LogstashForwarderSetup
-    LUMBERJACK_INIT_SCRIPT = Rails.root.join('config/logstash/forwarder.init')
     LUMBERJACK_INSTALL_SCRIPT = <<-EOF
       rm -rf /opt/logstash-forwarder
       rm -f /etc/logstash-forwarder
@@ -22,7 +21,8 @@ module Hyperdock
     LUMBERJACK = {
       key: Rails.root.join('config/logstash/ssl/key.pem'),
       cert: Rails.root.join('config/logstash/ssl/cert.pem'),
-      conf: Rails.root.join('config/logstash/config.rb')
+      conf: Rails.root.join('config/logstash/forwarder'),
+      init: Rails.root.join('config/logstash/forwarder.init')
     }
 
     def use_logstash_forwarder! &block
@@ -51,7 +51,7 @@ module Hyperdock
     end
 
     def enable_logstash_forwarder!
-      scp.upload! LUMBERJACK_INIT_SCRIPT.to_s, "/etc/init.d/logstash-forwarder"
+      scp.upload! LUMBERJACK[:init].to_s, "/etc/init.d/logstash-forwarder"
       ssh.exec!("chmod a+x /etc/init.d/logstash-forwarder")
       log ssh.exec!("update-rc.d logstash-forwarder defaults")
       log ssh.exec!("/etc/init.d/logstash-forwarder stop && /etc/init.d/logstash-forwarder status")
