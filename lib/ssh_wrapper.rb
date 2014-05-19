@@ -11,8 +11,8 @@ end
 class SshWrapper
   attr_accessor :ssh, :scp
   NAME_PATTERN = /^[a-zA-Z0-9][a-zA-Z\-\_0-9]*[a-zA-Z0-9]$/
-  PRIVATE_KEY = Pathname.new File.expand_path "~/.ssh/id_rsa"
-  PUBLIC_KEY = Pathname.new File.expand_path "~/.ssh/id_rsa.pub"
+  SSH_PRIVATE_KEY = Rails.root.join("config/ssh_keypair/id_rsa")
+  SSH_PUBLIC_KEY = Rails.root.join("config/ssh_keypair/id_rsa.pub")
 
   def initialize ip, user="root", password, name
     if ip =~ Resolv::IPv4::Regex
@@ -119,7 +119,7 @@ class SshWrapper
   def connect
     begin
       log "Attempting password-less login"
-      Net::SSH.start(@host, 'root') do |ssh|
+      Net::SSH.start(@host, 'root', keys: [SSH_PRIVATE_KEY.to_s]) do |ssh|
         connected ssh
         yield
       end
@@ -193,22 +193,22 @@ class SshWrapper
 
   def generate_keypair
     log "Generating local keypair"
-    log system(%{ssh-keygen -t rsa -f #{PRIVATE_KEY} -N ""})
-    unless PRIVATE_KEY.exist? 
+    log system(%{ssh-keygen -t rsa -f #{SSH_PRIVATE_KEY} -N ""})
+    unless SSH_PRIVATE_KEY.exist? 
       err "Failed to generate keypair"
       exit(2)
     else
-      log "Generated private key #{PRIVATE_KEY}"
-      log "Generated public key #{PUBLIC_KEY}"
+      log "Generated private key #{SSH_PRIVATE_KEY}"
+      log "Generated public key #{SSH_PUBLIC_KEY}"
     end
   end
 
   def configure_passwordless_login
-    generate_keypair unless PRIVATE_KEY.exist?
+    generate_keypair unless SSH_PRIVATE_KEY.exist?
     Net::SSH.start(@host, 'root', password: ENV['password']) do |ssh|
       connected ssh
       ssh.exec!("mkdir ~/.ssh")
-      remote_append "~/.ssh/authorized_keys", PUBLIC_KEY.read
+      remote_append "~/.ssh/authorized_keys", SSH_PUBLIC_KEY.read
       log "Disabling future password authentication attempts"
       remote_append "/etc/ssh/sshd_config", "PasswordAuthentication no"
       ssh.exec!("service ssh restart")
