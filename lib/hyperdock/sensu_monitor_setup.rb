@@ -35,9 +35,10 @@ module Hyperdock
     }
     FIREWALL = {
       "Configure firewall" => {
-        "Allow ssh port 22" => "ufw allow ssh",
-        "Allow redis port 6379" => "ufw deny 6379",
-        "Allow rabbitmq port 5671" => "ufw deny 5671",
+        "ALLOW ssh port 22" => "ufw allow ssh",
+        "DENY redis port 6379" => "ufw deny 6379",
+        "ALLOW rabbitmq port 5671" => "ufw allow 5671",
+        "DENY Sensu API port 4567" => "ufw deny 4567",
         "Enable Firewall" => "yes | ufw enable"
       }
     }
