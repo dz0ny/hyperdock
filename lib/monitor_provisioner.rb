@@ -9,5 +9,4 @@ class MonitorProvisioner < SshWrapper
       use_sensu!
     end
   end
-
 end

@@ -39,6 +39,8 @@ module Hyperdock
         "DENY redis port 6379" => "ufw deny 6379",
         "ALLOW rabbitmq port 5671" => "ufw allow 5671",
         "DENY Sensu API port 4567" => "ufw deny 4567",
+        # to use the sensu API we'll need to setup nginx reverse proxy
+        # we'll do it if we end up needing the API -- same goes for the dashboard
         "Enable Firewall" => "yes | ufw enable"
       }
     }
