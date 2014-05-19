@@ -240,4 +240,10 @@ class SshWrapper
       execute_batch cmd
     end
   end
+
+  def enable_initd_service name
+    log ssh.exec!("update-rc.d #{name} defaults")
+    log ssh.exec!("/etc/init.d/#{name} stop")
+    log ssh.exec!("/etc/init.d/#{name} start")
+  end
 end
