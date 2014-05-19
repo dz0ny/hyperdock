@@ -85,6 +85,7 @@ module Hyperdock
     def replace_local_certs
       # TODO maybe later you want to make this a choice?
       log "You have generated new certs! I will download the client certs now.".yellow
+      FileUtils.mkdir SSL_CERT.dirname
       scp.download!("/tmp/ssl_certs/client/cert.pem", SSL_CERT.to_s)
       log "Updated #{SSL_CERT}"
       scp.download!("/tmp/ssl_certs/client/key.pem", SSL_KEY.to_s)
