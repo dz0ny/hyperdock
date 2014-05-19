@@ -22,24 +22,10 @@ module Hyperdock
     def configure_sensu_client!
       write_sensu_client_certs!
       write_rabbit_config!
-      write_client_config!
+      write_client_config! 
       use_sensu_embedded_ruby!
+      permit_sensu_configs!
       enable_sensu_client!
-    end
-
-    def enable_sensu_client!
-      ssh.exec!("chown -R sensu:sensu /etc/sensu")
-      log ssh.exec!("update-rc.d sensu-client defaults")
-      log ssh.exec!("/etc/init.d/sensu-client stop")
-      log ssh.exec!("/etc/init.d/sensu-client start")
-    end
-
-    def write_client_config!
-      conf = JSON.parse CLIENT_CONF.read
-      conf["client"]["name"] = @name
-      conf["client"]["address"] = @host
-      conf = JSON.pretty_generate(conf)
-      remote_write '/etc/sensu/conf.d/client.json', conf
     end
   end
 end

@@ -41,9 +41,9 @@ module Hyperdock
         "ALLOW ssh port 22" => "ufw allow ssh",
         "DENY redis port 6379" => "ufw deny 6379",
         "ALLOW rabbitmq port 5671" => "ufw allow 5671",
-        "DENY Sensu API port 4567" => "ufw deny 4567",
-        # to use the sensu API we'll need to setup nginx reverse proxy
-        # we'll do it if we end up needing the API -- same goes for the dashboard
+        # TODO terminate API and Dashboard with SSL
+        "ALLOW Sensu API port 4567" => "ufw allow 4567",
+        "ALLOW Sensu Dashboard port 8080" => "ufw allow 8080",
         "Enable Firewall" => "yes | ufw enable"
       }
     }
@@ -62,14 +62,18 @@ module Hyperdock
     def reconfigure!
       use_sensu_embedded_ruby!
       generate_new_certificates
-      setup_rabbitmq
-      write_sensu_client_certs!
+      write_sensu_client_certs! simple_copy: true
       write_rabbit_config!
       write_redis_config!
       write_api_config!
       write_dashboard_config!
+      write_client_config!
+      setup_rabbitmq
       needs_package 'redis-server' do
         execute_batch FIREWALL
+        permit_sensu_configs!
+        enable_sensu_monitor!
+        enable_sensu_client!
       end
     end
 

@@ -9,21 +9,24 @@ module Hyperdock
     EOF
     SENSU_CONFIG_DIR = Rails.root.join('config/sensu')
     CLIENT_DIR = SENSU_CONFIG_DIR.join('client')
-    CLIENT_CONF = CLIENT_DIR.join('client.json')
+    CLIENT_CONF = CLIENT_DIR.join('conf.d/client.json')
     SSL_KEY = CLIENT_DIR.join('ssl/key.pem')
     SSL_CERT = CLIENT_DIR.join('ssl/cert.pem')
     RABBIT_CONF = CLIENT_DIR.join('conf.d/rabbitmq.json')
-    MONITOR_DIR = SENSU_CONFIG_DIR.join('monitor')
-    REDIS_CONF = MONITOR_DIR.join('conf.d/redis.json')
 
     def use_sensu_embedded_ruby!
       remote_write '/etc/default/sensu', "EMBEDDED_RUBY=true"
     end
 
-    def write_sensu_client_certs!
+    def write_sensu_client_certs! opts={}
       ssh.exec!("rm -rf /etc/sensu/ssl ; mkdir -p /etc/sensu/ssl")
-      scp.upload! SSL_KEY.to_s, '/etc/sensu/ssl/key.pem'
-      scp.upload! SSL_CERT.to_s, '/etc/sensu/ssl/cert.pem'
+      if opts[:simple_copy]
+        ssh.exec!("cat /tmp/ssl_certs/client/cert.pem > /etc/sensu/ssl/cert.pem")
+        ssh.exec!("cat /tmp/ssl_certs/client/key.pem > /etc/sensu/ssl/key.pem")
+      else
+        scp.upload! SSL_KEY.to_s, '/etc/sensu/ssl/key.pem'
+        scp.upload! SSL_CERT.to_s, '/etc/sensu/ssl/cert.pem'
+      end
     end
 
     def write_rabbit_config!
@@ -32,6 +35,28 @@ module Hyperdock
       conf["rabbitmq"]["host"] = ENV["RABBITMQ_HOST"]
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/rabbitmq.json', conf
+    end
+
+    def write_client_config!
+      conf = JSON.parse CLIENT_CONF.read
+      conf["client"]["name"] = @name
+      conf["client"]["address"] = @host
+      conf = JSON.pretty_generate(conf)
+      remote_write '/etc/sensu/conf.d/client.json', conf
+    end
+
+    def permit_sensu_configs!
+      ssh.exec!("chown -R sensu:sensu /etc/sensu")
+    end
+
+    def enable_sensu_client!
+      enable_initd_service "sensu-client"
+    end
+
+    def enable_sensu_monitor!
+      ['server', 'api', 'dashboard'].each do |name|
+        enable_initd_service "sensu-#{name}"
+      end
     end
   end
 end
