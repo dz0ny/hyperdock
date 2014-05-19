@@ -10,8 +10,10 @@ module Hyperdock
     SENSU_CONFIG_DIR = Rails.root.join('config/sensu')
     CLIENT_DIR = SENSU_CONFIG_DIR.join('client')
     CLIENT_CONF = CLIENT_DIR.join('conf.d/client.json')
-    SSL_KEY = CLIENT_DIR.join('ssl/key.pem')
-    SSL_CERT = CLIENT_DIR.join('ssl/cert.pem')
+    SENSU = {
+      key: CLIENT_DIR.join('ssl/key.pem'),
+      cert: CLIENT_DIR.join('ssl/cert.pem')
+    }
     RABBIT_CONF = CLIENT_DIR.join('conf.d/rabbitmq.json')
 
     def use_sensu_embedded_ruby!
@@ -24,8 +26,8 @@ module Hyperdock
         ssh.exec!("cat /tmp/ssl_certs/client/cert.pem > /etc/sensu/ssl/cert.pem")
         ssh.exec!("cat /tmp/ssl_certs/client/key.pem > /etc/sensu/ssl/key.pem")
       else
-        scp.upload! SSL_KEY.to_s, '/etc/sensu/ssl/key.pem'
-        scp.upload! SSL_CERT.to_s, '/etc/sensu/ssl/cert.pem'
+        scp.upload! SENSU[:key].to_s, '/etc/sensu/ssl/key.pem'
+        scp.upload! SENSU[:cert].to_s, '/etc/sensu/ssl/cert.pem'
       end
     end
 

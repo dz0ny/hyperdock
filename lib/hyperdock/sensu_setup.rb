@@ -5,14 +5,14 @@ module Hyperdock
     include SensuSetupCommon
 
     def use_sensu!
-      if SSL_KEY.exist? && SSL_CERT.exist?
+      if SENSU[:key].exist? && SENSU[:cert].exist?
         if package_installed? "sensu"
           configure_sensu_client!
         else
           install_sensu!
         end
       else
-        raise "Missing key and cert for injection... Expected them to be in: #{SSL_KEY.dirname}"
+        raise "Missing key and cert for injection... Expected them to be in: #{SENSU[:key].dirname}"
       end
     end
 
