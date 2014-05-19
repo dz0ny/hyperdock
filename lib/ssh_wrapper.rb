@@ -250,4 +250,19 @@ class SshWrapper
     log ssh.exec!("/etc/init.d/#{name} stop")
     log ssh.exec!("/etc/init.d/#{name} start")
   end
+
+  ##
+  # Update something in the .env file
+  def update_local_env *args
+    raise ArgumentError unless args.is_a? Hash
+    env = Dotenv.load
+    args.each do |key, val|
+      env[key] = val
+      log log_after "Env Updated: #{key}=#{val}!"
+    end
+    File.open(Rails.root.join(".env"), 'w') do |file|
+      env.each {|k,v| file.puts "#{k}=#{v}" }
+    end
+    log_after "Environment has changed. Please reprovision all hosts!"
+  end
 end
