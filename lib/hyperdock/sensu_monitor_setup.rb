@@ -28,7 +28,7 @@ module Hyperdock
         "rabbitmqctl delete_user guest",
         "rabbitmqctl delete_user sensu",
         "rabbitmqctl add_vhost /sensu",
-        "rabbitmqctl add_user sensu mypass",
+        "rabbitmqctl add_user sensu #{ENV['RABBITMQ_PASSWORD']}",
         %{rabbitmqctl set_permissions -p /sensu sensu ".*" ".*" ".*"}
       ]
       # "Enable RabbitMQ web console" => "rabbitmq-plugins enable rabbitmq_management"

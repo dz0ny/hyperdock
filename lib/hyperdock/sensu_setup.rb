@@ -38,7 +38,7 @@ module Hyperdock
 
     def write_rabbit_config!
       conf = JSON.parse RABBIT_CONF.read
-      # change stuff as needed via conf["rabbitmq"] ... e.g. insert password via envvars
+      conf["rabbitmq"]["password"] = ENV["RABBITMQ_PASSWORD"]
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/rabbitmq.json', conf
     end
