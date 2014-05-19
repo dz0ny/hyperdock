@@ -2,8 +2,6 @@ FROM debian:unstable
 
 ENV DEBIAN_FRONTEND noninteractive
 
-WORKDIR /apps/rails
-
 # set a few bundle config variables so that a local .bundle in our development directory doesn't screw up our image
 ENV BUNDLE_APP_CONFIG /apps/bundle
 ENV BUNDLE_PATH /apps/gems
@@ -18,5 +16,7 @@ ADD Gemfile.lock /apps/rails/Gemfile.lock
 ENV NOKOGIRI_USE_SYSTEM_LIBRARIES 1
 RUN bundle install
 
-CMD ["/apps/rails/docker_runner"]
+WORKDIR /apps/rails
+
+CMD ["/apps/rails/config/deploy/docker/runner"]
 
