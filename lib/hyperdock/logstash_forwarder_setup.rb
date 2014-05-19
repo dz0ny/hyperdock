@@ -26,10 +26,14 @@ module Hyperdock
     }
 
     def use_logstash_forwarder! &block
-      if logstash_forwarder_installed?
-        configure_logstash_forwarder! &block
+      if LUMBERJACK[:key].exist? && LUMBERJACK[:cert]
+        if logstash_forwarder_installed?
+          configure_logstash_forwarder! &block
+        else
+          install_logstash_forwarder!
+        end
       else
-        install_logstash_forwarder!
+        raise "Missing key and cert for injection... Expected them to be in: #{LUMBERJACK[:key].dirname}"
       end
     end
 
