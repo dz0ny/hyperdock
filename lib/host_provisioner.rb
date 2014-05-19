@@ -22,7 +22,19 @@ class HostProvisioner < SshWrapper
       end
       wait_for_docker do
         use_sensu!
-        use_logstash_forwarder!
+        use_logstash_forwarder! do |config|
+          # Collect logs for each docker container
+          config["files"] << {
+            "paths" => [ "/var/lib/docker/containers/*/*-json.log" ],
+            "fields"=> { "type"=> "docker-container-json" }
+          }
+
+          # Collect logs for the docker daemon
+          config["files"] << {
+            "paths"=> [ "/var/log/upstart/docker.log" ],
+            "fields"=> { "type"=> "docker-upstart" }
+          }
+        end
       end
     end
   end
