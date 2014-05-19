@@ -55,6 +55,7 @@ module Hyperdock
         "ALLOW lumberjack port 5043" => "ufw allow 5043",
         "Enable Firewall" => "yes | ufw enable"
       })
+      update_local_env "LOGSTASH_SERVER" => "#{@host}:5043"
     end
 
     def logstash_installed?
