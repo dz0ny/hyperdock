@@ -54,6 +54,7 @@ module Hyperdock
     end
 
     def reconfigure!
+      use_sensu_embedded_ruby!
       generate_new_certificates
       setup_rabbitmq
       needs_package 'redis-server' do
