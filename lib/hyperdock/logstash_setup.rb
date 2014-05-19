@@ -45,9 +45,8 @@ module Hyperdock
 
     def reconfigure_logstash!
       generate_new_logstash_certificates
-      #write_logstash_certs!
-      #write_logstash_config!
-      #enable_logstash!
+      remote_write '/etc/logstash', Rails.root.join('config/logstash/config').to_s
+      setup_logstash_supervisor
       #execute_batch("Configure firewall" => {
       #  "ALLOW ssh port 22" => "ufw allow ssh",
       #  "ALLOW elasticsearch port 9200" => "ufw allow 9200",
@@ -79,6 +78,14 @@ module Hyperdock
       scp.download!(remote[:key], LUMBERJACK[:key])
       log log_after "New SSL private key downloaded to #{LUMBERJACK[:key]}".yellow
       log log_after "Make sure to run the host provisioner again on all hosts to setup the new certs".yellow
+    end
+
+    def setup_logstash_supervisor
+      confs = Rails.root.join('config/supervisor/monitor')
+      es_conf = confs.join('elasticsearch.conf').read.gsub('ELASTICSEARCH_BIN', ELASTICSEARCH_BIN)
+      ls_conf = confs.join('logstash.conf').read.gsub('LOGSTASH_BIN', LOGSTASH_BIN)
+      remote_write '/etc/supervisor/conf.d/elasticsearch.conf', es_conf
+      remote_write '/etc/supervisor/conf.d/logstash.conf', ls_conf
     end
   end
 end
