@@ -5,11 +5,13 @@
       %p.small= @container.status
     .pull-right
       = link_to 'Edit', edit_container_path(@container), class: 'btn btn-primary btn-sm'
-      - if @container.status != 'started'
+      - if @container.status != 'started' && @container.status != 'pending'
         = link_to 'Start', start_container_path(@container), class: 'btn btn-success btn-sm'
       - if @container.status == 'started'
-        = link_to 'Stop', stop_container_path(@container), class: 'btn btn-danger btn-sm'
-        = link_to 'Restart', restart_container_path(@container), class: 'btn btn-warning btn-sm'
+        = link_to 'Restart', restart_container_path(@container), class: 'btn btn-success btn-sm'
+        = link_to 'Stop', stop_container_path(@container), class: 'btn btn-warning btn-sm'
+      - if @container.status != 'pending'
+        = link_to 'Destroy', @container, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm'
           
 %hr/
 .row
