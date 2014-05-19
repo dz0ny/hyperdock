@@ -29,7 +29,7 @@ class SshWrapper
     end
   end
 
-  def start options
+  def start options={}
     connect do
       if ubuntu_lts?
         if v = options[:version]

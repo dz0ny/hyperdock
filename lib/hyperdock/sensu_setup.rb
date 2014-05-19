@@ -3,10 +3,7 @@ require 'hyperdock/sensu_setup_common'
 module Hyperdock
   module SensuSetup
     include SensuSetupCommon
-    DIR = SENSU_CONFIG_DIR.join('client')
-    SSL_KEY = DIR.join('/ssl/key.pem')
-    SSL_CERT = DIR.join('ssl/cert.pem')
-    RABBIT_CONF = DIR.join('conf.d/rabbitmq.json')
+    RABBIT_CONF = CLIENT_DIR.join('conf.d/rabbitmq.json')
     CLIENT_CONF = SENSU_CONFIG_DIR.join('client.json')
 
     def use_sensu!
@@ -39,10 +36,6 @@ module Hyperdock
       log ssh.exec!("/etc/init.d/sensu-client start")
     end
 
-    def use_sensu_embedded_ruby!
-      remote_write '/etc/default/sensu', "EMBEDDED_RUBY=true"
-    end
-    
     def write_rabbit_config!
       conf = JSON.parse RABBIT_CONF.read
       # change stuff as needed via conf["rabbitmq"] ... e.g. insert password via envvars
