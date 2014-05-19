@@ -31,6 +31,15 @@ module Hyperdock
         "rabbitmqctl add_user sensu mypass",
         %{rabbitmqctl set_permissions -p /sensu sensu ".*" ".*" ".*"}
       ]
+      # "Enable RabbitMQ web console" => "rabbitmq-plugins enable rabbitmq_management"
+    }
+    FIREWALL = {
+      "Configure firewall" => {
+        "Allow ssh port 22" => "ufw allow ssh",
+        "Allow redis port 6379" => "ufw deny 6379",
+        "Allow rabbitmq port 5671" => "ufw deny 5671",
+        "Enable Firewall" => "yes | ufw enable"
+      }
     }
 
     def use_sensu!
@@ -47,6 +56,9 @@ module Hyperdock
     def reconfigure!
       generate_new_certificates
       setup_rabbitmq
+      needs_package 'redis-server' do
+        execute_batch FIREWALL
+      end
     end
 
     def setup_rabbitmq
