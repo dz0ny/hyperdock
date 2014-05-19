@@ -4,10 +4,11 @@
       "cert_chain_file": "/etc/sensu/ssl/cert.pem",
       "private_key_file": "/etc/sensu/ssl/key.pem"
     },
-    "host": "monitor.hyperdock.io",
+    "host": "",
     "port": 5671,
     "vhost": "/sensu",
     "user": "sensu",
     "password": ""
   }
 }
+
