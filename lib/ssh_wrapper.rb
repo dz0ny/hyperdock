@@ -79,9 +79,16 @@ class SshWrapper
   end
 
   def needs_package pkg
-    unless package_installed? pkg
+    if package_installed? pkg
+      yield
+    else
       log "Installing package: #{pkg}"
-      ssh.exec!("DEBIAN_FRONTEND=noninteractive apt-get install -y #{pkg}")
+      script = "DEBIAN_FRONTEND=noninteractive apt-get install -y #{pkg}"
+      if block_given?
+        stream_exec(script) { yield }
+      else
+        ssh.exec!(script)
+      end
     end
   end
 
