@@ -86,6 +86,8 @@ module Hyperdock
       ls_conf = confs.join('logstash.conf').read.gsub('LOGSTASH_BIN', LOGSTASH_BIN)
       remote_write '/etc/supervisor/conf.d/elasticsearch.conf', es_conf
       remote_write '/etc/supervisor/conf.d/logstash.conf', ls_conf
+      log ssh.exec! "supervisorctl stop all"
+      log ssh.exec! "service supervisor restart"
     end
   end
 end
