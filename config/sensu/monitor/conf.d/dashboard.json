@@ -1,0 +1,8 @@
+{
+  "dashboard": {
+    "port": 8080,
+    "user": "",
+    "password": ""
+  }
+}
+

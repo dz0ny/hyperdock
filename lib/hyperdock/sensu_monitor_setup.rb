@@ -7,6 +7,7 @@ module Hyperdock
     CERT_TAR = MONITOR_DIR.join('ssl_certs.tar')
     REDIS_CONF = MONITOR_DIR.join('conf.d/redis.json')
     API_CONF = MONITOR_DIR.join('conf.d/api.json')
+    DASHBOARD_CONF = MONITOR_DIR.join('conf.d/dashboard.json')
     RABBITMQ_INSTALL_SCRIPT = <<-EOF
       apt-get -y install erlang-nox
       wget -q http://www.rabbitmq.com/rabbitmq-signing-key-public.asc -O- | apt-key add -
@@ -66,6 +67,7 @@ module Hyperdock
       write_rabbit_config!
       write_redis_config!
       write_api_config!
+      write_dashboard_config!
       needs_package 'redis-server' do
         execute_batch FIREWALL
       end
@@ -91,6 +93,14 @@ module Hyperdock
       conf["api"]["password"] = ENV["SENSU_API_PASSWORD"]
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/api.json', conf
+    end
+
+    def write_dashboard_config!
+      conf = JSON.parse DASHBOARD_CONF.read
+      conf["dashboard"]["user"] = ENV["SENSU_DASHBOARD_USER"]
+      conf["dashboard"]["password"] = ENV["SENSU_DASHBOARD_PASSWORD"]
+      conf = JSON.pretty_generate(conf)
+      remote_write '/etc/sensu/conf.d/dashboard.json', conf
     end
 
     def setup_rabbitmq
