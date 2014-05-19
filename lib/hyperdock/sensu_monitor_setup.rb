@@ -52,10 +52,8 @@ module Hyperdock
       if package_installed? "sensu"
         reconfigure!
       else
-        log "Installing sensu (monitor)"
-        stream_exec(INSTALL_SCRIPT) do
-          configure_sensu_monitor!
-        end
+        log "Installing Sensu"
+        stream_exec(INSTALL_SCRIPT) { use_sensu! }
       end
     end
 
