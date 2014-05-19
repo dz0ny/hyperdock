@@ -22,3 +22,4 @@ public/assets/*
 .vagrant/*
 
 config/sensu/client/ssl/*
+config/logstash/ssl/*
