@@ -79,7 +79,7 @@ class SshWrapper
 
   def needs_package pkg
     if package_installed? pkg
-      yield
+      yield if block_given?
     else
       log "Installing package: #{pkg}"
       script = "DEBIAN_FRONTEND=noninteractive apt-get install -y #{pkg}"
