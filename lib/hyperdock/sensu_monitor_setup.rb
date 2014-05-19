@@ -5,6 +5,8 @@ module Hyperdock
     include SensuSetupCommon
     MONITOR_DIR = SENSU_CONFIG_DIR.join('monitor')
     CERT_TAR = MONITOR_DIR.join('ssl_certs.tar')
+    REDIS_CONF = MONITOR_DIR.join('conf.d/redis.json')
+    API_CONF = MONITOR_DIR.join('conf.d/api.json')
     RABBITMQ_INSTALL_SCRIPT = <<-EOF
       apt-get -y install erlang-nox
       wget -q http://www.rabbitmq.com/rabbitmq-signing-key-public.asc -O- | apt-key add -
@@ -63,6 +65,7 @@ module Hyperdock
       write_sensu_client_certs!
       write_rabbit_config!
       write_redis_config!
+      write_api_config!
       needs_package 'redis-server' do
         execute_batch FIREWALL
       end
@@ -72,6 +75,22 @@ module Hyperdock
       conf = JSON.parse REDIS_CONF.read
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/redis.json', conf
+    end
+
+    def write_rabbit_config!
+      conf = JSON.parse RABBIT_CONF.read
+      conf["rabbitmq"]["password"] = ENV["RABBITMQ_PASSWORD"]
+      conf["rabbitmq"]["host"] = ENV["RABBITMQ_HOST"]
+      conf = JSON.pretty_generate(conf)
+      remote_write '/etc/sensu/conf.d/rabbitmq.json', conf
+    end
+
+    def write_api_config!
+      conf = JSON.parse API_CONF.read
+      conf["api"]["user"] = ENV["SENSU_API_USER"]
+      conf["api"]["password"] = ENV["SENSU_API_PASSWORD"]
+      conf = JSON.pretty_generate(conf)
+      remote_write '/etc/sensu/conf.d/api.json', conf
     end
 
     def setup_rabbitmq
