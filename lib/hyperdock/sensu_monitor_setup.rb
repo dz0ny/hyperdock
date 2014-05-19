@@ -60,9 +60,18 @@ module Hyperdock
       use_sensu_embedded_ruby!
       generate_new_certificates
       setup_rabbitmq
+      write_sensu_client_certs!
+      write_rabbit_config!
+      write_redis_config!
       needs_package 'redis-server' do
         execute_batch FIREWALL
       end
+    end
+
+    def write_redis_config!
+      conf = JSON.parse REDIS_CONF.read
+      conf = JSON.pretty_generate(conf)
+      remote_write '/etc/sensu/conf.d/redis.json', conf
     end
 
     def setup_rabbitmq
