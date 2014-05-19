@@ -1,4 +1,4 @@
-notification :tmux, display_message: true
+notification :tmux, display_message: true, default_message_color: 'black'
 
 guard :rspec, cmd: 'spring rspec' do
   watch(%r{^spec/.+_spec\.rb$})
