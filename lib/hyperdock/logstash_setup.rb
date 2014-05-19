@@ -1,55 +1,51 @@
 module Hyperdock
   module LogstashSetup
-    INIT_SCRIPT = Rails.root.join('config/logstash/forwarder.init')
+    VERSION = "1.4.1"
     INSTALL_SCRIPT = <<-EOF
+      rm -rf /opt/logstas* /usr/local/bin/logstas*
+
       export DEBIAN_FRONTEND=noninteractive
       apt-get update
       apt-get install -yq openjdk-7-jre-headless supervisor
+      cd /opt
+      echo "Downloading logstash ..."
+      wget https://download.elasticsearch.org/logstash/logstash/logstash-#{VERSION}.tar.gz 2>/dev/null
+      tar -zxvf logstash-#{VERSION}.tar.gz > /dev/null
+      echo "Symlinking ..."
+      ln -s /opt/logstash-#{VERSION}/bin/logstash /usr/local/bin/logstash
+      ln -s /opt/logstash-#{VERSION}/bin/logstash.lib.sh /usr/local/bin/logstash.lib.sh
+      rm -f logstash-#{VERSION}.tar.gz
+
+
     EOF
-    SSL_KEY = Rails.root.join('config/logstash/ssl/key.pem')
-    SSL_CERT = Rails.root.join('config/logstash/ssl/cert.pem')
-    LOGSTASH_CONF = Rails.root.join('config/logstash/config.rb')
+
+    FIREWALL = {
+      "Configure firewall" => {
+        "ALLOW ssh port 22" => "ufw allow ssh",
+        "ALLOW elasticsearch port 9200" => "ufw allow 9200",
+        "ALLOW nginx port 80" => "ufw allow 80",
+        "ALLOW lumberjack port 5043" => "ufw allow 5043",
+        "Enable Firewall" => "yes | ufw enable"
+      }
+    }
 
     def use_logstash!
-      if logstash_forwarder_installed?
+      if logstash_installed?
         reconfigure!
       else
         log "Installing Logstash"
-        stream_exec(INSTALL_SCRIPT) { use_logstash! }
+        stream_exec(INSTALL_SCRIPT) { exit ; use_logstash! }
       end
     end
 
     def reconfigure!
-      write_logstash_certs!
-      write_logstash_config!
-      enable_logstash!
+      #write_logstash_certs!
+      #write_logstash_config!
+      #enable_logstash!
     end
 
-    def enable_logstash_forwarder!
-      scp.upload! INIT_SCRIPT.to_s, "/etc/init.d/logstash-forwarder"
-      ssh.exec!("chmod a+x /etc/init.d/logstash-forwarder")
-      log ssh.exec!("update-rc.d logstash-forwarder defaults")
-      log ssh.exec!("/etc/init.d/logstash-forwarder stop && /etc/init.d/logstash-forwarder status")
-      log ssh.exec!("/etc/init.d/logstash-forwarder start && /etc/init.d/logstash-forwarder status")
-    end
-
-    def write_logstash_forwarder_config!
-      conf = JSON.parse(LOGSTASH_CONF.readlines.reject{|l| l.strip.match(/^\#/) }.join)
-      # make changes here if you want
-      # e.g. conf["network"]["servers"] << ALT_LOGSTASH_SERVER
-      remote_write '/etc/logstash-forwarder', JSON.pretty_generate(conf)
-    end
-
-    def write_logstash_forwarder_certs!
-      dir = "/opt/logstash-forwarder/ssl"
-      ssh.exec!("rm -rf #{dir} ; mkdir -p #{dir}")
-      scp.upload! SSL_KEY.to_s, File.join(dir, 'key.pem')
-      scp.upload! SSL_CERT.to_s, File.join(dir, 'cert.pem')
-    end
-
-    def logstash_forwarder_installed?
-      file_exists?("/opt/logstash-forwarder/bin/logstash-forwarder") &&
-        file_exists?("/etc/init.d/logstash-forwarder")
+    def logstash_installed?
+      file_exists?("/usr/local/bin/logstash")
     end
   end
 end
