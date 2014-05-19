@@ -65,8 +65,8 @@ module Hyperdock
     end
 
     def generate_new_logstash_certificates
-      dir = "/tmp/ssl_certs/logstash"
-      remote = { key: "#{dir}/key", cert: "#{dir}/cert" }
+      dir = "/var/ssl/logstash"
+      remote = { key: "#{dir}/key.pem", cert: "#{dir}/cert.pem" }
       ssh.exec! "mkdir -p #{dir}"
       ssh.exec! "openssl req -x509 -batch -nodes -newkey rsa:2048 -keyout #{remote[:key]} -out #{remote[:cert]}"
       # TODO maybe later you want to make this a choice?

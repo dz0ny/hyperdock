@@ -4,8 +4,8 @@ input {
     port => 5043
 
     # The paths to your ssl cert and key
-    ssl_certificate => "/opt/logstash/ssl/cert.pem"
-    ssl_key => "/opt/logstash/ssl/key.pem"
+    ssl_certificate => "/var/ssl/logstash/cert.pem"
+    ssl_key => "/var/ssl/logstash/key.pem"
 
     # Set this to whatever you want.
     type => "lumberjack"
