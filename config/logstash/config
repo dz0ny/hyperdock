@@ -8,7 +8,7 @@ input {
     ssl_key => "/opt/logstash/ssl/key.pem"
 
     # Set this to whatever you want.
-    type => "somelogs"
+    type => "lumberjack"
   }
 }
 
