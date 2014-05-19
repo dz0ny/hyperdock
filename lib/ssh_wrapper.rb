@@ -184,7 +184,7 @@ class SshWrapper
   def connected ssh
     log "Connected to #{@name}"
     @ssh = ssh
-    @scp = Net::SCP.new(@ssh)
+    @scp = ssh.scp
   end
 
   def generate_keypair
