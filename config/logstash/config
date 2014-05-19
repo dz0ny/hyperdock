@@ -1,0 +1,19 @@
+input {
+  lumberjack {
+    # The port to listen on
+    port => 5043
+
+    # The paths to your ssl cert and key
+    ssl_certificate => "/opt/logstash/ssl/cert.pem"
+    ssl_key => "/opt/logstash/ssl/key.pem"
+
+    # Set this to whatever you want.
+    type => "somelogs"
+  }
+}
+
+output {
+  elasticsearch {
+    embedded => true
+  }
+}
