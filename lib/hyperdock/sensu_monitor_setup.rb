@@ -89,7 +89,6 @@ module Hyperdock
       scp.download!("/tmp/ssl_certs/client/key.pem", SSL_KEY.to_s)
       log "Updated #{SSL_KEY}"
       log "Make sure to run the host provisioner again on all hosts to use the new keys!".yellow
-      exit
     end
   end
 end
