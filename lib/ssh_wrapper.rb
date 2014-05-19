@@ -27,21 +27,20 @@ class SshWrapper
     else
       raise "name was not valid. pattern: #{NAME_PATTERN}"
     end
+    @after = [] # we put our log_after messages here
   end
 
   def start options={}
     connect do
       if ubuntu_lts?
         if v = options[:version]
-          if ubuntu_version_matches?(v)
-            yield
-          else
+          unless ubuntu_version_matches?(v)
             err "Requires Ubuntu #{v}!"
             exit(2)
           end
-        else
-          yield
         end
+        yield
+        @after.each {|msg| log msg }
       else
         err "This is not an Ubuntu LTS server! Cannot continue."
         exit(2)
@@ -144,6 +143,11 @@ class SshWrapper
         exit(2)
       end
     end
+  end
+
+  def log_after msg
+    @after << msg
+    return msg
   end
 
   def log msg
