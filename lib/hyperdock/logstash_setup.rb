@@ -24,7 +24,7 @@ module Hyperdock
       rm -rf /opt/logstas* 
       export DEBIAN_FRONTEND=noninteractive
       apt-get update
-      apt-get install -yq openjdk-7-jre-headless supervisor
+      apt-get install -yq openjdk-7-jre-headless supervisor unzip nginx apache2-utils
       cd /opt
       echo "Logstash Downloading ..."
       wget https://download.elasticsearch.org/logstash/logstash/logstash-#{LOGSTASH_VERSION}.tar.gz 2>/dev/null
@@ -47,13 +47,14 @@ module Hyperdock
       generate_new_logstash_certificates
       remote_write '/etc/logstash', Rails.root.join('config/logstash/config').to_s
       setup_logstash_supervisor
-      #execute_batch("Configure firewall" => {
-      #  "ALLOW ssh port 22" => "ufw allow ssh",
-      #  "ALLOW elasticsearch port 9200" => "ufw allow 9200",
-      #  "ALLOW nginx port 80" => "ufw allow 80",
-      #  "ALLOW lumberjack port 5043" => "ufw allow 5043",
-      #  "Enable Firewall" => "yes | ufw enable"
-      #})
+      use_kibana
+      execute_batch("Configure firewall" => {
+        "ALLOW ssh port 22" => "ufw allow ssh",
+        "DENY elasticsearch port 9200" => "ufw deny 9200",
+        "ALLOW nginx port 80" => "ufw allow 80",
+        "ALLOW lumberjack port 5043" => "ufw allow 5043",
+        "Enable Firewall" => "yes | ufw enable"
+      })
     end
 
     def logstash_installed?
@@ -88,6 +89,32 @@ module Hyperdock
       remote_write '/etc/supervisor/conf.d/logstash.conf', ls_conf
       log ssh.exec! "supervisorctl stop all"
       log ssh.exec! "service supervisor restart"
+    end
+
+    def use_kibana
+      if file_exists? '/usr/share/kibana3'
+        ssh.exec! 'rm -f /etc/nginx/sites-enabled/default'
+        ssh.exec! 'rm -f /etc/nginx/sites-available/logstash'
+        ssh.exec! 'rm -f /etc/nginx/sites-enabled/logstash'
+        nginx_conf = Rails.root.join('config/logstash/nginx.conf').read.
+          gsub('SERVER_NAME', "#{@name}.hyperdock.io")
+        remote_write '/etc/nginx/sites-available/logstash', nginx_conf
+        remote_write '/usr/share/kibana3/config.js', Rails.root.join('config/logstash/kibana.config.json').read
+        ssh.exec! "chmod 644 /usr/share/kibana3/config.js"
+        ssh.exec! "ln -s /etc/nginx/sites-available/logstash /etc/nginx/sites-enabled/logstash"
+        log ssh.exec! %{echo "#{ENV['KIBANA_PASSWORD']}" | htpasswd -ci /etc/nginx/conf.d/kibana.htpasswd #{ENV['KIBANA_USERNAME']}}
+        ssh.exec! "service nginx restart"
+      else
+        get_kibana = <<-EOF
+          rm -rf /usr/share/kibana3
+          cd /usr/share
+          wget -q http://download.elasticsearch.org/kibana/kibana/kibana-latest.zip
+          unzip kibana-latest.zip
+          mv kibana-latest kibana3
+          rm -f kibana-latest.zip
+        EOF
+        stream_exec(get_kibana) { use_kibana }
+      end
     end
   end
 end
