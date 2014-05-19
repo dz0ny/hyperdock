@@ -8,21 +8,21 @@ class MonitorProvisioner < SshWrapper
 
   def provision!
     start( version: '14.04' ) do
-      #use_sensu!
+      use_sensu!
       use_logstash!
-      #use_logstash_forwarder! do |config|
-      #  # Collect supervisor logs
-      #  config["files"] << {
-      #    "paths" => [ "/var/log/supervisor/*.log" ],
-      #    "fields"=> { "type"=> "supervisor" }
-      #  }
+      use_logstash_forwarder! do |config|
+        # Collect supervisor logs
+        config["files"] << {
+          "paths" => [ "/var/log/supervisor/*.log" ],
+          "fields"=> { "type"=> "supervisor" }
+        }
 
-      #  # Collect sensu logs
-      #  config["files"] << {
-      #    "paths" => [ "/var/log/sensu/sensu-*.log" ],
-      #    "fields"=> { "type"=> "sensu" }
-      #  }
-      #end
+        # Collect sensu logs
+        config["files"] << {
+          "paths" => [ "/var/log/sensu/sensu-*.log" ],
+          "fields"=> { "type"=> "sensu" }
+        }
+      end
     end
   end
 end
