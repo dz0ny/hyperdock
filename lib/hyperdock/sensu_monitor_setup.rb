@@ -84,11 +84,7 @@ module Hyperdock
       conf["rabbitmq"]["host"] = "localhost"
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/rabbitmq.json', conf
-      env = Dotenv.load
-      env["RABBITMQ_HOST"] = @host
-      File.open(Rails.root.join(".env"), 'w') do |file|
-        env.each {|k,v| file.puts "#{k}=#{v}" }
-      end
+      update_local_env "RABBITMQ_HOST" => @host
     end
 
     def write_api_config!
