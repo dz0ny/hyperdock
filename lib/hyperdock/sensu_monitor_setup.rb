@@ -76,8 +76,20 @@ module Hyperdock
       log "Uploading SSL certificate generator"
       scp.upload! CERT_TAR.to_s, "/tmp"
       log "Extracting ..."
-      ssh.exec! "cd /tmp && tar -xvf ssl_certs.tar"
-      ssh.exec! "cd /tmp/ssl_certs && ./ssl_certs.sh generate 2>/dev/null"
+      log ssh.exec! "cd /tmp && tar -xvf ssl_certs.tar"
+      log ssh.exec! "cd /tmp/ssl_certs && ./ssl_certs.sh generate 2>/dev/null"
+      replace_local_certs
+    end
+
+    def replace_local_certs
+      # TODO maybe later you want to make this a choice?
+      log "You have generated new certs! I will download the client certs now.".yellow
+      scp.download!("/tmp/ssl_certs/client/cert.pem", SSL_CERT.to_s)
+      log "Updated #{SSL_CERT}"
+      scp.download!("/tmp/ssl_certs/client/key.pem", SSL_KEY.to_s)
+      log "Updated #{SSL_KEY}"
+      log "Make sure to run the host provisioner again on all hosts to use the new keys!".yellow
+      exit
     end
   end
 end
