@@ -36,30 +36,19 @@ module Hyperdock
       ]
       # "Enable RabbitMQ web console" => "rabbitmq-plugins enable rabbitmq_management"
     }
-    FIREWALL = {
-      "Configure firewall" => {
-        "ALLOW ssh port 22" => "ufw allow ssh",
-        "DENY redis port 6379" => "ufw deny 6379",
-        "ALLOW rabbitmq port 5671" => "ufw allow 5671",
-        # TODO terminate API and Dashboard with SSL
-        "ALLOW Sensu API port 4567" => "ufw allow 4567",
-        "ALLOW Sensu Dashboard port 8080" => "ufw allow 8080",
-        "Enable Firewall" => "yes | ufw enable"
-      }
-    }
 
     def use_sensu!
       if package_installed? "sensu"
         reconfigure!
       else
         log "Installing Sensu"
-        stream_exec(INSTALL_SCRIPT) { use_sensu! }
+        stream_exec(SENSU_INSTALL_SCRIPT) { use_sensu! }
       end
     end
 
     def reconfigure!
       use_sensu_embedded_ruby!
-      generate_new_certificates
+      generate_new_sensu_certificates
       write_sensu_client_certs! simple_copy: true
       write_rabbit_config!
       write_redis_config!
@@ -68,10 +57,18 @@ module Hyperdock
       write_client_config!
       setup_rabbitmq
       needs_package 'redis-server' do
-        execute_batch FIREWALL
         permit_sensu_configs!
         enable_sensu_monitor!
         enable_sensu_client!
+        execute_batch("Configure firewall" => {
+          "ALLOW ssh port 22" => "ufw allow ssh",
+          "DENY redis port 6379" => "ufw deny 6379",
+          "ALLOW rabbitmq port 5671" => "ufw allow 5671",
+          # TODO terminate API and Dashboard with SSL
+          "ALLOW Sensu API port 4567" => "ufw allow 4567",
+          "ALLOW Sensu Dashboard port 8080" => "ufw allow 8080",
+          "Enable Firewall" => "yes | ufw enable"
+        })
       end
     end
 
@@ -119,17 +116,17 @@ module Hyperdock
       end
     end
 
-    def generate_new_certificates
+    def generate_new_sensu_certificates
       ssh.exec! "rm -rf /tmp/ssl_cert*"
       log "Uploading SSL certificate generator"
       scp.upload! CERT_TAR.to_s, "/tmp"
       log "Extracting ..."
       log ssh.exec! "cd /tmp && tar -xvf ssl_certs.tar"
       log ssh.exec! "cd /tmp/ssl_certs && ./ssl_certs.sh generate 2>/dev/null"
-      replace_local_certs
+      replace_local_sensu_certs
     end
 
-    def replace_local_certs
+    def replace_local_sensu_certs
       # TODO maybe later you want to make this a choice?
       log log_after "You have generated new certs!.".yellow
       FileUtils.mkdir(SSL_CERT.dirname) unless SSL_CERT.dirname.exist?

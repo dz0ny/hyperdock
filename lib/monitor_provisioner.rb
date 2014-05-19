@@ -1,12 +1,10 @@
 require 'ssh_wrapper'
 require 'hyperdock/sensu_monitor_setup'
 require 'hyperdock/logstash_setup'
-require 'hyperdock/logstash_forwarder_setup'
 
 class MonitorProvisioner < SshWrapper
   include Hyperdock::SensuMonitorSetup
   include Hyperdock::LogstashSetup
-  include Hyperdock::LogstashForwarderSetup
 
   def provision!
     start( version: '14.04' ) do

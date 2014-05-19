@@ -1,7 +1,7 @@
 module Hyperdock
   module LogstashForwarderSetup
-    INIT_SCRIPT = Rails.root.join('config/logstash/forwarder.init')
-    INSTALL_SCRIPT = <<-EOF
+    LUMBERJACK_INIT_SCRIPT = Rails.root.join('config/logstash/forwarder.init')
+    LUMBERJACK_INSTALL_SCRIPT = <<-EOF
       rm -rf /opt/logstash-forwarder
       rm -f /etc/logstash-forwarder
       rm -f /etc/init.d/logstash-forwarder
@@ -19,9 +19,11 @@ module Hyperdock
       mkdir bin
       mv logstash-forwarder bin
     EOF
-    SSL_KEY = Rails.root.join('config/logstash/ssl/key.pem')
-    SSL_CERT = Rails.root.join('config/logstash/ssl/cert.pem')
-    LOGSTASH_CONF = Rails.root.join('config/logstash/config.rb')
+    LUMBERJACK = {
+      key: Rails.root.join('config/logstash/ssl/key.pem'),
+      cert: Rails.root.join('config/logstash/ssl/cert.pem'),
+      conf: Rails.root.join('config/logstash/config.rb')
+    }
 
     def use_logstash_forwarder! &block
       if logstash_forwarder_installed?
@@ -33,7 +35,7 @@ module Hyperdock
 
     def install_logstash_forwarder!
       needs_package 'git'
-      stream_exec(INSTALL_SCRIPT) do
+      stream_exec(LUMBERJACK_INSTALL_SCRIPT) do
         configure_logstash_forwarder!
       end
     end
@@ -45,7 +47,7 @@ module Hyperdock
     end
 
     def enable_logstash_forwarder!
-      scp.upload! INIT_SCRIPT.to_s, "/etc/init.d/logstash-forwarder"
+      scp.upload! LUMBERJACK_INIT_SCRIPT.to_s, "/etc/init.d/logstash-forwarder"
       ssh.exec!("chmod a+x /etc/init.d/logstash-forwarder")
       log ssh.exec!("update-rc.d logstash-forwarder defaults")
       log ssh.exec!("/etc/init.d/logstash-forwarder stop && /etc/init.d/logstash-forwarder status")
@@ -53,7 +55,7 @@ module Hyperdock
     end
 
     def write_logstash_forwarder_config!
-      conf = JSON.parse(LOGSTASH_CONF.readlines.reject{|l| l.strip.match(/^\#/) }.join)
+      conf = JSON.parse(LUMBERJACK[:conf].readlines.reject{|l| l.strip.match(/^\#/) }.join)
       conf["network"]["servers"] = [ ENV["LOGSTASH_SERVER"] ]
       yield(conf) if block_given?
       conf = JSON.pretty_generate conf
@@ -63,8 +65,8 @@ module Hyperdock
     def write_logstash_forwarder_certs!
       dir = "/opt/logstash-forwarder/ssl"
       ssh.exec!("rm -rf #{dir} ; mkdir -p #{dir}")
-      scp.upload! SSL_KEY.to_s, File.join(dir, 'key.pem')
-      scp.upload! SSL_CERT.to_s, File.join(dir, 'cert.pem')
+      scp.upload! LUMBERJACK[:key].to_s, File.join(dir, 'key.pem')
+      scp.upload! LUMBERJACK[:cert].to_s, File.join(dir, 'cert.pem')
     end
 
     def logstash_forwarder_installed?

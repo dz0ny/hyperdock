@@ -14,7 +14,7 @@ module Hyperdock
 
     def install_sensu!
       log "Installing sensu (client)"
-      stream_exec(INSTALL_SCRIPT) do
+      stream_exec(SENSU_INSTALL_SCRIPT) do
         configure_sensu_client!
       end
     end
