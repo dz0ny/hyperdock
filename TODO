@@ -101,3 +101,6 @@ See STATUS for information on what is being worked on at the current moment. Whe
 
 * Ability to commit a container (thus producing an Image, this is a docker feature) which is then tied to your user so as to become available in your Images list as a private image.
   - In essence this is a "Snapshot" and can be classified and labelled as such.
+
+* Provisioner improvements
+  - Don't do everything as root -- see https://index.docker.io/u/strider/strider/ as a good example of how to create new users for the service

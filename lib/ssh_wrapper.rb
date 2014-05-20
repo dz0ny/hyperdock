@@ -15,7 +15,7 @@ class SshWrapper
   SSH_PUBLIC_KEY = Rails.root.join("config/ssh/id_rsa.pub")
   SSH_KNOWN_HOSTS_FILE = Rails.root.join("config/ssh/known_hosts")
 
-  def initialize ip, user="root", password, name
+  def initialize ip, user=(ENV['user'] ? ENV['user'] : "root"), password, name
     ssh_dir = Rails.root.join("config/ssh")
     FileUtils.mkdir ssh_dir unless ssh_dir.exist?
     if ip =~ Resolv::IPv4::Regex
@@ -122,7 +122,7 @@ class SshWrapper
   def connect
     begin
       log "Attempting password-less login"
-      Net::SSH.start(@host, 'root', { keys: [SSH_PRIVATE_KEY.to_s], keys_only: true, timeout: 5000,
+      Net::SSH.start(@host, @user, { keys: [SSH_PRIVATE_KEY.to_s], keys_only: true, timeout: 5000,
                                       user_known_hosts_file: SSH_KNOWN_HOSTS_FILE.to_s }) do |ssh|
         connected ssh
         yield
@@ -209,7 +209,7 @@ class SshWrapper
 
   def configure_passwordless_login
     generate_keypair unless SSH_PRIVATE_KEY.exist?
-    Net::SSH.start(@host, 'root', password: ENV['password']) do |ssh|
+    Net::SSH.start(@host, @user, password: ENV['password']) do |ssh|
       connected ssh
       ssh.exec!("mkdir ~/.ssh")
       remote_append "~/.ssh/authorized_keys", SSH_PUBLIC_KEY.read
