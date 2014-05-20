@@ -253,10 +253,10 @@ class SshWrapper
 
   ##
   # Update something in the .env file
-  def update_local_env *args
-    raise ArgumentError unless args.is_a? Hash
+  def update_local_env hash
+    raise ArgumentError unless hash.is_a? Hash
     env = Dotenv.load
-    args.each do |key, val|
+    hash.each do |key, val|
       env[key] = val
       log log_after "Env Updated: #{key}=#{val}!"
     end
