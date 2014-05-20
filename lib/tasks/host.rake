@@ -35,5 +35,7 @@ namespace :host do
     # * add host to the database
     # * secure the docker api endpoint
     # * install any sensu checks
+    # * expose the docker port on the firewall
+    # * expose the docker 49000-49999 range
   end
 end
