@@ -45,7 +45,7 @@ module Hyperdock
 
     def reconfigure_logstash!
       generate_new_logstash_certificates
-      remote_write '/etc/logstash', Rails.root.join('config/logstash/config').to_s
+      remote_write '/etc/logstash', Rails.root.join('config/logstash/config').read
       setup_logstash_supervisor
       use_kibana
       execute_batch("Configure firewall" => {
