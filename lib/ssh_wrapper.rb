@@ -25,7 +25,7 @@ class SshWrapper
     end
     @user = user
     @password = password
-    if name.match(NAME_PATTERN)
+    if name =~ NAME_PATTERN
       @name = name
     else
       raise "name was not valid. pattern: #{NAME_PATTERN}"
