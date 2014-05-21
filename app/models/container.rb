@@ -14,6 +14,28 @@ class Container < ActiveRecord::Base
   validates :region, presence: true
   validates :image, presence: true
 
+  before_validation :relink_image!
+
+  def relink_image!
+    if self.persisted? && self.image.nil?
+      info = OpenStruct.new(self.get_info)
+      image_name = info.Config["Image"]
+      image_uuid = info.Image
+      img = Image.where(docker_index: image_name).first
+      unless img
+        exposed_ports = info.Config["ExposedPorts"].keys.join(',')
+        img = Image.create({
+          name: image_name,
+          docker_index: image_uuid,
+          port_bindings: exposed_ports
+        })
+      end
+      self.image = img
+    end
+  rescue => ex
+    self.errors.add(:image, "failed to relink! You should probably snapshot and destroy this container. If snapshotting hasn't been implemented yet and you're seeing this, please email us!") # FIXME shorten this notice once snapshotting is added
+  end
+
   def get_info
     self.host.docker.inspect self.instance_id
   end

@@ -63,4 +63,30 @@ describe Container do
     it { should have_key :for_start }
     it { should have_key :for_create }
   end
+
+
+  describe "#save container that lost association with an image" do
+    before(:each) do
+      container.save
+      container.image.destroy
+      container.reload
+      container.stub(:get_info).and_return({
+        "Config"=>{
+          "Image"=> "a-nice-name",
+          "ExposedPorts" => {
+            "22/tcp" => {},
+            "3000/tcp" => {}
+          }
+        },
+        "Image"=>"a-uuid"
+      })
+      container.save
+    end
+    it "can be saved without raising errors" do
+      container.errors.should be_empty
+    end
+    specify "because a new image get linked from the Docker info" do
+      container.image.should be_persisted
+    end
+  end
 end
