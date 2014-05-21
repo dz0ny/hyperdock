@@ -81,7 +81,7 @@ class HostsController < AdminController
       instance_id: c.ID,
       host: @host,
       region: @host.region,
-      image: Image.where(docker_index: c.Config["Image"]).first,
+      image: image,
       env_settings: Hash[c.Config["Env"].map {|pair| pair.split('=') }],
       port_bindings: c.NetworkSettings["Ports"].to_json,
       status: c.State["Running"] ? "started" : "stopped",
