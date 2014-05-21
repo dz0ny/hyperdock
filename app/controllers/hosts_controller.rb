@@ -74,7 +74,8 @@ class HostsController < AdminController
     c = OpenStruct.new @host.docker.inspect params[:instance_id]  
     image = Image.where(docker_index: c.Config["Image"]).first
     unless image
-      image = Image.create(name: c.Config["Image"])
+      exposed_ports = c.Config["ExposedPorts"].keys.join(',')
+      image = Image.create(name: c.Config["Image"], port_bindings: exposed_ports)
     end
     container = current_user.containers.build({
       instance_id: c.ID,
