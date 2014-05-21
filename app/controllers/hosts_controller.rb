@@ -72,6 +72,10 @@ class HostsController < AdminController
 
   def reclaim_zombie_container
     c = OpenStruct.new @host.docker.inspect params[:instance_id]  
+    image = Image.where(docker_index: c.Config["Image"]).first
+    unless image
+      image = Image.create(name: c.Config["Image"])
+    end
     container = current_user.containers.build({
       instance_id: c.ID,
       host: @host,
