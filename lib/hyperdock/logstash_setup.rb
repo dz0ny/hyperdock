@@ -1,24 +1,13 @@
 require 'hyperdock/logstash_forwarder_setup'
+require 'hyperdock/elastic_search_setup'
 
 module Hyperdock
   module LogstashSetup
     include Hyperdock::LogstashForwarderSetup
+    include Hyperdock::ElasticSearchSetup
 
     LOGSTASH_VERSION = "1.4.1"
     LOGSTASH_BIN = "/opt/logstash-#{LOGSTASH_VERSION}/bin/logstash"
-
-    ELASTICSEARCH_VERSION = "1.1.1"
-    ELASTICSEARCH_BIN = "/opt/elasticsearch-#{ELASTICSEARCH_VERSION}/bin/elasticsearch"
-
-    ELASTICSEARCH_INSTALL_SCRIPT = <<-EOF
-      rm -rf /opt/elasticsearc* 
-      cd /opt
-      echo "ElasticSearch Downloading ..."
-      wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-#{ELASTICSEARCH_VERSION}.tar.gz 2>/dev/null
-      echo "ElasticSearch Extracting ..."
-      tar -zxvf elasticsearch-#{ELASTICSEARCH_VERSION}.tar.gz > /dev/null
-      rm -f elasticsearch-#{ELASTICSEARCH_VERSION}.tar.gz
-    EOF
 
     LOGSTASH_INSTALL_SCRIPT = <<-EOF
       rm -rf /opt/logstas* 
@@ -34,18 +23,27 @@ module Hyperdock
     EOF
 
     def use_logstash!
-      if logstash_installed? && elasticsearch_installed?
+      if logstash_installed?
         reconfigure_logstash!
+        use_elasticsearch!
       else
-        log "Installing Logstash & ElasticSearch"
-        script = "#{LOGSTASH_INSTALL_SCRIPT}\n#{ELASTICSEARCH_INSTALL_SCRIPT}"
+        log "Installing Logstash"
+        script = "#{LOGSTASH_INSTALL_SCRIPT}"
         stream_exec(script) { use_logstash! }
       end
     end
 
+
+    def write_logstash_config
+      path = Rails.root.join('config/logstash/config')
+      contents = path.read.gsub('ELASTICSEARCH_HOST', '127.0.0.1').
+                           gsub('ELASTICSEARCH_CLUSTER', @name)
+      remote_write '/etc/logstash', contents
+    end
+
     def reconfigure_logstash!
       generate_new_logstash_certificates
-      remote_write '/etc/logstash', Rails.root.join('config/logstash/config').read
+      write_logstash_config
       setup_logstash_supervisor
       use_kibana
       execute_batch("Configure firewall" => {
@@ -60,10 +58,6 @@ module Hyperdock
 
     def logstash_installed?
       file_exists? LOGSTASH_BIN
-    end
-
-    def elasticsearch_installed?
-      file_exists? ELASTICSEARCH_BIN
     end
 
     def generate_new_logstash_certificates
