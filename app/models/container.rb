@@ -26,7 +26,8 @@ class Container < ActiveRecord::Base
         exposed_ports = info.Config["ExposedPorts"].keys.join(',')
         img = Image.create({
           name: image_name,
-          docker_index: image_uuid,
+          description: image_uuid,
+          docker_index: nil,
           port_bindings: exposed_ports
         })
       end
