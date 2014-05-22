@@ -17,6 +17,12 @@ class MonitorProvisioner < SshWrapper
           "fields"=> { "type"=> "supervisor" }
         }
 
+        # Collect nginx logs
+        config["files"] << {
+          "paths" => [ "/var/log/nginx/*.log" ],
+          "fields"=> { "type"=> "nginx" }
+        }
+
         # Collect sensu logs
         config["files"] << {
           "paths" => [ "/var/log/sensu/sensu-*.log" ],
