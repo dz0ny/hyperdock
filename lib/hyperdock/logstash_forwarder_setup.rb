@@ -59,11 +59,17 @@ module Hyperdock
     end
 
     def write_logstash_forwarder_config!
-      conf = JSON.parse(LUMBERJACK[:conf].readlines.reject{|l| l.strip.match(/^\#/) }.join)
+      remote_path = '/etc/logstash-forwarder'
+      if file_exists? remote_path
+        conf = JSON.parse(ssh.exec!("cat #{remote_path}").strip)
+      else
+        conf = JSON.parse(LUMBERJACK[:conf].readlines.reject{|l| l.strip.match(/^\#/) }.join)
+      end
       conf["network"]["servers"] = [ ENV["LOGSTASH_SERVER"] ]
       yield(conf) if block_given?
+      conf["files"].uniq!
       conf = JSON.pretty_generate conf
-      remote_write '/etc/logstash-forwarder', conf
+      remote_write remote_path, conf
     end
 
     def write_logstash_forwarder_certs!
