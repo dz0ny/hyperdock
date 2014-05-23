@@ -33,7 +33,10 @@ module Hyperdock
     end
 
     def install_docker!
-      cmd = "curl -s https://get.docker.io/ubuntu/ | sh"
+      cmd = %{
+        export DEBIAN_FRONTEND=noninteractive
+        curl -s https://get.docker.io/ubuntu/ | sh
+      }
       stream_exec(cmd) do
         configure_docker!
       end
