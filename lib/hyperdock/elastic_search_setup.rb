@@ -1,7 +1,9 @@
 module Hyperdock
   module ElasticSearchSetup
     ELASTICSEARCH_VERSION = "1.1.1"
-    ELASTICSEARCH_BIN = "/opt/elasticsearch-#{ELASTICSEARCH_VERSION}/bin/elasticsearch"
+    ELASTICSEARCH_HOME = "/opt/elasticsearch-#{ELASTICSEARCH_VERSION}"
+    ELASTICSEARCH_BIN = File.join(ELASTICSEARCH_HOME, 'bin/elasticsearch')
+    ELASTICSEARCH_CONF = File.join(ELASTICSEARCH_HOME, 'config/elasticsearch.yml')
 
     ELASTICSEARCH_INSTALL_SCRIPT = <<-EOF
       rm -rf /opt/elasticsearc* 
@@ -13,7 +15,6 @@ module Hyperdock
       rm -f elasticsearch-#{ELASTICSEARCH_VERSION}.tar.gz
     EOF
 
-    ELASTICSEARCH_CONF = '/etc/elasticsearch/elasticsearch.yml'
 
     def use_elasticsearch!
       if elasticsearch_installed?
@@ -32,7 +33,7 @@ module Hyperdock
     end
 
     def elasticsearch_installed?
-      file_exists? ELASTICSEARCH_BIN && file_exists? ELASTICSEARCH_CONF
+      file_exists?(ELASTICSEARCH_BIN)
     end
   end
 end
