@@ -9,6 +9,7 @@ class String
 end
 
 class SshWrapper
+  class PasswordExpiredError < StandardError ; end
   attr_accessor :ssh, :scp
   NAME_PATTERN = /^[a-zA-Z0-9][a-zA-Z\-\_0-9]*[a-zA-Z0-9]$/
   SSH_PRIVATE_KEY = Rails.root.join("config/ssh/id_rsa")
@@ -49,6 +50,10 @@ class SshWrapper
         exit(2)
       end
     end
+  end
+
+  def password_expired?
+    ssh.exec!("pwd") =~ /Your password has expired/
   end
 
   def ubuntu_lts?
@@ -99,6 +104,7 @@ class SshWrapper
     begin
       file.write content
       file.close
+      ssh.exec!("mkdir -p #{File.dirname(remote_path)}")
       scp.upload! file.path, remote_path
       log "Wrote #{content.length} bytes to #{@host}:#{remote_path}"
     ensure
@@ -131,8 +137,10 @@ class SshWrapper
       err "Passwordless login failed. Attempting to login with password"
       begin
         configure_passwordless_login
-        sleep 1
         retry
+      rescue PasswordExpiredError
+        err "Password has expired! You must login via SSH and change your password in order to continue"
+        exit(2)
       rescue Net::SSH::AuthenticationFailed
         err "Incorrect password. Giving up."
         exit(2)
@@ -211,6 +219,7 @@ class SshWrapper
     generate_keypair unless SSH_PRIVATE_KEY.exist?
     Net::SSH.start(@host, @user, password: ENV['password']) do |ssh|
       connected ssh
+      raise PasswordExpiredError if password_expired?
       ssh.exec!("mkdir ~/.ssh")
       remote_append "~/.ssh/authorized_keys", SSH_PUBLIC_KEY.read
       log "Disabling future password authentication attempts"
