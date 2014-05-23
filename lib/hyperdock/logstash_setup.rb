@@ -63,19 +63,16 @@ module Hyperdock
     end
 
     def generate_new_logstash_certificates
-      dir = "/var/ssl/logstash"
-      remote = { key: "#{dir}/key.pem", cert: "#{dir}/cert.pem" }
-      ssh.exec! "mkdir -p #{dir}"
-      ssh.exec! "openssl req -x509 -batch -nodes -newkey rsa:2048 -keyout #{remote[:key]} -out #{remote[:cert]}"
+      ssl = generate_certificate(cert: "/var/ssl/logstash/cert.pem", key: "/var/ssl/logstash/key.pem")
       # TODO maybe later you want to make this a choice?
-      log log_after "You have generated new certs!.".yellow
+      log_after "You have generated new certs!.".yellow
       dir = LUMBERJACK[:key].dirname
       FileUtils.mkdir(dir) unless dir.exist?
-      scp.download!(remote[:cert], LUMBERJACK[:cert].to_s)
-      log log_after "New SSL cert downloaded to #{LUMBERJACK[:cert]}".yellow
-      scp.download!(remote[:key], LUMBERJACK[:key])
-      log log_after "New SSL private key downloaded to #{LUMBERJACK[:key]}".yellow
-      log log_after "Make sure to run the host provisioner again on all hosts to setup the new certs".yellow
+      scp.download!(ssl[:cert], LUMBERJACK[:cert].to_s)
+      log_after "New SSL cert downloaded to #{LUMBERJACK[:cert]}".yellow
+      scp.download!(ssl[:key], LUMBERJACK[:key])
+      log_after "New SSL private key downloaded to #{LUMBERJACK[:key]}".yellow
+      log_after "Make sure to run the host provisioner again on all hosts to setup the new certs".yellow
     end
 
     def setup_logstash_supervisor
