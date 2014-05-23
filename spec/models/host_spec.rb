@@ -12,4 +12,14 @@ describe Host do
   it "#docker returns a Docker object" do
     subject.docker.should be_a Docker::Client
   end
+
+  it "is not a monitor by default" do
+    host.should_not be_monitor
+  end
+
+  it "can be a monitor" do
+    host.save
+    host.is_monitor!
+    host.reload.should be_monitor
+  end
 end

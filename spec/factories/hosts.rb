@@ -4,7 +4,6 @@ FactoryGirl.define do
   factory :host do
     name "MyHost"
     ip_address "10.0.0.12"
-    port 5544
     association :region
     after(:build) do |host|
       host.region = create(:region)
