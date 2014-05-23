@@ -274,4 +274,12 @@ class SshWrapper
     end
     log_after "Environment has changed. Please reprovision all hosts!"
   end
+
+  def generate_certificate opts
+    dir = File.dirname opts[:cert]
+    ssh.exec! "mkdir -p #{dir}"
+    remote = { key: "#{dir}/key.pem", cert: "#{dir}/cert.pem" }
+    ssh.exec! "openssl req -x509 -batch -nodes -newkey rsa:2048 -keyout #{remote[:key]} -out #{remote[:cert]}"
+    remote
+  end
 end
