@@ -8,15 +8,14 @@ class Host < ActiveRecord::Base
   after_destroy :update_region
 
   validates :name, presence: true
-  validates :ip_address, :format => { :with => Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex) }, uniqueness: { scope: :port, message: "and port belong to another host" }
-  validates :port, numericality: { only_integer: true, less_than_or_equal_to: 65535, greater_than: 0  }
+  validates :ip_address, :format => { :with => Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex) }, uniqueness: true
 
   def info
     OpenStruct.new(get_info)
   end
 
   def docker_url
-    "http://#{self.ip_address}:#{self.port.to_s}"
+    "https://#{self.ip_address}:443"
   end
 
   def get_info
@@ -46,6 +45,14 @@ class Host < ActiveRecord::Base
       rc.proxy = self.containers.where(instance_id: rc.Id).first if rc.Id
       rc
     end
+  end
+
+  def monitor?
+    self.is_monitor
+  end
+
+  def is_monitor!
+    self.update_column(:is_monitor, true)
   end
 
   private
