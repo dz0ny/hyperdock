@@ -18,7 +18,7 @@ namespace :monitor do
   EOF
   task provision: :environment do
     require 'monitor_provisioner'
-    mp = MonitorProvisioner.new(ENV['ip'], ENV['password'], "monitor")
+    mp = MonitorProvisioner.new(ENV['ip'], ENV['password'], ENV["name"])
     mp.provision!
     # what it does:
     # * disable ssh password auth
