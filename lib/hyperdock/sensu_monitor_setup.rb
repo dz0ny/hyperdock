@@ -1,19 +1,21 @@
 require 'hyperdock/sensu_setup_common'
+require 'hyperdock/nginx'
 
 module Hyperdock
   module SensuMonitorSetup
     include SensuSetupCommon
+    include Nginx
     MONITOR_DIR = SENSU_CONFIG_DIR.join('monitor')
     CERT_TAR = MONITOR_DIR.join('ssl_certs.tar')
     REDIS_CONF = MONITOR_DIR.join('conf.d/redis.json')
     API_CONF = MONITOR_DIR.join('conf.d/api.json')
     DASHBOARD_CONF = MONITOR_DIR.join('conf.d/dashboard.json')
     RABBITMQ_INSTALL_SCRIPT = <<-EOF
+      export DEBIAN_FRONTEND=noninteractive
       apt-get -y install erlang-nox
       wget -q http://www.rabbitmq.com/rabbitmq-signing-key-public.asc -O- | apt-key add -
       echo "deb     http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
       apt-get update
-      export DEBIAN_FRONTEND=noninteractive
       apt-get install rabbitmq-server
     EOF
     RABBITMQ_CONFIG_STEPS = {
@@ -55,6 +57,11 @@ module Hyperdock
       write_api_config!
       write_dashboard_config!
       write_client_config!
+      setup_nginx_vhost({
+        server_name: "sensu.#{@name}.#{ENV['FQDN']}",
+        site_name: "sensu",
+        template_path: MONITOR_DIR.join('dashboard-nginx.conf')
+      })
       setup_rabbitmq
       needs_package 'redis-server' do
         permit_sensu_configs!
@@ -66,7 +73,7 @@ module Hyperdock
           "ALLOW rabbitmq port 5671" => "ufw allow 5671",
           # TODO terminate API and Dashboard with SSL
           "ALLOW Sensu API port 4567" => "ufw allow 4567",
-          "ALLOW Sensu Dashboard port 8080" => "ufw allow 8080",
+          "DENY Sensu Dashboard port 8080" => "ufw deny 8080",
           "Enable Firewall" => "yes | ufw enable"
         })
       end
