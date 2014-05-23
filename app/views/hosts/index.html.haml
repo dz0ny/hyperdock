@@ -11,18 +11,16 @@
             %th Name
             %th Healthy?
             %th Ip address
-            %th Port
             %th Region
             %th{:colspan => "3"}
         %tbody
           - @hosts.each do |host|
             %tr
               %td
-                %i.glyphicon.glyphicon-cloud>
+                %i.glyphicon{class:"glyphicon-#{host.is_monitor? ? 'eye-open' : 'cloud'}"}
                 \&nbsp;#{link_to host.name, host}
               %td= host.healthy ? "yes" : "no"
               %td= host.ip_address
-              %td= host.port
               %td= host.region.name
               %td= link_to 'Check Health', healthcheck_host_path(host), method: :get
               %td= link_to 'Edit', edit_host_path(host)

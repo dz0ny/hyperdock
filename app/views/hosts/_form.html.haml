@@ -10,16 +10,21 @@
             - @host.errors.full_messages.each do |message|
               %li= message
       .form-group.col-lg-12
-        = f.label :region_id
-        = f.collection_select :region_id, Region.all, :id, :name, { include_blank: true }, { class: 'form-control input-lg', placeholder: "Select a region" }
-      .form-group.col-lg-12
         = f.label :name
         = f.text_field :name, class: 'form-control input-sm'
       .form-group.col-lg-12
-        = f.label :ip_address
+        = f.label :region_id
+        = f.collection_select :region_id, Region.all, :id, :name, { include_blank: true }, { class: 'form-control input-lg', placeholder: "Select a region" }
+      .form-group.col-lg-12
+        = f.label :ip_address, "IP Address"
         = f.text_field :ip_address, class: 'form-control input-sm'
       .form-group.col-lg-12
-        = f.label :port
-        = f.number_field :port, class: 'form-control input-sm'
-      .actions
-        = f.submit
+        = f.submit 'Submit', class: 'btn btn-success pull-right'
+        .pull-left
+          .radio
+            = f.label :is_monitor, { class: "radio-inline" } do
+              = f.radio_button :is_monitor, true
+              Monitor
+            = f.label :is_monitor, { class: "radio-inline" } do
+              = f.radio_button :is_monitor, false
+              Docker Host
