@@ -1,15 +1,16 @@
-= form_for(@region) do |f|
-  - if @region.errors.any?
-    #error_explanation
-      %h2
-        = pluralize(@region.errors.count, "error")
-        prohibited this region from being saved:
-      %ul
-        - @region.errors.full_messages.each do |message|
-          %li= message
-  .field
-    = f.label :name
-    %br/
-    = f.text_field :name
-  .actions
-    = f.submit
+.row
+  .container-fluid
+    = form_for(@region, html: {class: 'form-horizontal'}) do |f|
+      - if @region.errors.any?
+        #error_explanation
+          %h2
+            = pluralize(@region.errors.count, "error")
+            prohibited this region from being saved:
+          %ul
+            - @region.errors.full_messages.each do |message|
+              %li= message
+      .form-group.col-lg-12
+        = f.label :name
+        = f.text_field :name, class: 'form-control input-sm'
+      .form-group.col-lg-12
+        = f.submit 'Submit', class: 'btn btn-success pull-right'
