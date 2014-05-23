@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140511081130) do
+ActiveRecord::Schema.define(version: 20140523090734) do
 
   create_table "containers", force: true do |t|
     t.integer  "image_id"
@@ -35,11 +35,11 @@ ActiveRecord::Schema.define(version: 20140511081130) do
   create_table "hosts", force: true do |t|
     t.string   "name"
     t.string   "ip_address"
-    t.integer  "port"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "region_id"
     t.boolean  "healthy",    default: false, null: false
+    t.boolean  "is_monitor", default: false, null: false
   end
 
   add_index "hosts", ["region_id"], name: "index_hosts_on_region_id"
