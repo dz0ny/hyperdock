@@ -1,10 +1,12 @@
 require 'hyperdock/logstash_forwarder_setup'
 require 'hyperdock/elastic_search_setup'
+require 'hyperdock/kibana'
 
 module Hyperdock
   module LogstashSetup
     include Hyperdock::LogstashForwarderSetup
     include Hyperdock::ElasticSearchSetup
+    include Hyperdock::Kibana
 
     LOGSTASH_VERSION = "1.4.1"
     LOGSTASH_BIN = "/opt/logstash-#{LOGSTASH_VERSION}/bin/logstash"
@@ -84,32 +86,6 @@ module Hyperdock
       remote_write '/etc/supervisor/conf.d/logstash.conf', ls_conf
       log ssh.exec! "supervisorctl stop all"
       log ssh.exec! "service supervisor restart"
-    end
-
-    def use_kibana
-      if file_exists? '/usr/share/kibana3'
-        ssh.exec! 'rm -f /etc/nginx/sites-enabled/default'
-        ssh.exec! 'rm -f /etc/nginx/sites-available/logstash'
-        ssh.exec! 'rm -f /etc/nginx/sites-enabled/logstash'
-        nginx_conf = Rails.root.join('config/logstash/nginx.conf').read.
-          gsub('SERVER_NAME', "#{@name}.hyperdock.io")
-        remote_write '/etc/nginx/sites-available/logstash', nginx_conf
-        remote_write '/usr/share/kibana3/config.js', Rails.root.join('config/logstash/kibana.config.json').read
-        ssh.exec! "chmod 644 /usr/share/kibana3/config.js"
-        ssh.exec! "ln -s /etc/nginx/sites-available/logstash /etc/nginx/sites-enabled/logstash"
-        log ssh.exec! %{echo "#{ENV['KIBANA_PASSWORD']}" | htpasswd -ci /etc/nginx/conf.d/kibana.htpasswd #{ENV['KIBANA_USERNAME']}}
-        ssh.exec! "service nginx restart"
-      else
-        get_kibana = <<-EOF
-          rm -rf /usr/share/kibana3
-          cd /usr/share
-          wget -q http://download.elasticsearch.org/kibana/kibana/kibana-latest.zip
-          unzip kibana-latest.zip
-          mv kibana-latest kibana3
-          rm -f kibana-latest.zip
-        EOF
-        stream_exec(get_kibana) { use_kibana }
-      end
     end
   end
 end
