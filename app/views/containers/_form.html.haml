@@ -11,7 +11,7 @@
               %li= message
       .form-group.col-lg-12
         = f.label :name
-        = f.text_field :name, class: 'form-control input-lg'
+        = f.text_field :name, class: 'form-control input-sm'
       .form-group.col-lg-12
         = f.label :region_id
         = f.collection_select :region_id, @regions, :id, :name, { include_blank: true }, { class: 'form-control input-lg', placeholder: "Select a region" }
