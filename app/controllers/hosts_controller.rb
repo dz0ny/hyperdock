@@ -1,8 +1,6 @@
 class HostsController < AdminController
   before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container, :provision]
 
-  include ActionController::Live
-
   def provision
     Provisioner.perform_async('Host', @host.id)
     render nothing: true
