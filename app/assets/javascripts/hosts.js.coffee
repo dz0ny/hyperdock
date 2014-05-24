@@ -6,7 +6,7 @@ App.ready ->
     unless @ws().already_subscribed_to(ch)
       @terminal = new App.Terminal('#terminal')
       console.log @terminal
-      @ws().subscribe(ch).bind 'provisioner', @terminal.handle
+      @ws().subscribe(ch).bind 'provisioner', @terminal.handle_json
       console.log "Connected to #{ch}"
 
     btn.click ->

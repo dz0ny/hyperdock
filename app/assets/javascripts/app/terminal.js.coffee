@@ -1,15 +1,20 @@
+#= require jquery.terminal/js/jquery.terminal-0.8.7.js
+
 App.Terminal = class Terminal
   constructor: (selector) ->
     @$el = $(selector)
+    @connected = false
+    @term = @$el.terminal @handle_user,
+      greetings: "",
+      name: "HDTerm"
+      height: 200
+      prompt: "~> "
 
-  stderr: (msg) ->
-    @$el.append "<span>#{msg}</span><br>"
+  stderr: (msg) -> @term.error msg
 
-  stdout: (msg) ->
-    @$el.append "<span>#{msg}</span><br>"
+  stdout: (msg) -> @term.echo msg
 
-  clear: ->
-    @$el.empty()
+  clear: -> @term.clear()
 
   exit: (code) ->
     if code == 0
@@ -17,9 +22,13 @@ App.Terminal = class Terminal
     else
       @stderr "Process exited with status #{code}"
 
-  handle: (e) =>
+  handle_json: (e) =>
     switch e.event
       when 'start' then @clear()
       when 'exit' then @exit(e.status)
       when 'stderr' then @stderr e.message
       when 'stdout' then @stdout e.message
+
+  handle_user: (command, term) =>
+    if not @connected
+      term.error("STDIN is not connected.")
