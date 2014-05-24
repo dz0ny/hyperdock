@@ -17,3 +17,5 @@
 //= require select2
 //= require app/index
 //= require_tree .
+//= require websocket_rails/main
+

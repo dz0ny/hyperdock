@@ -6,6 +6,7 @@ gem 'pg', group: :production
 gem 'net-ssh'
 gem 'net-scp'
 gem 'term-ansicolor'
+gem 'websocket-rails'
 
 gem 'haml'
 gem "erb2haml", :group => :development
