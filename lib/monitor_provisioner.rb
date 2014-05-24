@@ -6,13 +6,6 @@ class MonitorProvisioner < SshWrapper
   include Hyperdock::SensuMonitorSetup
   include Hyperdock::LogstashSetup
 
-  def provision_test!
-    5.times do
-      log "ok coolio #{Time.now.to_s}"
-      sleep 1
-    end
-  end
-
   def provision!
     start( version: '14.04' ) do
       use_sensu!
