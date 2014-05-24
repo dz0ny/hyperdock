@@ -17,9 +17,15 @@ module Docker
       @base_uri = base_uri
     end
 
+    def mkhttp uri
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      http
+    end
+
     def info
       uri = URI.join(base_uri, "/info")
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       http.open_timeout = 2
       http.read_timeout = 2
       res = http.get(uri.request_uri)
@@ -33,7 +39,7 @@ module Docker
       uri = URI.join(base_uri, "/containers/#{id}/json")
       req = Net::HTTP::Get.new(uri)
       req["Content-Type"] = "application/json"
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       http.open_timeout = 2
       http.read_timeout = 2
       res = http.request(req)
@@ -45,7 +51,7 @@ module Docker
       uri = URI.join(base_uri, "/containers/#{id}/top")
       req = Net::HTTP::Get.new(uri)
       req["Content-Type"] = "application/json"
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       http.open_timeout = 2
       http.read_timeout = 2
       res = http.request(req)
@@ -54,7 +60,7 @@ module Docker
 
     def pull image
       uri = URI.join(base_uri, "/images/create")
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       http.request_post(uri.request_uri, "fromImage=#{image.docker_index}") do |response|
         response.read_body do |chunk|
           yield chunk
@@ -67,7 +73,7 @@ module Docker
       req = Net::HTTP::Post.new(uri)
       req["Content-Type"] = "application/json"
       req.body = default_creation_config.merge(config).to_json
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       response = http.request(req)
       JSON.parse response.body
     end
@@ -78,7 +84,7 @@ module Docker
       req = Net::HTTP::Post.new(uri)
       req["Content-Type"] = "application/json"
       req.body = default_start_config.merge(config).to_json
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       response = http.request(req)
       response.body
     end
@@ -87,7 +93,7 @@ module Docker
       raise InvalidInstanceIdError if id.nil?
       uri = URI.join(base_uri, "/containers/#{id}/stop?t=0")
       req = Net::HTTP::Post.new(uri)
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       response = http.request(req)
       response.body
     end
@@ -96,7 +102,7 @@ module Docker
       raise InvalidInstanceIdError if id.nil?
       uri = URI.join(base_uri, "/containers/#{id}/restart?t=0")
       req = Net::HTTP::Post.new(uri)
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       response = http.request(req)
       response.body
     end
@@ -105,7 +111,7 @@ module Docker
       raise InvalidInstanceIdError if id.nil?
       uri = URI.join(base_uri, "/containers/#{id}?v=1&force=1")
       req = Net::HTTP::Delete.new(uri)
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       response = http.request(req)
       response.body
     end
@@ -114,7 +120,7 @@ module Docker
     # http://docs.docker.io/reference/api/docker_remote_api_v1.11/#21-containers
     def containers options
       uri = URI.join(base_uri, "/containers/json?#{options.to_query}")
-      http = Net::HTTP.new(uri.host, uri.port)
+      http = mkhttp uri
       http.open_timeout = 2
       http.read_timeout = 4
       res = http.get(uri.request_uri)
