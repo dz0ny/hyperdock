@@ -1,18 +1,12 @@
 class HostsController < AdminController
-  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container]
+  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container, :provision]
 
   include ActionController::Live
 
-  def stream
-    response.headers['Content-Type'] = 'text/event-stream'
-    100.times {
-      response.stream.write 'hello world'
-      sleep 1
-    }
-  ensure
-    response.stream.close
+  def provision
+    Provisioner.perform_async('Host', @host.id)
+    render nothing: true
   end
-  
 
   # GET /hosts
   # GET /hosts.json
