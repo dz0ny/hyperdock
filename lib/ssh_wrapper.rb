@@ -15,6 +15,7 @@ class SshWrapper
   SSH_PRIVATE_KEY = Rails.root.join("config/ssh/id_rsa")
   SSH_PUBLIC_KEY = Rails.root.join("config/ssh/id_rsa.pub")
   SSH_KNOWN_HOSTS_FILE = Rails.root.join("config/ssh/known_hosts")
+  TIMEOUT_SECS = 10
 
   def initialize ip, user=(ENV['user'] ? ENV['user'] : "root"), password, name
     ssh_dir = Rails.root.join("config/ssh")
@@ -128,11 +129,17 @@ class SshWrapper
   def connect
     begin
       log "Attempting password-less login"
-      Net::SSH.start(@host, @user, { keys: [SSH_PRIVATE_KEY.to_s], keys_only: true, timeout: 5000,
-                                      user_known_hosts_file: SSH_KNOWN_HOSTS_FILE.to_s }) do |ssh|
-        connected ssh
-        yield
+      timeout TIMEOUT_SECS do
+        Net::SSH.start(@host, @user, { keys: [SSH_PRIVATE_KEY.to_s],
+                                       keys_only: true, timeout: TIMEOUT_SECS,
+                                       user_known_hosts_file: SSH_KNOWN_HOSTS_FILE.to_s }) do |ssh|
+          connected ssh
+          yield
+        end
       end
+    rescue Timeout::Error
+      err "Connection timed out."
+      exit(2)
     rescue Net::SSH::AuthenticationFailed
       err "Passwordless login failed. Attempting to login with password"
       begin
