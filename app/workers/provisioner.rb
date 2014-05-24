@@ -4,25 +4,28 @@ require 'host_provisioner'
 
 class Provisioner
   include Sidekiq::Worker
+  sidekiq_options unique: true,
+    unique_args: :unique_args
+
+  def self.unique_args(model, id, options)
+    [ model, id ]
+  end
 
   def perform(class_string, id, opts={})
     case class_string
     when 'Host'
-      key = opts["mutex_key"].to_sym
-      mutex = Redis::Semaphore.new(key, connection: 'localhost')
-      provision_host Host.find(id), mutex, opts["password"]
+      provision_host Host.find(id), opts["password"]
     when 'Container'
       provision_container Container.find(id)
     end
   end
 
-  def provision_host record, mutex, password=nil
+  def provision_host record, password=nil
     logger.info "Provisioning host #{record.name} #{record.ip_address}"
     ch = WebsocketRails["host_#{record.id}".to_sym]
     klass = record.monitor? ? MonitorProvisioner : HostProvisioner
     provisioner = klass.new(record.ip_address, 'root', password, record.name)
     provisioner.on_exit {|code|
-      mutex.unlock
       ch.trigger 'provisioner', {success: code == 0}
     }.on_output {|data|
       ch.trigger 'provisioner', data

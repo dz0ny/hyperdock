@@ -39,8 +39,8 @@ gem 'spring',        group: :development
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-gem 'redis-semaphore'
 gem 'sidekiq'
+gem 'sidekiq-unique-jobs'
 gem 'sinatra', require: nil
 # Use unicorn as the app server
 gem 'unicorn', group: :production
