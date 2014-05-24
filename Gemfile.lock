@@ -204,14 +204,12 @@ GEM
     rdoc (4.1.1)
       json (~> 1.4)
     redis (3.0.7)
-    redis-classy (1.2.0)
-      redis-namespace (~> 1.0)
-    redis-mutex (2.1.1)
-      redis-classy (~> 1.2)
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
     redis-objects (0.9.1)
       redis (>= 3.0.2)
+    redis-semaphore (0.2.1)
+      redis
     ref (1.0.5)
     remotipart (1.2.1)
     rspec (2.14.1)
@@ -345,7 +343,7 @@ DEPENDENCIES
   quiet_assets
   rails (= 4.1.0)
   rails_admin
-  redis-mutex
+  redis-semaphore
   rspec-rails
   sass-rails (~> 4.0.3)
   sdoc (~> 0.4.0)

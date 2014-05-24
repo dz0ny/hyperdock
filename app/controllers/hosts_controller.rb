@@ -3,16 +3,16 @@ class HostsController < AdminController
 
   def provision
     key = "provision_host_#{@host.id}"
-    mutex = Redis::Mutex.new(key, block: 0, expire: 10.minutes)
-    if mutex.lock
+    s = Redis::Semaphore.new(key.to_sym, connection: 'localhost')
+    if s.locked?
+      render text: 'failed to acquire lock!' 
+    else
       begin
-        Provisioner.perform_async('Host', @host.id, mutex_key: key, password:'')
-      ensure
-        mutex.unlock
+        s.lock do 
+          Provisioner.perform_async('Host', @host.id, mutex_key: key, password:'')
+        end
       end
       render text: 'ok'
-    else
-      render text: 'failed to acquire lock!'
     end
   end
 

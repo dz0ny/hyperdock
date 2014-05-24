@@ -8,8 +8,8 @@ class Provisioner
   def perform(class_string, id, opts={})
     case class_string
     when 'Host'
-      mutex = Redis::Mutex.new opts["mutex_key"]
-      binding.pry
+      key = opts["mutex_key"].to_sym
+      mutex = Redis::Semaphore.new(key, connection: 'localhost')
       provision_host Host.find(id), mutex, opts["password"]
     when 'Container'
       provision_container Container.find(id)
