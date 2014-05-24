@@ -2,8 +2,18 @@ class HostsController < AdminController
   before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container, :provision]
 
   def provision
-    Provisioner.perform_async('Host', @host.id)
-    render nothing: true
+    key = "provision_host_#{@host.id}"
+    mutex = Redis::Mutex.new(key, block: 0, expire: 10.minutes)
+    if mutex.lock
+      begin
+        Provisioner.perform_async('Host', @host.id, mutex_key: key, password:'')
+      ensure
+        mutex.unlock
+      end
+      render text: 'ok'
+    else
+      render text: 'failed to acquire lock!'
+    end
   end
 
   # GET /hosts
