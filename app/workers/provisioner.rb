@@ -32,10 +32,16 @@ class Provisioner
         ch.trigger 'provisioner', { event: 'stdout', message: msg }
       elsif msg = data[:err]
         ch.trigger 'provisioner', { event: 'stderr', message: msg }
+      else
+        ch.trigger 'provisioner', { event: 'unknown', data: data }
       end
-    }
+    } #.on_ssh_config { |pub_key, priv_key| }
     ch.trigger 'provisioner', { event: 'start' }
-    provisioner.provision!
+    begin
+      provisioner.provision!
+    rescue => ex
+      ch.trigger 'provisioner', { event: 'stderr', message: %{#{ex.class} -- #{ex.message}<br>#{ex.backtrace.join("<br>")}} }
+    end
   end
 
   ##
