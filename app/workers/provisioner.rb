@@ -9,29 +9,27 @@ class Provisioner
     opts = {logger: logger}
     case class_string
     when 'Host'
-      opts[:host] = Host.find(id)
-      provision_host opts
+      provision_host Host.find(id), opts
     when 'Container'
-      opts[:container] = Container.find(id)
-      provision_container opts
+      provision_container Container.find(id), opts
     end
   end
 
-  def provision_host host, opts
-    if opts[:host].monitor?
-      MonitorProvisioner.new opts
-    else
-      HostProvisioner.new opts
-    end.event_log do |data|
-      ch = "host_#{opts[:host].id}".to_sym
+  def provision_host record, opts
+    klass = record.monitor? ? MonitorProvisioner : HostProvisioner
+    provisioner = klass.new(record.ip_address, 'root', opts[:password], record.name)
+    provisioner.on_output do |data|
+      ch = "host_#{record.id}".to_sym
       WebsocketRails[ch].trigger 'provisioner', data
-    end.provision!
+    end
+    provisioner.provision_test!
   end
 
   ##
   # You won't always pull an image when provisioning.
   # Sometimes you'll be using a local image. FIXME
-  def provision_container opts
+  def provision_container record, opts
+    opts[:container] = record
     provisioner = ContainerProvisioner.new opts
     provisioner.provision! do |data|
       ch = "container_#{opts[:container].id}".to_sym
