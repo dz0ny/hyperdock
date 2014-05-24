@@ -42,7 +42,7 @@ class ContainersController < ApplicationController
       respond_to do |format|
         if @container.save
           # send to sidekiq to provision
-          Provisioner.perform_async(@container.id) 
+          Provisioner.perform_async('Container', @container.id) 
           format.html { redirect_to @container, notice: 'Container was successfully created.' }
           format.json { render :show, status: :created, location: @container }
         else
