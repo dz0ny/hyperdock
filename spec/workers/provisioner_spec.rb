@@ -11,13 +11,13 @@ describe Provisioner do
 
   it "sets an instance id" do
     prev_id = container.instance_id
-    worker.perform(container.id)
+    worker.perform('Container', container.id)
     container.reload.instance_id.should_not eq prev_id
   end
 
   it "sets a status" do
     container.status.should_not eq "created"
-    worker.perform(container.id)
+    worker.perform('Container', container.id)
     container.reload.status.should eq "created"
   end
 end
