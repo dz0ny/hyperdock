@@ -10,7 +10,13 @@
 .row
   .container-fluid
     - if @host.is_monitor
-      = link_to '[re]provision', provision_host_path(@host), remote: true, id: 'reprovision'
+      .form-horizontal
+        .form-group
+          = label_tag 'Root Password', nil, class: 'col-xs-3 control-label'
+          .col-xs-5
+            = text_field_tag :root_password, nil, placeholder: "Required once, never saved", class: 'form-control input-sm'
+          .col-xs-3
+            = link_to '(Re)provision', '#', id: 'reprovision_host', class: 'btn btn-primary', data: { url: provision_host_path(@host), id: @host.id }
       #terminal
     - else
       .panel.panel-default
