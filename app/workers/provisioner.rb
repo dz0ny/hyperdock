@@ -6,7 +6,6 @@ class Provisioner
   include Sidekiq::Worker
 
   def perform(class_string, id)
-    opts = {logger: logger}
     case class_string
     when 'Host'
       provision_host Host.find(id), opts
@@ -30,6 +29,7 @@ class Provisioner
   # Sometimes you'll be using a local image. FIXME
   def provision_container record, opts
     opts[:container] = record
+    opts[:logger] = logger
     provisioner = ContainerProvisioner.new opts
     provisioner.provision! do |data|
       ch = "container_#{opts[:container].id}".to_sym
