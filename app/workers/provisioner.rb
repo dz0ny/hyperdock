@@ -25,9 +25,7 @@ class Provisioner
     ch = WebsocketRails["host_#{record.id}".to_sym]
     klass = record.monitor? ? MonitorProvisioner : HostProvisioner
     provisioner = klass.new(record.ip_address, 'root', password, record.name)
-    provisioner.on_exit {|code|
-      ch.trigger 'provisioner', { event: 'exit', status: code }
-    }.on_output {|data|
+    provisioner.on_output {|data|
       if msg = data[:log]
         ch.trigger 'provisioner', { event: 'stdout', message: msg }
       elsif msg = data[:err]
@@ -35,12 +33,20 @@ class Provisioner
       else
         ch.trigger 'provisioner', { event: 'unknown', data: data }
       end
-    } #.on_ssh_config { |pub_key, priv_key| }
-    ch.trigger 'provisioner', { event: 'start' }
+    }.on_exit {|code|
+      ch.trigger 'provisioner', { event: 'exit', status: code }
+    }
     begin
+      provisioner.auth = record.ssh_identity
+      ch.trigger 'provisioner', { event: 'start' }
       provisioner.provision!
     rescue => ex
-      ch.trigger 'provisioner', { event: 'stderr', message: %{#{ex.class} -- #{ex.message}<br>#{ex.backtrace.join("<br>")}} }
+      ch.trigger 'provisioner', { event: 'exception',
+                                  class: ex.class.to_s, 
+                                  message: ex.message, 
+                                  backtrace: ex.backtrace }
+    ensure
+      record.ssh_identity = provisioner.auth
     end
   end
 

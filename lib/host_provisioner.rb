@@ -1,9 +1,9 @@
-require 'ssh_wrapper'
+require 'hyperdock/ssh/wrapper'
 require 'hyperdock/sensu_setup'
 require 'hyperdock/docker_setup'
 require 'hyperdock/logstash_forwarder_setup'
 
-class HostProvisioner < SshWrapper
+class HostProvisioner < Hyperdock::SSH::Wrapper
   include Hyperdock::SensuSetup
   include Hyperdock::DockerSetup
   include Hyperdock::LogstashForwarderSetup

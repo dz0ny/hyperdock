@@ -1,8 +1,8 @@
-require 'ssh_wrapper'
+require 'hyperdock/ssh/wrapper'
 require 'hyperdock/sensu_monitor_setup'
 require 'hyperdock/logstash_setup'
 
-class MonitorProvisioner < SshWrapper
+class MonitorProvisioner < Hyperdock::SSH::Wrapper
   include Hyperdock::SensuMonitorSetup
   include Hyperdock::LogstashSetup
 
