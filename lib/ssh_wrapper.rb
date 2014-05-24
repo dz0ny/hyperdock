@@ -191,6 +191,15 @@ class SshWrapper
     self
   end
 
+  ##
+  # register a block to handle exit
+  def on_exit
+    if block_given?
+      self.class.send(:define_method, :exit, -> (code) { yield(code) })
+    end
+    self
+  end
+
   def stream_exec cmd
     channel = ssh.open_channel do |ch|
       ch.exec(cmd) do |ch, success|
