@@ -15,7 +15,7 @@ class SshWrapper
   SSH_PRIVATE_KEY = Rails.root.join("config/ssh/id_rsa")
   SSH_PUBLIC_KEY = Rails.root.join("config/ssh/id_rsa.pub")
   SSH_KNOWN_HOSTS_FILE = Rails.root.join("config/ssh/known_hosts")
-  TIMEOUT_SECS = 10
+  TIMEOUT_SECS = 5
 
   def initialize ip, user=(ENV['user'] ? ENV['user'] : "root"), password, name
     ssh_dir = Rails.root.join("config/ssh")
