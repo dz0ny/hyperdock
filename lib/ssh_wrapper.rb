@@ -149,18 +149,14 @@ class SshWrapper
         err "Password has expired! You must login via SSH and change your password in order to continue"
         exit(2)
       rescue Net::SSH::AuthenticationFailed
-        err "Incorrect password. Giving up."
+        err "Authentication failed. Giving up."
         exit(2)
       end
     rescue Net::SSH::HostKeyMismatch => ex
-      err "Host key mismatch! #{ex.message}\nContinue anyway? (yes/no)"
-      choice = $stdin.gets
-      if choice[0].downcase == "y"
-        ex.remember_host!
-        retry
-      else
-        exit(2)
-      end
+      err "Host key mismatch! #{ex.message}\nRefusing to continue."
+      exit(2)
+      #ex.remember_host!
+      #retry
     end
   end
 
@@ -243,7 +239,8 @@ class SshWrapper
 
   def configure_passwordless_login
     generate_keypair unless SSH_PRIVATE_KEY.exist?
-    Net::SSH.start(@host, @user, password: ENV['password']) do |ssh|
+    Net::SSH.start(@host, @user, { password: @password, timeout: TIMEOUT_SECS,
+                                   user_known_hosts_file: SSH_KNOWN_HOSTS_FILE.to_s }) do |ssh|
       connected ssh
       raise PasswordExpiredError if password_expired?
       ssh.exec!("mkdir ~/.ssh")
