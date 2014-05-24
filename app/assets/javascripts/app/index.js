@@ -11,8 +11,11 @@ App.ready(function() {
 
 App.ws = function() {
   if (typeof this.dispatcher === 'undefined') {
-    return this.dispatcher = new WebSocketRails("localhost:3000/websocket");
-  } else {
-    return this.dispatcher;
+    this.dispatcher = new WebSocketRails("localhost:3000/websocket");
+    // Add some helpers
+    this.dispatcher.already_subscribed_to = function(ch) {
+      return typeof this.channels[ch] !== 'undefined';
+    }
   }
+  return this.dispatcher;
 }
