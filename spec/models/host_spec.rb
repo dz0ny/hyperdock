@@ -22,4 +22,9 @@ describe Host do
     host.is_monitor!
     host.reload.should be_monitor
   end
+
+  it "has a temporary storage directory on disk created as needed" do
+    host.save
+    host.tmp.should be_directory
+  end
 end

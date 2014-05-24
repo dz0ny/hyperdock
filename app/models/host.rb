@@ -55,6 +55,33 @@ class Host < ActiveRecord::Base
     self.update_column(:is_monitor, true)
   end
 
+  def tmp
+    path = Rails.root.join("tmp/hosts/#{self.id}")
+    FileUtils.mkdir_p(path) unless path.exist?
+    path
+  end
+
+  def ssh_auth_files
+    ident = { private_key: tmp.join("id_rsa"),
+              public_key: tmp.join("id_rsa.pub"),
+              known_hosts: tmp.join("known_hosts") }
+  end
+
+  def ssh_identity
+    ident = ssh_auth_files
+    ident[:private_key].write self.ssh_private_key
+    ident[:public_key].write self.ssh_public_key
+    ident[:known_hosts].write self.ssh_known_hosts
+    ident
+  end
+
+  def ssh_identity= ident
+    self.ssh_private_key = ident[:private_key].read 
+    self.ssh_public_key = ident[:public_key].read
+    self.ssh_known_hosts = ident[:known_hosts].read
+    self.save!
+  end
+
   private
 
   def update_region
