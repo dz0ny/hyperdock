@@ -32,7 +32,7 @@ class Provisioner
   def provision_container record
     provisioner = ContainerProvisioner.new container: record, logger: logger
     provisioner.provision! do |data|
-      ch = "container_#{container.id}".to_sym
+      ch = "container_#{record.id}".to_sym
       logger.info data
       WebsocketRails[ch].trigger 'provisioner', data
     end
