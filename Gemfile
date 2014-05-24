@@ -1,4 +1,8 @@
 source 'https://rubygems.org'
+source 'https://rails-assets.org'
+
+gem 'rails-assets-jquery.terminal'
+
 gem 'dotenv-rails'
 
 gem 'pg', group: :production
