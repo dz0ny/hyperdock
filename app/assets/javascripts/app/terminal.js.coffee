@@ -15,7 +15,7 @@ App.Terminal = class Terminal
     switch e.event
       when 'start' then @term.clear()
       when 'exit'
-        m = "Process existed with status #{code}"
+        m = "Process existed with status #{e.status}"
         if e.status == 0 then @term.echo(m) else @term.error(m)
       when 'stderr' then @term.error e.message
       when 'exception'
