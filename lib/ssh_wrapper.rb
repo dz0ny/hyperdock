@@ -282,4 +282,14 @@ class SshWrapper
     ssh.exec! "openssl req -x509 -batch -nodes -newkey rsa:2048 -keyout #{remote[:key]} -out #{remote[:cert]}"
     remote
   end
+
+  ##
+  # register a block to receive log events
+  def event_log
+    if block_given?
+      self.class.send(:define_method, :log, -> (line) { yield({log: line})})
+      self.class.send(:define_method, :err, -> (line) { yield({err: line})})
+    end
+    self
+  end
 end
