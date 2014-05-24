@@ -26,16 +26,16 @@ class Provisioner
     klass = record.monitor? ? MonitorProvisioner : HostProvisioner
     provisioner = klass.new(record.ip_address, 'root', password, record.name)
     provisioner.on_exit {|code|
-      ch.trigger 'provisioner', {success: code == 0}
+      ch.trigger 'provisioner', { event: 'exit', status: code }
     }.on_output {|data|
-      ch.trigger 'provisioner', data
+      if msg = data[:log]
+        ch.trigger 'provisioner', { event: 'stdout', message: msg }
+      elsif msg = data[:err]
+        ch.trigger 'provisioner', { event: 'stderr', message: msg }
+      end
     }
-    sleep 1
-    provisioner.log 'fake output'
-    sleep 1
-    provisioner.exit(2)
-
-      #.provision!
+    ch.trigger 'provisioner', { event: 'start' }
+    provisioner.provision!
   end
 
   ##
