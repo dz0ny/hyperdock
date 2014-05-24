@@ -11,6 +11,7 @@
   .container-fluid
     - if @host.is_monitor
       = link_to '[re]provision', provision_host_path(@host), remote: true, id: 'reprovision'
+      #terminal
     - else
       .panel.panel-default
         .panel-heading Usage

@@ -5,5 +5,6 @@ App.ready ->
     ch = "host_#{host_id}"
     if host_id? && !ws.already_subscribed_to(ch)
       ws.subscribe(ch).bind 'provisioner', (data) ->
-        console.log data
+        line = "<span>#{JSON.stringify(data)}</span><br>"
+        $('#terminal').append line
       console.log("subscribed to channel #{ch}")
