@@ -20,7 +20,7 @@ module Hyperdock
 
     def upgrade_kernel!
       script = %{
-          apt-get -y update
+          apt-get -y update > /dev/null
           apt-get -y install linux-image-generic-lts-raring linux-headers-generic-lts-raring
           reboot
       }

@@ -15,7 +15,7 @@ module Hyperdock
       apt-get -y install erlang-nox
       wget -q http://www.rabbitmq.com/rabbitmq-signing-key-public.asc -O- | apt-key add -
       echo "deb     http://www.rabbitmq.com/debian/ testing main" > /etc/apt/sources.list.d/rabbitmq.list
-      apt-get update
+      apt-get update > /dev/null
       apt-get install rabbitmq-server
     EOF
     RABBITMQ_CONFIG_STEPS = {

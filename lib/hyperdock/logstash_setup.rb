@@ -14,8 +14,9 @@ module Hyperdock
     LOGSTASH_INSTALL_SCRIPT = <<-EOF
       rm -rf /opt/logstas* 
       export DEBIAN_FRONTEND=noninteractive
-      apt-get update
+      apt-get update > /dev/null
       apt-get install -yq openjdk-7-jre-headless supervisor unzip nginx apache2-utils
+      yes | dpkg --configure -a
       cd /opt
       echo "Logstash Downloading ..."
       wget https://download.elasticsearch.org/logstash/logstash/logstash-#{LOGSTASH_VERSION}.tar.gz 2>/dev/null
