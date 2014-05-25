@@ -69,9 +69,10 @@ class Host < ActiveRecord::Base
 
   def ssh_identity
     ident = ssh_auth_files
-    ident[:private_key].write self.ssh_private_key
-    ident[:public_key].write self.ssh_public_key
-    ident[:known_hosts].write self.ssh_known_hosts
+    ident.keys.each do |key|
+      ident[key].write self.send("ssh_#{key}".to_sym)
+      ident[key].chmod 0600
+    end
     ident
   end
 
