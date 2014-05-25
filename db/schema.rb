@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140524195148) do
+ActiveRecord::Schema.define(version: 20140525095835) do
 
   create_table "containers", force: true do |t|
     t.integer  "image_id"
@@ -38,11 +38,24 @@ ActiveRecord::Schema.define(version: 20140524195148) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "region_id"
-    t.boolean  "healthy",         default: false, null: false
-    t.boolean  "is_monitor",      default: false, null: false
+    t.boolean  "healthy",                  default: false, null: false
+    t.boolean  "is_monitor",               default: false, null: false
     t.text     "ssh_private_key"
     t.text     "ssh_public_key"
     t.text     "ssh_known_hosts"
+    t.string   "rabbitmq_host"
+    t.string   "logstash_server"
+    t.string   "rabbitmq_password"
+    t.string   "sensu_api_user"
+    t.string   "sensu_api_password"
+    t.string   "sensu_dashboard_user"
+    t.string   "sensu_dashboard_password"
+    t.string   "kibana_user"
+    t.string   "kibana_password"
+    t.text     "logstash_cert"
+    t.text     "logstash_key"
+    t.text     "sensu_cert"
+    t.text     "sensu_key"
   end
 
   add_index "hosts", ["region_id"], name: "index_hosts_on_region_id"
