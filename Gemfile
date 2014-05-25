@@ -10,7 +10,7 @@ gem 'pg', group: :production
 gem 'net-ssh'
 gem 'net-scp'
 gem 'term-ansicolor'
-gem 'websocket-rails'
+gem 'websocket-rails', git: 'git://github.com/websocket-rails/websocket-rails.git', ref: '7b7bc1'
 
 gem 'haml'
 gem "erb2haml", :group => :development
