@@ -4,8 +4,7 @@ require 'host_provisioner'
 
 class Provisioner
   include Sidekiq::Worker
-  sidekiq_options unique: true,
-    unique_args: :unique_args
+  sidekiq_options retry: false, unique: true, unique_args: :unique_args
 
   def self.unique_args(model, id, options)
     [ model, id ]
