@@ -82,6 +82,12 @@ class Host < ActiveRecord::Base
     self.save!
   end
 
+  ##
+  # Find the region monitor
+  def monitor
+    monitor? ? self : region.hosts.where(is_monitor: true).first
+  end
+
   private
 
   def update_region
