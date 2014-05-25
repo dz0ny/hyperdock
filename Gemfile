@@ -7,6 +7,8 @@ gem 'dotenv-rails'
 
 gem 'pg', group: :production
 
+gem 'cloudflare'
+
 gem 'net-ssh'
 gem 'net-scp'
 gem 'term-ansicolor'
