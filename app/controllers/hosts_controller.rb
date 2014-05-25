@@ -1,10 +1,5 @@
 class HostsController < AdminController
-  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container, :provision]
-
-  def provision
-    Provisioner.perform_async('Host', @host.id, password: params['password'])
-    render text: 'ok'
-  end
+  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container]
 
   # GET /hosts
   # GET /hosts.json
