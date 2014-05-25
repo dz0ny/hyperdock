@@ -3,7 +3,7 @@
 App.Terminal = class Terminal
   constructor: (selector, @ws, @ch, @ev) ->
     @$el = $(selector)
-    @supported_modes = ['predefined', 'websocket']
+    @supported_modes = ['predefined'] # we're still working on STDIN, when ready add 'websocket'
     @mode 'predefined'
     unless @ws.already_subscribed_to(ch)
       @ws.subscribe(ch).bind ev, @handle_json
@@ -15,13 +15,9 @@ App.Terminal = class Terminal
     switch e.event
       when 'start' then @term.clear()
       when 'exit'
-        m = "Process existed with status #{e.status}"
+        m = "Process exited with status #{e.status}"
         if e.status == 0 then @term.echo(m) else @term.error(m)
       when 'stderr' then @term.error e.message
-      when 'exception'
-        @term.error ex.class
-        @term.error ex.message
-        @term.error msg for msg in ex.backtrace
       when 'stdout' then @term.echo e.message
 
   greetz: """
@@ -51,16 +47,17 @@ App.Terminal = class Terminal
       when 'websocket' then @setup @websocket_input_handler
     @current_mode = mode
 
-  websocket_input_handler: (input) =>
-    parts = input.split(' ')
-    if parts[0] == "mode" and (parts[1] in @supported_modes)
-      @mode parts[1]
-    else
-      @ws.channels[@ch].trigger event: 'input', message: input
-
   predefined_commands:
     echo: (arg1) -> @echo arg1
     help: -> @greetings()
     mode: (arg1) -> @hd_term.mode(arg1)
     modes: -> @echo @hd_term.supported_modes.join(', ')
+
+  websocket_input_handler: (input) =>
+    return unless input.length > 0
+    parts = input.split(' ')
+    if parts[0] == "mode" and (parts[1] in @supported_modes)
+      @mode parts[1]
+    else
+      @ws.channels[@ch].trigger 'input', message: input
 
