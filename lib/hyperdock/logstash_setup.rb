@@ -49,13 +49,6 @@ module Hyperdock
       write_logstash_config
       setup_logstash_supervisor
       use_kibana
-      execute_batch("Configure firewall" => {
-        "ALLOW ssh port 22" => "ufw allow ssh",
-        "DENY elasticsearch port 9200" => "ufw deny 9200",
-        "ALLOW nginx port 80" => "ufw allow 80",
-        "ALLOW lumberjack port 5043" => "ufw allow 5043",
-        "Enable Firewall" => "yes | ufw enable"
-      })
       update_local_env "LOGSTASH_SERVER" => "#{@host}:5043"
     end
 

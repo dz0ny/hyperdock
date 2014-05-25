@@ -67,15 +67,6 @@ module Hyperdock
         permit_sensu_configs!
         enable_sensu_monitor!
         enable_sensu_client!
-        execute_batch("Configure firewall" => {
-          "ALLOW ssh port 22" => "ufw allow ssh",
-          "DENY redis port 6379" => "ufw deny 6379",
-          "ALLOW rabbitmq port 5671" => "ufw allow 5671",
-          # TODO terminate API and Dashboard with SSL
-          "ALLOW Sensu API port 4567" => "ufw allow 4567",
-          "DENY Sensu Dashboard port 8080" => "ufw deny 8080",
-          "Enable Firewall" => "yes | ufw enable"
-        })
       end
     end
 
