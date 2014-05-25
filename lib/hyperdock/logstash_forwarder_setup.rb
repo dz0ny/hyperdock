@@ -38,9 +38,10 @@ module Hyperdock
     end
 
     def install_logstash_forwarder!
-      needs_package 'git'
-      stream_exec(LUMBERJACK_INSTALL_SCRIPT) do
-        configure_logstash_forwarder!
+      needs_package 'git' do
+        stream_exec(LUMBERJACK_INSTALL_SCRIPT) do
+          configure_logstash_forwarder!
+        end
       end
     end
 
