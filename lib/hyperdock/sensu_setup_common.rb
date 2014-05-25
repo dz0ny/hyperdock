@@ -25,6 +25,10 @@ module Hyperdock
       if opts[:simple_copy]
         ssh.exec!("cat /tmp/ssl_certs/client/cert.pem > /etc/sensu/ssl/cert.pem")
         ssh.exec!("cat /tmp/ssl_certs/client/key.pem > /etc/sensu/ssl/key.pem")
+      elsif self.respond_to? :monitor
+        log "Writing sensu keys from monitor #{monitor.name}"
+        remote_write '/etc/sensu/ssl/key.pem', self.monitor.sensu_key
+        remote_write '/etc/sensu/ssl/cert.pem', self.monitor.sensu_cert
       else
         scp.upload! SENSU[:key].to_s, '/etc/sensu/ssl/key.pem'
         scp.upload! SENSU[:cert].to_s, '/etc/sensu/ssl/cert.pem'

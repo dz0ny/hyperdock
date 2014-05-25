@@ -76,8 +76,14 @@ module Hyperdock
     def write_logstash_forwarder_certs!
       dir = "/opt/logstash-forwarder/ssl"
       ssh.exec!("rm -rf #{dir} ; mkdir -p #{dir}")
-      scp.upload! LUMBERJACK[:key].to_s, File.join(dir, 'key.pem')
-      scp.upload! LUMBERJACK[:cert].to_s, File.join(dir, 'cert.pem')
+      if self.respond_to? :monitor
+        log "Writing logstash keys from monitor #{monitor.name}"
+        remote_write File.join(dir, 'key.pem'), self.monitor.logstash_key
+        remote_write File.join(dir, 'cert.pem'), self.monitor.logstash_cert
+      else
+        scp.upload! LUMBERJACK[:key].to_s, File.join(dir, 'key.pem')
+        scp.upload! LUMBERJACK[:cert].to_s, File.join(dir, 'cert.pem')
+      end
     end
 
     def logstash_forwarder_installed?

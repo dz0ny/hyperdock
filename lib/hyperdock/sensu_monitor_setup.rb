@@ -121,15 +121,16 @@ module Hyperdock
     end
 
     def replace_local_sensu_certs
-      # TODO maybe later you want to make this a choice?
-      log_after "You have generated new certs!.".yellow
+      log_after "You have generated new certs!."
       dir = SENSU[:key].dirname
       FileUtils.mkdir(dir) unless dir.exist?
       scp.download!("/tmp/ssl_certs/client/cert.pem", SENSU[:cert].to_s)
-      log_after "New SSL cert downloaded to #{SENSU[:cert]}".yellow
+      update_local_env 'SENSU_CERT' => SENSU[:cert].read
+      log_after "New SSL cert downloaded to #{SENSU[:cert]}"
       scp.download!("/tmp/ssl_certs/client/key.pem", SENSU[:key].to_s)
-      log_after "New SSL private key downloaded to #{SENSU[:key]}".yellow
-      log_after "Make sure to run the host provisioner again on all hosts to setup the new certs".yellow
+      update_local_env 'SENSU_KEY' => SENSU[:key].read
+      log_after "New SSL private key downloaded to #{SENSU[:key]}"
+      log_after "Make sure to run the host provisioner again on all hosts to setup the new certs"
     end
   end
 end
