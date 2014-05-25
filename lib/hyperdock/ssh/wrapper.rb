@@ -158,10 +158,7 @@ module Hyperdock
             exit(2)
           end
         rescue Net::SSH::HostKeyMismatch => ex
-          err "Host key mismatch! #{ex.message}\nRefusing to continue."
-          exit(2)
-          #ex.remember_host!
-          #retry
+          err "Host key mismatch! Refusing to connect."
         end
       end
 
