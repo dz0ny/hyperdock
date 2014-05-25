@@ -3,8 +3,9 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   authenticate :user, lambda { |u| u.admin? } do
     mount Sidekiq::Web => '/sidekiq'
+    mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   end
-  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+
   devise_for :users
   resources :regions
 
@@ -14,7 +15,6 @@ Rails.application.routes.draw do
   resources :hosts do
     member do
       get :healthcheck
-      get :provision
       get 'zombie/:instance_id/discard', action: :discard_zombie_container
       get 'zombie/:instance_id/reclaim', action: :reclaim_zombie_container
     end
