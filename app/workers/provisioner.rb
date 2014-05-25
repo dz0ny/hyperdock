@@ -37,16 +37,15 @@ class Provisioner
       ch.trigger 'provisioner', { event: 'exit', status: code }
     }
     begin
-      provisioner.auth = record.ssh_identity
       ch.trigger 'provisioner', { event: 'start' }
+      provisioner.auth = record.ssh_identity
       provisioner.provision!
-    rescue => ex
-      ch.trigger 'provisioner', { event: 'exception',
-                                  class: ex.class.to_s, 
-                                  message: ex.message, 
-                                  backtrace: ex.backtrace }
-    ensure
       record.ssh_identity = provisioner.auth
+    rescue => ex
+      ch.trigger 'provisioner', { event: 'stderr', message: "#{ex.class.to_s} #{ex.message}" }
+      ex.backtrace.each do |bt|
+        ch.trigger 'provisioner', { event: 'stderr', message: "#{bt}" }
+      end
     end
   end
 
