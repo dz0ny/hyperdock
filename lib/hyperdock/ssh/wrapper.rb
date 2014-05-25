@@ -5,15 +5,12 @@ require 'tempfile'
 require 'term/ansicolor'
 require 'hyperdock/ssh/hooks'
 
-class String
-  include Term::ANSIColor
-end
-
 module Hyperdock
   module SSH
     class Wrapper
       class PasswordExpiredError < StandardError ; end
       include Hyperdock::SSH::Hooks
+      include Term::ANSIColor
       attr_accessor :ssh, :scp, :auth
       NAME_PATTERN = /^[a-zA-Z0-9][a-zA-Z\-\_0-9]*[a-zA-Z0-9]$/
       TIMEOUT_SECS = 5
@@ -134,13 +131,10 @@ module Hyperdock
         begin
           _before_connect if self.respond_to? :_before_connect
           log "Attempting password-less login"
-          timeout TIMEOUT_SECS do
-            Net::SSH.start(@host, @user, { keys: auth[:private_key].to_s,
-                                           keys_only: true, timeout: TIMEOUT_SECS,
-                                           user_known_hosts_file: auth[:known_hosts].to_s }) do |ssh|
-                                             connected ssh
-                                             yield
-                                           end
+          Net::SSH.start(@host, @user, { keys: auth[:private_key].to_s, keys_only: true, timeout: TIMEOUT_SECS,
+                                         user_known_hosts_file: auth[:known_hosts].to_s }) do |ssh|
+            connected ssh
+            yield
           end
         rescue Timeout::Error
           err "Connection timed out."
@@ -149,6 +143,7 @@ module Hyperdock
           err "Passwordless login failed. Attempting to login with password"
           begin
             configure_passwordless_login
+            _after_configured_passwordless_login if self.respond_to? :_after_configured_passwordless_login
             retry
           rescue PasswordExpiredError
             err "Password has expired! You must login via SSH and change your password in order to continue"
@@ -169,13 +164,13 @@ module Hyperdock
 
       def log msg
         msg.to_s.split("\n").each do |line|
-          $stdout.puts "[#{@user}@#{@host}]: #{line}".green
+          $stdout.puts green line
         end
       end
 
       def err msg
         msg.to_s.split("\n").each do |line|
-          $stdout.puts "[#{@user}@#{@host}]: #{line}".red
+          $stdout.puts red line
         end
       end
 
@@ -209,9 +204,9 @@ module Hyperdock
       end
 
       def generate_keypair
-        log "Generating local keypair"
-        system(%{ssh-keygen -t rsa -f #{auth[:private_key]} -N "" 2>&1 > /dev/null})
-        unless auth[:private_key].exist? 
+        log "Generating keypair"
+        `yes | ssh-keygen -t rsa -f #{auth[:private_key]} -N ""`.split("\n").each {|line| log line}
+        unless auth[:private_key].exist?
           err "Failed to generate keypair"
           exit(2)
         else
@@ -221,7 +216,7 @@ module Hyperdock
       end
 
       def configure_passwordless_login
-        generate_keypair unless auth[:private_key].exist?
+        generate_keypair unless auth[:private_key].exist? && auth[:private_key].size > 0
         Net::SSH.start(@host, @user, { password: @password, timeout: TIMEOUT_SECS,
                                        user_known_hosts_file: auth[:known_hosts].to_s }) do |ssh|
           connected ssh
