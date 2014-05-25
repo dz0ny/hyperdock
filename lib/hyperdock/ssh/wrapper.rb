@@ -34,9 +34,9 @@ module Hyperdock
           raise "name was not valid. pattern: #{NAME_PATTERN}"
         end
         @after = [] # we put our log_after messages here
-        @auth = { private_key: Rails.root.join("tmp/ssh/id_rsa"),
-                  public_key: Rails.root.join("tmp/ssh/id_rsa.pub"),
-                  known_hosts: Rails.root.join("tmp/ssh/known_hosts") }
+        @auth = { private_key: Rails.root.join("tmp/id_rsa"),
+                  public_key: Rails.root.join("tmp/id_rsa.pub"),
+                  known_hosts: Rails.root.join("tmp/known_hosts") }
       end
 
       def start options={}
