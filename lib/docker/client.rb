@@ -125,6 +125,8 @@ module Docker
       http.read_timeout = 4
       res = http.get(uri.request_uri)
       JSON.parse(res.body)
+    rescue
+      []
     end
   end
 end
