@@ -19,32 +19,41 @@ class Provisioner
     end
   end
 
+  def trigger name, details={}
+    @ch.trigger 'provisioner', { event: name }.merge(details)
+  end
+
   def provision_host record, password=nil
+    ENV["RABBITMQ_HOST"] = record.monitor.rabbitmq_host
+    ENV["LOGSTASH_SERVER"] = record.monitor.logstash_server
     logger.info "Provisioning host #{record.name} #{record.ip_address}"
-    ch = WebsocketRails["host_#{record.id}".to_sym]
-    klass = record.monitor? ? MonitorProvisioner : HostProvisioner
-    provisioner = klass.new(record.ip_address, 'root', password, record.name)
-    provisioner.on_output {|data|
-      if msg = data[:log]
-        ch.trigger 'provisioner', { event: 'stdout', message: msg }
-      elsif msg = data[:err]
-        ch.trigger 'provisioner', { event: 'stderr', message: msg }
-      else
-        ch.trigger 'provisioner', { event: 'unknown', data: data }
-      end
-    }.on_exit {|code|
-      ch.trigger 'provisioner', { event: 'exit', status: code }
-    }
+    @ch = WebsocketRails["host_#{record.id}".to_sym]
+    status = 127
+    start_time = Time.now
     begin
-      ch.trigger 'provisioner', { event: 'start' }
-      provisioner.auth = record.ssh_identity
+      klass = record.monitor? ? MonitorProvisioner : HostProvisioner
+      provisioner = klass.new(record.ip_address, 'root', password, record.name)
+      provisioner.on_output {|out, err|
+        trigger 'stdout', message: out if out
+        trigger 'stderr', message: err if err
+      }.on_exit {|code|
+        trigger 'exit', status: (status = code)
+      }.before_connect {
+        provisioner.auth = record.ssh_identity
+      }.after_configured_passwordless_login {
+        record.ssh_identity = provisioner.auth
+      }.on_update_env {|key, value|
+        record.update_attribute(key, value)
+      }.set_monitor { record.monitor }
+      trigger 'start'
       provisioner.provision!
-      record.ssh_identity = provisioner.auth
+      status = 0
     rescue => ex
-      ch.trigger 'provisioner', { event: 'stderr', message: "#{ex.class.to_s} #{ex.message}" }
-      ex.backtrace.each do |bt|
-        ch.trigger 'provisioner', { event: 'stderr', message: "#{bt}" }
-      end
+      trigger 'stderr', message: "#{ex.class.to_s} #{ex.message}"
+      ex.backtrace.each {|bt| trigger 'stderr', message: "#{bt}" }
+    ensure
+      trigger 'exit', status: status
+      logger.info "No longer provisioning host #{record.name} #{record.ip_address} after #{Time.now - start_time} seconds"
     end
   end
 
