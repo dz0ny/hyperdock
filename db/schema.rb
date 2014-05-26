@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140526075223) do
+ActiveRecord::Schema.define(version: 20140526214239) do
 
   create_table "containers", force: true do |t|
     t.integer  "image_id"
@@ -104,6 +104,7 @@ ActiveRecord::Schema.define(version: 20140526075223) do
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
     t.integer  "container_limit",        default: 2
+    t.string   "auth_token"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
