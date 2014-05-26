@@ -9,33 +9,26 @@ class HostProvisioner < Hyperdock::SSH::Wrapper
   include Hyperdock::LogstashForwarderSetup
 
   def provision!
-    start do
-      if ubuntu_1404? || kernel_upgraded?
-        if command_missing?('docker')
-          install_docker!
-        elsif ! docker_listening?
-          configure_docker!
-        end
-      elsif ubuntu_1204?
-        upgrade_kernel!
-        install_docker!
-      end
-      wait_for_docker do
-        use_sensu!
-        use_logstash_forwarder! do |config|
-          # Collect logs for each docker container
-          config["files"] << {
-            "paths" => [ "/var/lib/docker/containers/*/*-json.log" ],
-            "fields"=> { "type"=> "docker-container-json" }
-          }
+    start( version: '14.04' ) do
+      use_sensu!
+      use_docker!
+      use_logstash_forwarder! do |config|
+        # Collect logs for each docker container
+        config["files"] << {
+          "paths" => [ "/var/lib/docker/containers/*/*-json.log" ],
+          "fields"=> { "type"=> "docker-container-json" }
+        }
 
-          # Collect logs for the docker daemon
-          config["files"] << {
-            "paths"=> [ "/var/log/upstart/docker.log" ],
-            "fields"=> { "type"=> "docker-upstart" }
-          }
-        end
+        # Collect logs for the docker daemon
+        config["files"] << {
+          "paths"=> [ "/var/log/upstart/docker.log" ],
+          "fields"=> { "type"=> "docker-upstart" }
+        }
       end
+      execute_batch("Configure firewall" => {
+        "ALLOW ssh port 22" => "ufw allow ssh",
+        "Enable firewall" => "yes | ufw enable"
+      })
     end
   end
 end
