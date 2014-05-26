@@ -41,14 +41,14 @@ module Hyperdock
 
     def use_sensu!
       if package_installed? "sensu"
-        reconfigure!
+        configure_sensu_monitor!
       else
         log "Installing Sensu"
         stream_exec(SENSU_INSTALL_SCRIPT) { use_sensu! }
       end
     end
 
-    def reconfigure!
+    def configure_sensu_monitor!
       use_sensu_embedded_ruby!
       generate_new_sensu_certificates
       write_sensu_client_certs! simple_copy: true
