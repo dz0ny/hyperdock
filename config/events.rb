@@ -13,5 +13,6 @@ WebsocketRails::EventMap.describe do
   # The above will handle an event triggered on the client like `product.new`.
   namespace :host do
     subscribe :provision, to: WebsocketController, with_method: :provision_host
+    subscribe :reset_known_hosts, to: WebsocketController, with_method: :reset_known_hosts
   end 
 end
