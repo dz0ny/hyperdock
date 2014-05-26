@@ -24,3 +24,4 @@ public/assets/*
 config/sensu/client/ssl/*
 config/logstash/ssl/*
 dump.rdb
+config/docker/ssl_certs/*
