@@ -38,7 +38,6 @@ module Hyperdock
         cert = tmp.join('cert')
         key = tmp.join('key')
         ca = tmp.join('ca')
-        binding.pry
         scp.download!("#{dir}/client/cert.pem", cert)
         scp.download!("#{dir}/client/key.pem", key)
         scp.download!("#{dir}/docker_ca/cacert.pem", ca)
