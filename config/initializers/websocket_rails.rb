@@ -17,7 +17,8 @@ WebsocketRails.setup do |config|
   
   if config.standalone = Rails.env.production?
     config.thin_options[:daemonize] = false
-    ENV['WS_ADDR'] = "#{ENV['FQDN']}:#{config.standalone_port = 3000}"
+    config.standalone_port = 3001
+    ENV['WS_ADDR'] = "#{ENV['FQDN']}:#{config.standalone_port}"
   end
 
   # Change to true to enable channel synchronization between
