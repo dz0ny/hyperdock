@@ -11,7 +11,10 @@
       - unless @host.monitor?
         %span.small
           Monitor: 
-          = link_to @host.monitor.name, host_path(@host.monitor)
+          - if @host.monitor.nil?
+            Not monitored
+          - else
+            = link_to @host.monitor.name, host_path(@host.monitor)
     .pull-right
       = link_to 'Edit', edit_host_path(@host), class: 'btn btn-primary btn-sm'
       - if current_user.admin?
