@@ -16,14 +16,13 @@ module Hyperdock
       conf = conf.gsub('SERVER_NAME', opts[:server_name])
       if not opts[:no_ssl] # use ssl by default
         if not opts[:cert] # no cert? gen keypair
-          opts.merge generate_certificate({
+          ssl = generate_certificate({
             cert: "/var/ssl/nginx/#{opts[:site_name]}/cert.pem",
             key: "/var/ssl/nginx/#{opts[:site_name]}/key.pem"
           })
         end
-        conf = conf.gsub('SSL_CERT', opts[:cert])
-        conf = conf.gsub('SSL_CERT', opts[:cert])
-        conf = conf.gsub('SSL_CLIENT_CERT', opts[:client_cert])
+        conf = conf.gsub('SSL_CERT', ssl[:cert])
+        conf = conf.gsub('SSL_KEY', ssl[:key])
       end
       remote_write site_available, conf
       remote_write NGINX_BUCKET_SIZE_CONF, "server_names_hash_bucket_size 64;"
