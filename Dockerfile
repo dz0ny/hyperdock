@@ -18,5 +18,5 @@ RUN bundle install
 
 WORKDIR /apps/rails
 
-CMD ["/apps/rails/config/deploy/docker/runner"]
+CMD ["/apps/rails/config/docker/runner"]
 
