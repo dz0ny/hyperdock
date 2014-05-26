@@ -11,7 +11,7 @@ App.ready(function() {
 
 App.ws = function() {
   if (typeof this.dispatcher === 'undefined') {
-    this.dispatcher = new WebSocketRails("localhost:3000/websocket");
+    this.dispatcher = new WebSocketRails(Page.socket);
     // Add some helpers
     this.dispatcher.already_subscribed_to = function(ch) {
       return typeof this.channels[ch] !== 'undefined';

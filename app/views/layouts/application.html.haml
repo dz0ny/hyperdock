@@ -8,7 +8,7 @@
     %meta{:name=>"google-site-verification", :content=>"8z50ZZlQ8OHvuPw0Un3ZAiZXizcnOr12-vi7N3nxMPI"}
   %body
     %script
-      Page = { data: {} }
+      Page = { data: {}, socket: "#{ENV['WS_ADDR'] || 'localhost:3000'}/websocket" }
     %nav.navbar.navbar-inverse.navbar-static-top{:role => "navigation"}
       .container-fluid
         / Brand and toggle get grouped for better mobile display
