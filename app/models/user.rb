@@ -14,4 +14,9 @@ class User < ActiveRecord::Base
     self.containers.count >= self.container_limit
   end
 
+  def get_auth_token!
+    token = SecureRandom.urlsafe_base64(32)
+    self.update_column(:auth_token, token)
+    token
+  end
 end
