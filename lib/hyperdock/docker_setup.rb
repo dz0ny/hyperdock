@@ -11,9 +11,7 @@ module Hyperdock
     EOF
 
     def use_docker!
-      if package_installed? 'docker.io'
-        configure_docker!
-      else
+      unless package_installed? 'docker.io'
         install_docker!
       end
     end
