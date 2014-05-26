@@ -8,8 +8,8 @@ class ShowHostPage
     @setup_terminal_commands()
     @setup_terminal_ui()
     @socket = @app.ws()
-    term.connect_websockets(@socket, "host_#{@host_id}", 'provisioner')
-    term.start()
+    @terminal.connect_websockets(@socket, "host_#{@host_id}", 'provisioner')
+    @terminal.start()
 
   setup_terminal_ui: ->
     $('#rollup-terminal').click (e) =>
@@ -19,7 +19,7 @@ class ShowHostPage
         @terminal.height TERM_HEIGHT
       icon = $($(e.target).find('i').context)
       icon.toggleClass('glyphicon-chevron-up').toggleClass('glyphicon-chevron-down')
-      term.scroll_to_bottom()
+      @terminal.scroll_to_bottom()
       return false
 
   setup_terminal_commands: ->
@@ -36,6 +36,6 @@ class ShowHostPage
       @socket.emit 'host.get_host_info', { id: @host_id }
 
 App.ready ->
-  if /^\/hosts\/\d+/.test(window.location.pathname)
+  if /^\/hosts\/\d+$/.test(window.location.pathname)
     @show_host_page = new ShowHostPage(@)
 
