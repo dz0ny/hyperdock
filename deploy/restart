@@ -6,4 +6,5 @@ NEW_SUPERVISOR_CONF="$APP_DIR/config/supervisor/webapp/hyperdock.conf"
 sudo rm $SUPERVISOR_CONF
 sudo ln -s $NEW_SUPERVISOR_CONF $SUPERVISOR_CONF
 sudo supervisorctl update
+sudo supervisorctl restart
 echo "restarting supervisor"
