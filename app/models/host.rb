@@ -38,6 +38,17 @@ class Host < ActiveRecord::Base
     @client ||= Docker::Client.new(docker_url)
   end
 
+  def provisioned?
+    not ssh_private_key.empty?
+  end
+
+  def ssh
+    auth = ssh_identity
+    Net::SSH.start(self.ip_address, 'root', { keys: auth[:private_key].to_s, keys_only: true, user_known_hosts_file: auth[:known_hosts].to_s }) do |ssh|
+      yield(ssh, ssh.scp)
+    end
+  end
+
   def remote_containers
     docker.containers(all: true, size: true).map do |c|
       rc = OpenStruct.new(c)
