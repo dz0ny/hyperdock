@@ -1,0 +1,47 @@
+.panel.panel-default
+  .panel-heading Containers
+  .panel-body
+    %ul
+      - @host.remote_containers.each do |c|
+        %li
+          - if c.proxy
+            %p
+              Name: 
+              %b= link_to c.proxy.name, container_path(c.proxy)
+            %p
+              Owner:
+              = link_to c.proxy.user.email, rails_admin.show_path(model_name: 'user', id: c.proxy.user.id)
+            %p
+              Status:
+              = c.proxy.status.capitalize
+            %p
+              Image:
+              - if c.image
+                = link_to c.image.name, image_path(c.image)
+              - else
+                %i(title="This image does not exist in the database")
+                  = c.Image
+          - else
+            %p
+              %i(title="Zombie containers are those on the host for which no object exists in Hyperdock") Zombie!
+              = link_to 'Discard', "/hosts/#{@host.id}/zombie/#{c.Id}/discard"
+              - if c.image
+                = link_to 'Reclaim', "/hosts/#{@host.id}/zombie/#{c.Id}/reclaim"
+              - else
+                %i(title="Image must exist in order to reclaim container")
+                  Cannot reclaim
+            %p
+              Status:
+              = c.Status =~ /Exited/ ? c.Status : "Unknown"
+          %p
+            Command:
+            = c.Command
+          %p
+            Image:
+            = c.Image
+          %p(title="SizeRootFs is the total size of all the files in the container, in bytes. If you were to export the filesystem of the container as a tarball, it would be about that size.")
+            SizeRootFs:
+            = c.SizeRw 
+          %p(title="SizeRw is the size of the files which have been created or changed, if you compare the container to its base image. Just after creation, this should be zero; as you modify (or create) files, this will increase.")
+            SizeRw:
+            = c.SizeRw 
