@@ -6,7 +6,7 @@ class Provisioner
   include Sidekiq::Worker
   sidekiq_options retry: false, unique: true, unique_args: :unique_args
 
-  def self.unique_args(model, id, options)
+  def self.unique_args(model, id, options={})
     [ model, id ]
   end
 
