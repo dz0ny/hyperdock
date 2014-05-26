@@ -32,6 +32,16 @@ class ShowHostPage
         id: @host_id
       false
 
+    @terminal.commands['containers'] = =>
+      @app.ws().trigger "host.list_containers",
+        id: @host_id
+      false
+
+    @terminal.commands['info'] = =>
+      @app.ws().trigger "host.get_host_info",
+        id: @host_id
+      false
+
 App.ready ->
   if /^\/hosts\/\d+/.test(window.location.pathname)
     @show_host_page = new ShowHostPage(@)
