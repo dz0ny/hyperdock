@@ -12,14 +12,18 @@ namespace :host do
     all required services are listening on host monitor.hyperdock.io
 
     Usage:
-      bin/rake host:provision name="ny-02" ip="162.243.85.251" password="gpexurxttorr"
-      bin/rake host:provision name="ny-01" ip="162.243.161.151" password="vshwpkubhvqz"
-      bin/rake host:provision name="sf-01" ip="107.170.249.184" password="bzcwfgknqdcy"
-      bin/rake host:provision name="am-01" ip="188.226.227.62" password="vuemvozgsplx"
+      bin/rake host:provision id=5
   EOF
   task provision: :environment do
     require 'host_provisioner'
-    hp = HostProvisioner.new(ENV['ip'], ENV['password'], ENV['name'])
+    record = Host.find(ENV['id'])
+    ENV["RABBITMQ_HOST"] = record.monitor.rabbitmq_host
+    ENV["LOGSTASH_SERVER"] = record.monitor.logstash_server
+    hp = HostProvisioner.new(record.ip_address, ENV['password'], record.name)
+    hp.auth = record.ssh_identity
+    hp.after_configured_passwordless_login { record.ssh_identity = mp.auth }
+    hp.on_update_env {|key, value| record.update_attribute(key, value) }
+    hp.set_monitor { record.monitor }
     hp.provision!
     # what it does:
     # * disable ssh password auth
