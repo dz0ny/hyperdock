@@ -23,8 +23,10 @@ class ShowHostPage
       return false
 
   setup_terminal_commands: ->
-    @terminal.commands['provision'] = (password) =>
-      @socket.emit 'host.provision', { id: @host_id, password: password }
+    @terminal.commands['provision'] = =>
+      password = prompt("Are you sure you want to run the provisioner?\nEnter root password if this is the first time.")
+      if password is not null
+        @socket.emit 'host.provision', { id: @host_id, password: password }
 
     @terminal.commands['reset_known_hosts'] = =>
       @socket.emit "host.reset_known_hosts", { id: @host_id }
