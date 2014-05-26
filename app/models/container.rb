@@ -83,7 +83,7 @@ class Container < ActiveRecord::Base
   def select_host
     unless self.host
       # TODO: select most optimal host
-      self.host = self.region.hosts.where(is_monitor: false)
+      self.host = self.region.hosts.where(is_monitor: false).first
     end
   end
 
