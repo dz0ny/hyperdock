@@ -37,7 +37,7 @@ class Provisioner
         trigger 'stdout', message: out if out
         trigger 'stderr', message: err if err
       }.on_exit {|code|
-        trigger 'exit', status: (status = code)
+        status = code
       }.before_connect {
         provisioner.auth = record.ssh_identity
       }.after_configured_passwordless_login {
