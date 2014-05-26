@@ -27,8 +27,8 @@ module Hyperdock
 
     def use_logstash!
       if logstash_installed?
-        reconfigure_logstash!
         use_elasticsearch!
+        reconfigure_logstash!
       else
         log "Installing Logstash"
         script = "#{LOGSTASH_INSTALL_SCRIPT}"
