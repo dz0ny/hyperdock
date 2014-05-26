@@ -18,7 +18,7 @@ WebsocketRails.setup do |config|
   if config.standalone = Rails.env.production?
     config.thin_options[:daemonize] = false
     config.standalone_port = 3001
-    ENV['WS_ADDR'] = "#{ENV['FQDN']}:#{config.standalone_port}"
+    ENV['WS_ADDR'] = "web-01.hyperdock.io:3001" # Bypass cloudflare
   end
 
   # Change to true to enable channel synchronization between
