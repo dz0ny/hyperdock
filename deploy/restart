@@ -1,3 +1,9 @@
 #!/bin/sh
-sudo supervisorctl restart all
-echo "restarting Passenger app"
+# Replace supervisor config
+APP_DIR=/home/app/hyperdock
+SUPERVISOR_CONF=/etc/supervisor/conf.d/hyperdock.conf
+NEW_SUPERVISOR_CONF="$APP_DIR/config/supervisor/webapp/hyperdock.conf"
+sudo rm $SUPERVISOR_CONF
+sudo ln -s $NEW_SUPERVISOR_CONF $SUPERVISOR_CONF
+sudo supervisorctl update
+echo "restarting supervisor"
