@@ -30,8 +30,7 @@ module Hyperdock
         remote_write '/etc/sensu/ssl/key.pem', self.monitor.sensu_key
         remote_write '/etc/sensu/ssl/cert.pem', self.monitor.sensu_cert
       else
-        scp.upload! SENSU[:key].to_s, '/etc/sensu/ssl/key.pem'
-        scp.upload! SENSU[:cert].to_s, '/etc/sensu/ssl/cert.pem'
+        raise "Cannot provision a host without a monitor."
       end
     end
 
