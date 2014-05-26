@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140525095835) do
+ActiveRecord::Schema.define(version: 20140526075223) do
 
   create_table "containers", force: true do |t|
     t.integer  "image_id"
@@ -56,6 +56,9 @@ ActiveRecord::Schema.define(version: 20140525095835) do
     t.text     "logstash_key"
     t.text     "sensu_cert"
     t.text     "sensu_key"
+    t.text     "docker_client_cert"
+    t.text     "docker_client_key"
+    t.text     "docker_ca_cert"
   end
 
   add_index "hosts", ["region_id"], name: "index_hosts_on_region_id"
