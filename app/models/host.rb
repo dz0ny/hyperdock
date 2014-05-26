@@ -15,7 +15,7 @@ class Host < ActiveRecord::Base
   end
 
   def docker_url
-    "https://#{self.ip_address}:443"
+    "https://#{self.ip_address}:4243"
   end
 
   def get_info
@@ -35,7 +35,7 @@ class Host < ActiveRecord::Base
   end
 
   def docker
-    @client ||= Docker::Client.new(docker_url)
+    @client ||= Docker::Client.new(self)
   end
 
   def provisioned?
@@ -92,6 +92,14 @@ class Host < ActiveRecord::Base
     self.ssh_public_key = ident[:public_key].read
     self.ssh_known_hosts = ident[:known_hosts].read
     self.save!
+  end
+
+  def ca_file
+    @ca_file ||= begin
+                   file = self.tmp.join('ca_file')
+                   file.write(self.docker_ca_cert) unless file.exist?
+                   file
+                 end
   end
 
   ##

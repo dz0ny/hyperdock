@@ -1,8 +1,9 @@
 require 'docker/default_configs'
+require 'openssl'
+
 ##
 # Represents docker for a host
 # Communicates over the network
-# Add security patterns, etc here
 module Docker
   class Client
     class InvalidInstanceIdError < StandardError ; end
@@ -13,13 +14,21 @@ module Docker
 
     attr_reader :base_uri
 
-    def initialize base_uri
-      @base_uri = base_uri
+    def initialize record
+      @base_uri = record.docker_url
+      @cert = record.docker_client_cert
+      @key = record.docker_client_key
+      @ca_file = record.ca_file
     end
 
     def mkhttp uri
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true
+      http.cert = OpenSSL::X509::Certificate.new(@cert)
+      http.key = OpenSSL::PKey::RSA.new(@key)
+      #http.verify_mode = OpenSSL::SSL::VERIFY_PEER # use if not self-signed
+      http.verify_mode = OpenSSL::SSL::VERIFY_NONE # self-signed
+      http.ca_file = @ca_file.to_s
       http
     end
 
@@ -125,8 +134,6 @@ module Docker
       http.read_timeout = 4
       res = http.get(uri.request_uri)
       JSON.parse(res.body)
-    rescue
-      []
     end
   end
 end

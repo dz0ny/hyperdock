@@ -27,7 +27,9 @@ class HostProvisioner < Hyperdock::SSH::Wrapper
       end
       execute_batch("Configure firewall" => {
         "ALLOW ssh port 22" => "ufw allow ssh",
-        "Enable firewall" => "yes | ufw enable"
+        "ALLOW docker api port 4243" => "ufw allow 4243",
+        "Enable firewall" => "yes | ufw enable",
+        "Restart docker" => "service docker restart"
       })
     end
   end
