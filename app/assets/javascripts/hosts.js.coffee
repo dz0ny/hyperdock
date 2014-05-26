@@ -5,8 +5,13 @@ class ShowHostPage
   constructor: (@app) ->
     @host_id = Page.data.host.id
     @terminal = term = new App.Terminal('#terminal', TERM_HEIGHT)
-    @extend_terminal()
+    @setup_terminal_commands()
+    @setup_terminal_ui()
+    @socket = @app.ws()
+    term.connect_websockets(@socket, "host_#{@host_id}", 'provisioner')
+    term.start()
 
+  setup_terminal_ui: ->
     $('#rollup-terminal').click (e) =>
       if @terminal.height() == TERM_HEIGHT
         @terminal.height TERM_HEIGHT_BIG
@@ -17,30 +22,18 @@ class ShowHostPage
       term.scroll_to_bottom()
       return false
 
-    term.connect_websockets(@app.ws(), "host_#{@host_id}", 'provisioner')
-    term.start()
-
-  extend_terminal: ->
+  setup_terminal_commands: ->
     @terminal.commands['provision'] = (password) =>
-      @app.ws().trigger 'host.provision',
-        id: @host_id
-        password: password
-      false
+      @socket.emit 'host.provision', { id: @host_id, password: password }
 
     @terminal.commands['reset_known_hosts'] = =>
-      @app.ws().trigger "host.reset_known_hosts",
-        id: @host_id
-      false
+      @socket.emit "host.reset_known_hosts", { id: @host_id }
 
     @terminal.commands['containers'] = =>
-      @app.ws().trigger "host.list_containers",
-        id: @host_id
-      false
+      @socket.emit "host.list_containers", { id: @host_id }
 
     @terminal.commands['info'] = =>
-      @app.ws().trigger "host.get_host_info",
-        id: @host_id
-      false
+      @socket.emit 'host.get_host_info', { id: @host_id }
 
 App.ready ->
   if /^\/hosts\/\d+/.test(window.location.pathname)
