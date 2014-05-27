@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140527042956) do
+ActiveRecord::Schema.define(version: 20140527054239) do
 
   create_table "containers", force: true do |t|
     t.integer  "image_id"
@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 20140527042956) do
     t.integer  "digitalocean_id"
     t.integer  "digitalocean_region_id"
     t.integer  "digitalocean_size_id"
+    t.integer  "digitalocean_ssh_key_id"
   end
 
   add_index "hosts", ["region_id"], name: "index_hosts_on_region_id"

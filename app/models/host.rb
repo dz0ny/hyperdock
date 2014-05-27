@@ -1,6 +1,7 @@
 require 'docker/client'
 
 class Host < ActiveRecord::Base
+  include DigitaloceanHost
   include SecureShellIdentity
   include DockerHost
   include Monitored
@@ -9,23 +10,8 @@ class Host < ActiveRecord::Base
   has_many :containers, dependent: :destroy
   belongs_to :region
 
-  after_save :update_region
-  after_destroy :update_region
-
-  before_create :assign_region
-  after_create :setup_cloud_vm
-  after_destroy :delete_cloud_vm
-
-  def assign_region
-    self.region = Region.where(:digitalocean_id => self.digitalocean_region_id).first_or_create
-    self.name = "#{self.region.digitalocean_slug}-#{SecureRandom.hex(3)}"
-  end
-
-  def setup_cloud_vm
-  end
-
-  def delete_cloud_vm
-  end
+  after_save :update_region_status
+  after_destroy :update_region_status
 
   def info
     OpenStruct.new(get_info)
@@ -65,7 +51,7 @@ class Host < ActiveRecord::Base
 
   private
 
-  def update_region
+  def update_region_status
     self.region.update_available_hosts_counter
   end
 end

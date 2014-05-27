@@ -8,7 +8,7 @@ gem 'dotenv-rails'
 gem 'pg', group: :production
 
 gem 'cloudflare'
-gem 'digitalocean'
+gem 'digitalocean', github: 'snyff/digitalocean'
 
 gem 'net-ssh'
 gem 'net-scp'
