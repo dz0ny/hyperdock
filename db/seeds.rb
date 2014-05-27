@@ -1,29 +1,5 @@
 User.create(email: "admin@hyperdock.io", password: "12345678", role: "admin", invitation_limit: 100, container_limit: 100)
 
-am = Region.create(name: "Amsterdam")
-ny = Region.create(name: "New York")
-sf = Region.create(name: "San Francisco")
-
-if Rails.env.production?
-  ny.hosts.create({
-    name: "ny-01.hyperdock.io",
-    ip_address: "162.243.161.151",
-  })
-  sf.hosts.create({
-    name: "sf-01.hyperdock.io",
-    ip_address: "107.170.249.184",
-  })
-  am.hosts.create({
-    name: "am-01.hyperdock.io",
-    ip_address: "188.226.227.62",
-  })
-else
-  sf.hosts.create({
-    name: "boot2docker",
-    ip_address: "192.168.33.10",
-  })
-end
-
 ##
 # This block of images is commented out because they need
 # configuration options to be broken out to the hyperdock level
