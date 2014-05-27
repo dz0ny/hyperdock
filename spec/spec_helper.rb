@@ -54,9 +54,6 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
   config.include FactoryGirl::Syntax::Methods
-  require './spec/support/docker_api_stubs'
-  config.include DockerApiStubs
-
   config.include Devise::TestHelpers, :type => :controller
 
   require 'database_cleaner'
