@@ -18,7 +18,7 @@ module Docker
       @base_uri = record.docker_url
       @cert = record.docker_client_cert
       @key = record.docker_client_key
-      @ca_file = record.ca_file
+      @ca_file = record.docker_ca_file
       @verify_ca = false
     end
 

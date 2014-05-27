@@ -1,6 +1,11 @@
 require 'docker/client'
 
 class Host < ActiveRecord::Base
+  include SecureShellIdentity
+  include DockerHost
+  include Monitored
+  include TempFolder
+
   has_many :containers, dependent: :destroy
   belongs_to :region
 
@@ -14,12 +19,13 @@ class Host < ActiveRecord::Base
     OpenStruct.new(get_info)
   end
 
-  def docker_url
-    "https://#{self.ip_address}:4243"
-  end
-
-  def get_info
-    @info ||= docker.info
+  def remote_containers
+    docker.containers(all: true, size: true).map do |c|
+      rc = OpenStruct.new(c)
+      rc.image = Image.where(docker_index: rc.Image.split(':').first) rescue nil
+      rc.proxy = self.containers.where(instance_id: rc.Id).first if rc.Id
+      rc
+    end
   end
 
   def online?
@@ -34,10 +40,6 @@ class Host < ActiveRecord::Base
     self.healthy
   end
 
-  def docker
-    @client ||= Docker::Client.new(self)
-  end
-
   def provisioned?
     not ssh_private_key.empty?
   end
@@ -47,65 +49,6 @@ class Host < ActiveRecord::Base
     Net::SSH.start(self.ip_address, 'root', { keys: auth[:private_key].to_s, keys_only: true, user_known_hosts_file: auth[:known_hosts].to_s }) do |ssh|
       yield(ssh, ssh.scp)
     end
-  end
-
-  def remote_containers
-    docker.containers(all: true, size: true).map do |c|
-      rc = OpenStruct.new(c)
-      rc.image = Image.where(docker_index: rc.Image.split(':').first) rescue nil
-      rc.proxy = self.containers.where(instance_id: rc.Id).first if rc.Id
-      rc
-    end
-  end
-
-  def monitor?
-    self.is_monitor
-  end
-
-  def is_monitor!
-    self.update_column(:is_monitor, true)
-  end
-
-  def tmp
-    path = Rails.root.join("tmp/hosts/#{self.id}")
-    FileUtils.mkdir_p(path) unless path.exist?
-    path
-  end
-
-  def ssh_auth_files
-    ident = { private_key: tmp.join("id_rsa"),
-              public_key: tmp.join("id_rsa.pub"),
-              known_hosts: tmp.join("known_hosts") }
-  end
-
-  def ssh_identity
-    ident = ssh_auth_files
-    ident.keys.each do |key|
-      ident[key].write self.send("ssh_#{key}".to_sym)
-      ident[key].chmod 0600
-    end
-    ident
-  end
-
-  def ssh_identity= ident
-    self.ssh_private_key = ident[:private_key].read 
-    self.ssh_public_key = ident[:public_key].read
-    self.ssh_known_hosts = ident[:known_hosts].read
-    self.save!
-  end
-
-  def ca_file
-    @ca_file ||= begin
-                   file = self.tmp.join('ca_file')
-                   file.write(self.docker_ca_cert) unless file.exist?
-                   file
-                 end
-  end
-
-  ##
-  # Find the region monitor
-  def monitor
-    monitor? ? self : region.hosts.where(is_monitor: true).first
   end
 
   private
