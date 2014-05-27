@@ -5,8 +5,8 @@ describe Provisioner do
   let(:container) { create(:container) }
 
   before(:each) do
-    stub_docker_pull container.host, container.image
-    stub_docker_run container.host
+    Docker::Client.any_instance.stub(:pull)
+    Docker::Client.any_instance.stub(:create).and_return("Warnings"=>nil)
   end
 
   it "sets an instance id" do
