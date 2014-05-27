@@ -1,6 +1,12 @@
 module SecureShellIdentity
   extend ActiveSupport::Concern
 
+  def generate_ssh_identity
+    `yes | ssh-keygen -t rsa -f #{ssh_auth_files[:private_key]} -N ""`
+    self.ssh_identity = ssh_auth_files
+    self.save!
+  end
+
   def ssh_auth_files
     ident = { private_key: tmp.join("id_rsa"),
               public_key: tmp.join("id_rsa.pub"),
@@ -19,7 +25,7 @@ module SecureShellIdentity
   def ssh_identity= ident
     self.ssh_private_key = ident[:private_key].read 
     self.ssh_public_key = ident[:public_key].read
-    self.ssh_known_hosts = ident[:known_hosts].read
+    self.ssh_known_hosts = ident[:known_hosts].read rescue ""
     self.save!
   end
 end
