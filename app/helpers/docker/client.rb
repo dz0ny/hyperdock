@@ -19,17 +19,7 @@ module Docker
       @cert = record.docker_client_cert
       @key = record.docker_client_key
       @ca_file = record.ca_file
-    end
-
-    def mkhttp uri
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      http.cert = OpenSSL::X509::Certificate.new(@cert)
-      http.key = OpenSSL::PKey::RSA.new(@key)
-      #http.verify_mode = OpenSSL::SSL::VERIFY_PEER # use if not self-signed
-      http.verify_mode = OpenSSL::SSL::VERIFY_NONE # self-signed
-      http.ca_file = @ca_file.to_s
-      http
+      @verify_ca = false
     end
 
     def info
@@ -135,5 +125,20 @@ module Docker
       res = http.get(uri.request_uri)
       JSON.parse(res.body)
     end
+
+    private
+      def mkhttp uri
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.cert = OpenSSL::X509::Certificate.new(@cert)
+        http.key = OpenSSL::PKey::RSA.new(@key)
+        if @verify_ca
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        else
+          http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        end
+        http.ca_file = @ca_file.to_s
+        http
+      end
   end
 end
