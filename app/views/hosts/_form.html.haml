@@ -10,14 +10,11 @@
             - @host.errors.full_messages.each do |message|
               %li= message
       .form-group.col-lg-12
-        = f.label :name
-        = f.text_field :name, class: 'form-control input-sm'
+        = f.label :digitalocean_region_id, "Region"
+        = f.collection_select :digitalocean_region_id, @regions, :id, :name, { include_blank: true }, { class: 'form-control input-lg', placeholder: "Select a region" }
       .form-group.col-lg-12
-        = f.label :region_id
-        = f.collection_select :region_id, Region.all, :id, :name, { include_blank: true }, { class: 'form-control input-lg', placeholder: "Select a region" }
-      .form-group.col-lg-12
-        = f.label :ip_address, "IP Address"
-        = f.text_field :ip_address, class: 'form-control input-sm'
+        = f.label :digitalocean_size_id, "Size"
+        = f.collection_select :digitalocean_size_id, @vm_sizes, :id, :name, { include_blank: true }, { class: 'form-control input-lg', placeholder: "Select a VM size" }
       .form-group.col-lg-12
         = f.submit 'Submit', class: 'btn btn-success pull-right'
         .pull-left

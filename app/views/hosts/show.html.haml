@@ -16,9 +16,9 @@
           - else
             = link_to @host.monitor.name, host_path(@host.monitor)
     .pull-right
-      = link_to 'Edit', edit_host_path(@host), class: 'btn btn-primary btn-sm'
       - if current_user.admin?
-        = link_to 'Rails Admin', rails_admin.edit_path(model_name: 'host', id: @host.id), class: 'btn btn-danger btn-sm'
+        = link_to 'Edit', rails_admin.edit_path(model_name: 'host', id: @host.id), class: 'btn btn-primary btn-sm'
+        = link_to 'Destroy', @host, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger btn-sm'
 %hr/
 .row
   .container-fluid
