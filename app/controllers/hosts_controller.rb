@@ -1,5 +1,5 @@
 class HostsController < AdminController
-  before_action :set_host, only: [:show, :edit, :update, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container]
+  before_action :set_host, only: [:show, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container]
 
   # GET /hosts
   # GET /hosts.json
@@ -14,11 +14,9 @@ class HostsController < AdminController
 
   # GET /hosts/new
   def new
+    @regions = Cloud.regions
+    @vm_sizes = Cloud.vm_sizes
     @host = Host.new
-  end
-
-  # GET /hosts/1/edit
-  def edit
   end
 
   # POST /hosts
@@ -31,21 +29,9 @@ class HostsController < AdminController
         format.html { redirect_to @host, notice: 'Host was successfully created.' }
         format.json { render :show, status: :created, location: @host }
       else
-        format.html { render :new }
-        format.json { render json: @host.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 
-  # PATCH/PUT /hosts/1
-  # PATCH/PUT /hosts/1.json
-  def update
-    respond_to do |format|
-      if @host.update(host_params)
-        format.html { redirect_to @host, notice: 'Host was successfully updated.' }
-        format.json { render :show, status: :ok, location: @host }
-      else
-        format.html { render :edit }
+    binding.pry
+        format.html { render :new }
         format.json { render json: @host.errors, status: :unprocessable_entity }
       end
     end
@@ -112,6 +98,6 @@ class HostsController < AdminController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def host_params
-      params.require(:host).permit(:name, :ip_address, :is_monitor, :region_id)
+      params.require(:host).permit(:is_monitor, :digitalocean_region_id, :digitalocean_size_id)
     end
 end

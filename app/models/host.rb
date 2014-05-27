@@ -12,8 +12,20 @@ class Host < ActiveRecord::Base
   after_save :update_region
   after_destroy :update_region
 
-  validates :name, presence: true
-  validates :ip_address, :format => { :with => Regexp.union(Resolv::IPv4::Regex, Resolv::IPv6::Regex) }, uniqueness: true
+  before_create :assign_region
+  after_create :setup_cloud_vm
+  after_destroy :delete_cloud_vm
+
+  def assign_region
+    self.region = Region.where(:digitalocean_id => self.digitalocean_region_id).first_or_create
+    self.name = "#{self.region.digitalocean_slug}-#{SecureRandom.hex(3)}"
+  end
+
+  def setup_cloud_vm
+  end
+
+  def delete_cloud_vm
+  end
 
   def info
     OpenStruct.new(get_info)

@@ -1,15 +1,10 @@
 class RegionsController < AdminController
-  before_action :set_region, only: [:show, :edit, :update, :destroy]
+  before_action :set_region, only: [:edit, :update, :destroy]
 
   # GET /regions
   # GET /regions.json
   def index
     @regions = Region.all
-  end
-
-  # GET /regions/1
-  # GET /regions/1.json
-  def show
   end
 
   # GET /regions/new

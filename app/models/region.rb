@@ -3,6 +3,14 @@ class Region < ActiveRecord::Base
   scope :all_available, -> { where("available_hosts_count > 0") }
   default_scope { order(available_hosts_count: :desc) }
 
+  before_create :set_cloud_attributes
+
+  def set_cloud_attributes
+    region = Cloud.get_region(self.digitalocean_id)
+    self.name = region.name
+    self.digitalocean_slug = region.slug
+  end
+
   def healthy?
     self.healthy_hosts.count == self.hosts.count
   end
