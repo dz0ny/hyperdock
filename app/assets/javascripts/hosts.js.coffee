@@ -8,8 +8,8 @@ class ShowHostPage
     @setup_terminal_commands()
     @setup_terminal_ui()
     @socket = @app.ws()
-    @terminal.connect_websockets(@socket, "host_#{@host_id}", 'provisioner')
     @terminal.start()
+    @terminal.connect_websocket(@socket, "host_#{@host_id}", 'provisioner')
 
   setup_terminal_ui: ->
     $('#rollup-terminal').click (e) =>
@@ -24,9 +24,7 @@ class ShowHostPage
 
   setup_terminal_commands: ->
     @terminal.commands['provision'] = =>
-      password = prompt("Are you sure you want to run the provisioner?\nEnter root password if this is the first time.")
-      return if password == null
-      @socket.emit 'host.provision', { id: @host_id, password: password }
+      @socket.emit 'host.provision', { id: @host_id, password: '' }
 
     @terminal.commands['reset_known_hosts'] = =>
       @socket.emit "host.reset_known_hosts", { id: @host_id }
