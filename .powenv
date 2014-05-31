@@ -1,0 +1,7 @@
+export PATH="/Users/keyvan/.rvm/gems/ruby-2.1.1@hyperdock/bin:/Users/keyvan/.rvm/gems/ruby-2.1.1@global/bin:/Users/keyvan/.rvm/rubies/ruby-2.1.1/bin:$PATH"
+export GEM_HOME='/Users/keyvan/.rvm/gems/ruby-2.1.1@hyperdock'
+export GEM_PATH='/Users/keyvan/.rvm/gems/ruby-2.1.1@hyperdock:/Users/keyvan/.rvm/gems/ruby-2.1.1@global'
+export MY_RUBY_HOME='/Users/keyvan/.rvm/rubies/ruby-2.1.1'
+export IRBRC='/Users/keyvan/.rvm/rubies/ruby-2.1.1/.irbrc'
+unset MAGLEV_HOME
+unset RBXOPT
