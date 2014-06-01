@@ -67,6 +67,21 @@ module Docker
       end
     end
 
+    ##
+    # http://docs.docker.io/reference/api/docker_remote_api_v1.11/#22-images
+    # POST /images/create
+    # Create an image, either by pull it from the registry or by importing it
+    def import image_url
+      # not done...
+      uri = URI.join(base_uri, "/images/create")
+      http = mkhttp uri
+      http.request_post(uri.request_uri, "fromSrc=#{image_url}") do |response|
+        response.read_body do |chunk|
+          yield chunk
+        end
+      end
+    end
+
     def create container, config
       uri = URI.join(base_uri, "/containers/create")
       req = Net::HTTP::Post.new(uri)

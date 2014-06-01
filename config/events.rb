@@ -16,6 +16,7 @@ WebsocketRails::EventMap.describe do
     subscribe :reset_known_hosts, 'websocket#reset_known_hosts'
     subscribe :list_containers, 'websocket#list_containers'
     subscribe :get_host_info, 'websocket#get_host_info'
+    subscribe :import_container, 'websocket#import_container'
   end 
 
   namespace :sensu do

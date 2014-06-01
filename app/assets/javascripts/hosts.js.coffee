@@ -35,6 +35,12 @@ class ShowHostPage
       @terminal.commands['info'] = =>
         @socket.emit 'host.get_host_info', { id: @host.id }
 
+      @terminal.commands['import_container'] = (url) =>
+        if url?
+          @socket.emit 'host.import_container', { id: @host.id, url: url }
+        else
+          @terminal.term.error "You must provide a URL to import"
+
 App.ready ->
   if /^\/hosts\/\d+$/.test(window.location.pathname)
     @show_host_page = new ShowHostPage(@)
