@@ -49,6 +49,15 @@ class Host < ActiveRecord::Base
     end
   end
 
+  def domains
+    arr = []
+    if self.is_monitor
+      arr << "kibana.#{self.name}.#{ENV['FQDN']}"
+      arr << "sensu.#{self.name}.#{ENV['FQDN']}"
+    end
+    arr
+  end
+
   private
 
   def update_region_status

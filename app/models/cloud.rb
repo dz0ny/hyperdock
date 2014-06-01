@@ -2,13 +2,12 @@
 # Abstract the clouds
 module Cloud
   class << self
+    include Hyperdock::DNS
+
     ##
     # Create an ssh key
     def create_ssh_key name, pub_key
-      Digitalocean::SshKey.create({
-        name: name,
-        ssh_pub_key: pub_key
-      }).ssh_key
+      Digitalocean::SshKey.create(name, pub_key).ssh_key
     end
 
     def destroy_ssh_key id
@@ -23,7 +22,7 @@ module Cloud
         size_id: size_id,
         image_id: 3240036,
         region_id: region_id,
-        ssh_key_ids: [ ssh_key_id ]
+        ssh_key_ids: ssh_key_id
       }).droplet
     end
 
