@@ -47,13 +47,3 @@ Image.create({
   }
 })
 
-##
-# This image can't be restarted
-# it exposes a problem with our PortBindings JSON
-# Try it out and fix the bug
-Image.create({
-  name: "InfluxDB",
-  description: "Time-series database",
-  docker_index: "blalor/docker-influxdb",
-  port_bindings: "2003 8083 8086 8090 8099"
-})
