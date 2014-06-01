@@ -1,0 +1,21 @@
+.panel.panel-default
+  .panel-heading Port Mapping Information
+  %table.table.table-striped.tabled-condensed
+    %thead
+      %tr
+        %th Internal Port
+        %th
+        %th External Port
+        %th Possible HTTP URL
+        %th Possible HTTPS URL
+    %tbody
+      - JSON.parse(@container.port_bindings).each do |cport, binding|
+        - host_port = extract_host_port(binding)
+        - next unless host_port
+        - site = "#{@container.host.ip_address}:#{host_port}"
+        %tr
+          %td= cport
+          %td &nbsp;=>&nbsp;
+          %td= host_port
+          - ["http", "https"].map {|prot| "#{prot}://#{site}"}.each do |possible_link|
+            %td= link_to possible_link, possible_link
