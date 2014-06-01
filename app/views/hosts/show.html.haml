@@ -27,4 +27,8 @@
     /= render 'containers'
 
 %script
-  Page.data.host = { id: #{@host.id} }
+  Page.data.host = {
+  id: #{@host.id},
+  is_monitor: #{@host.is_monitor},
+  name: "#{@host.name}"
+  };

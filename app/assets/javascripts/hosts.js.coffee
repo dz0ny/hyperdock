@@ -3,13 +3,13 @@ class ShowHostPage
   TERM_HEIGHT_BIG = 400
 
   constructor: (@app) ->
-    @host_id = Page.data.host.id
+    @host = Page.data.host
     @terminal = term = new App.Terminal('#terminal', TERM_HEIGHT)
     @setup_terminal_commands()
     @setup_terminal_ui()
     @socket = @app.ws()
     @terminal.start()
-    @terminal.connect_websocket(@socket, "host_#{@host_id}", 'provisioner')
+    @terminal.connect_websocket(@socket, "host_#{@host.id}", 'provisioner')
 
   setup_terminal_ui: ->
     $('#rollup-terminal').click (e) =>
@@ -24,16 +24,26 @@ class ShowHostPage
 
   setup_terminal_commands: ->
     @terminal.commands['provision'] = =>
-      @socket.emit 'host.provision', { id: @host_id, password: '' }
+      @socket.emit 'host.provision', { id: @host.id, password: '' }
 
     @terminal.commands['reset_known_hosts'] = =>
-      @socket.emit "host.reset_known_hosts", { id: @host_id }
+      @socket.emit "host.reset_known_hosts", { id: @host.id }
 
-    @terminal.commands['containers'] = =>
-      @socket.emit "host.list_containers", { id: @host_id }
+    if @host.is_monitor
+      @terminal.commands['kibana_dashboard'] = =>
+        window.open "https://kibana.#{@host.name}.#{Page.fqdn}/index.html#/dashboard/file/logstash.json", "_blank"
+        return "OK"
 
-    @terminal.commands['info'] = =>
-      @socket.emit 'host.get_host_info', { id: @host_id }
+      @terminal.commands['sensu_dashboard'] = =>
+        window.open "https://sensu.#{@host.name}.#{Page.fqdn}/", "_blank"
+        return "OK"
+
+    else
+      @terminal.commands['containers'] = =>
+        @socket.emit "host.list_containers", { id: @host.id }
+
+      @terminal.commands['info'] = =>
+        @socket.emit 'host.get_host_info', { id: @host.id }
 
 App.ready ->
   if /^\/hosts\/\d+$/.test(window.location.pathname)

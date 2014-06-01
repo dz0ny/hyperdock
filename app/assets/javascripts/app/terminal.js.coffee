@@ -47,7 +47,8 @@ App.Terminal = class Terminal
   start: ->
     @setup @commands
 
-  commands:
-    echo: (arg1) -> @echo arg1
+  commands: {}
+    # Example command: 
+    # echo: (arg1) -> @echo arg1
 
 
