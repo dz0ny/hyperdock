@@ -7,11 +7,19 @@ module Hyperdock
       # register a block to receive log events
       def on_output
         if block_given?
-          self.class.send(:define_method, :log, -> (line) {
-            yield(line.strip, nil) if line 
+          self.class.send(:define_method, :log, -> (input) {
+            if input
+              line = input.dup # may be a frozen string, so dup it
+              line.force_encoding('UTF-8')
+              yield(line.strip, nil)
+            end
           })
-          self.class.send(:define_method, :err, -> (line) {
-            yield(nil, line.strip) if line 
+          self.class.send(:define_method, :err, -> (input) {
+            if input
+              line = input.dup # may be a frozen string, so dup it
+              line.force_encoding('UTF-8')
+              yield(nil, line.strip)
+            end
           })
         end
         self
