@@ -36,7 +36,10 @@ App.Terminal = class Terminal
 
   connect_websocket: (@ch, @ev) ->
     ws = App.ws()
-    unless ws.already_subscribed_to(@ch)
+    if ws.already_subscribed_to(@ch)
+      @websocket = ws.channels[@ch]
+      @term.resume()
+    else
       @websocket = ws.subscribe(@ch)
       @websocket.bind @ev, @handle_json
       ws.on_open = (data) =>
