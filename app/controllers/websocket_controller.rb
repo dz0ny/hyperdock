@@ -36,6 +36,22 @@ class WebsocketController < WebsocketRails::BaseController
     # http://sensuapp.org/docs/0.11/api
   end
 
+  def container_top
+    c = Container.find(event.data['id'])
+    ch = WebsocketRails["container_#{c.id}".to_sym]
+    c.top.each_line do |line|
+      ch.trigger 'provisioner', { event: 'stdout', message: line.chomp }
+    end
+  end
+
+  def container_info
+    c = Container.find(event.data['id'])
+    ch = WebsocketRails["container_#{c.id}".to_sym]
+    c.info.each_line do |line|
+      ch.trigger 'provisioner', { event: 'stdout', message: line.chomp }
+    end
+  end
+
   private
   def user
     @user ||= current_user || User.find_by_auth_token(event.data['user_token'])
