@@ -68,7 +68,8 @@ class Provisioner
       if out = data[:chunk]
         trigger 'stdout', message: out
       elsif data[:done]
-        trigger 'stdout', message: "Done", info: data[:info], warnings: data[:warnings]
+        trigger 'stdout', message: "Done. Reloading...", info: data[:info], warnings: data[:warnings]
+        @ch.trigger 'reload'
         logger.info "No longer provisioning container #{record.id} #{record.name}"
       end
     end

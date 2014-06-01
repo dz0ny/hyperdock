@@ -34,16 +34,18 @@ App.Terminal = class Terminal
       checkArity: false
     @term.pause()
 
-  connect_websocket: (@ws, @ch, @ev) ->
-    unless @ws.already_subscribed_to(@ch)
-      @ws.subscribe(@ch).bind @ev, @handle_json
-      @ws.on_open = (data) =>
+  connect_websocket: (@ch, @ev) ->
+    ws = App.ws()
+    unless ws.already_subscribed_to(@ch)
+      @websocket = ws.subscribe(@ch)
+      @websocket.bind @ev, @handle_json
+      ws.on_open = (data) =>
         clearInterval(@reconnect_interval) if @reconnect_interval?
         @term.resume()
-      @ws.bind 'connection_closed', (data) =>
+      ws.bind 'connection_closed', (data) =>
         @term.pause()
         clearInterval(@reconnect_interval) if @reconnect_interval?
-        @reconnect_interval = setInterval @ws.reconnect, 5000
+        @reconnect_interval = setInterval ws.reconnect, 5000
 
   scroll_to_bottom: ->
     @term.scroll(Math.pow(9,9))

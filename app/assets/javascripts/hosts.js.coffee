@@ -5,7 +5,7 @@ class ShowHostPage
     @setup_terminal_commands()
     @socket = @app.ws()
     @terminal.start()
-    @terminal.connect_websocket(@socket, "host_#{@host.id}", 'provisioner')
+    @terminal.connect_websocket("host_#{@host.id}", 'provisioner')
 
   setup_terminal_commands: ->
     @terminal.commands['provision'] = =>
