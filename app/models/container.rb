@@ -88,13 +88,6 @@ class Container < ActiveRecord::Base
   end
 
   def delete_from_docker
-    if self.host && self.host.online?
-      begin
-        self.stop
-        self.host.docker.rm self.instance_id
-      rescue Docker::Client::InvalidInstanceIdError
-        # The container was never created
-      end
-    end
+    ContainerWorker.perform_async(:remove, self.host_id, self.instance_id)
   end
 end

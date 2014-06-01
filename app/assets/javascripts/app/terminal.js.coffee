@@ -1,8 +1,12 @@
 #= require jquery.terminal/js/jquery.terminal-0.8.7.js
 
 App.Terminal = class Terminal
-  constructor: (selector, @current_height) ->
+  TERM_HEIGHT = 60
+  TERM_HEIGHT_BIG = 400
+
+  constructor: (selector, @current_height=TERM_HEIGHT) ->
     @$el = $(selector)
+    @bind_height_toggle()
 
   height: (h) ->
     if h?
@@ -51,4 +55,13 @@ App.Terminal = class Terminal
     # Example command: 
     # echo: (arg1) -> @echo arg1
 
-
+  bind_height_toggle: ->
+    $('#rollup-terminal').click (e) =>
+      if @height() == TERM_HEIGHT
+        @height TERM_HEIGHT_BIG
+      else
+        @height TERM_HEIGHT
+      icon = $($(e.target).find('i').context)
+      icon.toggleClass('glyphicon-chevron-up').toggleClass('glyphicon-chevron-down')
+      @scroll_to_bottom()
+      return false

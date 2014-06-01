@@ -1,26 +1,11 @@
 class ShowHostPage
-  TERM_HEIGHT = 60
-  TERM_HEIGHT_BIG = 400
-
   constructor: (@app) ->
     @host = Page.data.host
-    @terminal = term = new App.Terminal('#terminal', TERM_HEIGHT)
+    @terminal = term = new App.Terminal('#terminal')
     @setup_terminal_commands()
-    @setup_terminal_ui()
     @socket = @app.ws()
     @terminal.start()
     @terminal.connect_websocket(@socket, "host_#{@host.id}", 'provisioner')
-
-  setup_terminal_ui: ->
-    $('#rollup-terminal').click (e) =>
-      if @terminal.height() == TERM_HEIGHT
-        @terminal.height TERM_HEIGHT_BIG
-      else
-        @terminal.height TERM_HEIGHT
-      icon = $($(e.target).find('i').context)
-      icon.toggleClass('glyphicon-chevron-up').toggleClass('glyphicon-chevron-down')
-      @terminal.scroll_to_bottom()
-      return false
 
   setup_terminal_commands: ->
     @terminal.commands['provision'] = =>
@@ -41,7 +26,7 @@ class ShowHostPage
           window.open url, "_blank" ; false
 
         checks: =>
-          @socket.emit "monitor.list_checks", { id: @host.id }
+          @socket.emit "sensu.list_checks", { id: @host.id }
 
     else
       @terminal.commands['containers'] = =>

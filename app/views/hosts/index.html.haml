@@ -18,7 +18,7 @@
             %tr
               %td
                 %i.glyphicon{class:"glyphicon-#{host.is_monitor? ? 'eye-open' : 'cloud'}"}
-                \&nbsp;#{link_to host.name, host}
+                  \&nbsp;#{link_to host.name, host, data: { no_turbolink: true }}
               %td= host.healthy ? "yes" : "no"
               %td= host.ip_address
               %td= host.region.name

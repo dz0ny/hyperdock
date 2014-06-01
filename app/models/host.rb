@@ -4,7 +4,7 @@ class Host < ActiveRecord::Base
   include DigitaloceanHost
   include SecureShellIdentity
   include DockerHost
-  include Monitored
+  include Monitoring
   include TempFolder
 
   has_many :containers, dependent: :destroy

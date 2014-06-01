@@ -16,6 +16,7 @@
 %hr/
 .row
   .container-fluid
+    = render 'shared/terminal'
     .panel.panel-default
       .panel-heading Port Mapping Information
       - if @container.status == 'started'
@@ -47,3 +48,8 @@
       .panel-heading Container Information
       .panel-body
         %pre= @container.info
+
+%script
+  Page.data.container = {
+  id: #{@container.id}
+  };

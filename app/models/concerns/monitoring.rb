@@ -1,4 +1,4 @@
-module Monitored
+module Monitoring
   extend ActiveSupport::Concern
 
   ##
@@ -13,5 +13,13 @@ module Monitored
 
   def is_monitor!
     self.update_column(:is_monitor, true)
+  end
+
+  def children
+    if self.is_monitor
+      @children ||= region.hosts.where(is_monitor: false)
+    else
+      [] # containers would make sense
+    end
   end
 end

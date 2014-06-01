@@ -23,7 +23,7 @@
           %tr
             %td
               %i.glyphicon.glyphicon-hdd>
-              \&nbsp;#{link_to container.name, container}
+              \&nbsp;#{link_to container.name, container, data: { no_turbolink: true }}
             %td
               - if container.image
                 = container.image.name

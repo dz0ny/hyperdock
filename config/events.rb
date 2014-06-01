@@ -17,4 +17,8 @@ WebsocketRails::EventMap.describe do
     subscribe :list_containers, 'websocket#list_containers'
     subscribe :get_host_info, 'websocket#get_host_info'
   end 
+
+  namespace :sensu do
+    subscribe :list_checks, 'websocket#list_sensu_checks'
+  end
 end

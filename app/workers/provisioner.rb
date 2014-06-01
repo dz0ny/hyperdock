@@ -62,10 +62,15 @@ class Provisioner
   # Sometimes you'll be using a local image. FIXME
   def provision_container record
     provisioner = ContainerProvisioner.new container: record, logger: logger
+    logger.info "Provisioning container #{record.id} #{record.name}"
+    @ch = WebsocketRails["container_#{record.id}".to_sym]
     provisioner.provision! do |data|
-      ch = "container_#{record.id}".to_sym
-      logger.info data
-      WebsocketRails[ch].trigger 'provisioner', data
+      if out = data[:chunk]
+        trigger 'stdout', message: out
+      elsif data[:done]
+        trigger 'stdout', message: "Done", info: data[:info], warnings: data[:warnings]
+        logger.info "No longer provisioning container #{record.id} #{record.name}"
+      end
     end
   end
 end

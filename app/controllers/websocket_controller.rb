@@ -30,6 +30,12 @@ class WebsocketController < WebsocketRails::BaseController
     end
   end
 
+  def list_sensu_checks
+    h = Host.find(event.data['id'])
+    # not implemented 
+    # http://sensuapp.org/docs/0.11/api
+  end
+
   private
   def user
     @user ||= current_user || User.find_by_auth_token(event.data['user_token'])

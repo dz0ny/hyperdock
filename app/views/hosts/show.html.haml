@@ -14,7 +14,7 @@
           - if @host.monitor.nil?
             Not monitored
           - else
-            = link_to @host.monitor.name, host_path(@host.monitor)
+            = link_to @host.monitor.name, host_path(@host.monitor), data: { no_turbolink: true }
     .pull-right
       - if current_user.admin?
         = link_to 'Edit', rails_admin.edit_path(model_name: 'host', id: @host.id), class: 'btn btn-primary btn-sm'
@@ -22,8 +22,16 @@
 %hr/
 .row
   .container-fluid
-    = render 'terminal'
+    = render 'shared/terminal'
     /= render 'usage'
+    - if @host.children.any?
+      .panel.panel-default
+        .panel-heading
+          Monitored Hosts
+        .panel-body
+          %ul
+            - @host.children.each do |host|
+              %li= link_to host.name, host, data: { no_turbolink: true }
     /= render 'containers'
 
 %script
