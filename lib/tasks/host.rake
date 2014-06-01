@@ -42,4 +42,17 @@ namespace :host do
     # * expose the docker port on the firewall
     # * expose the docker 49000-49999 range
   end
+
+  desc <<-EOF
+    Open an SSH connection to a host
+
+    Usage: 
+      bin/rake host:ssh id=6
+  EOF
+  task ssh: :environment do
+    if ENV['id']
+      record = Host.find(ENV['id'])
+      system("ssh -i #{record.ssh_identity[:private_key]} root@#{record.ip_address}")
+    end
+  end
 end

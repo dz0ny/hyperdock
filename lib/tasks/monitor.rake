@@ -38,18 +38,4 @@ namespace :monitor do
     # what it doesn't do (yet):
     # * InfluxDB
   end
-
-  desc <<-EOF
-    Open an SSH connection into a monitor
-
-    Usage: 
-      $(bin/rake monitor:ssh id=6)
-  EOF
-  task ssh: :environment do
-    require 'monitor_provisioner'
-    if ENV['id']
-      record = Host.find(ENV['id'])
-      puts "ssh -i #{record.ssh_identity[:private_key]} root@#{record.ip_address}"
-    end
-  end
 end
