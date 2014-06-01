@@ -15,10 +15,13 @@ WebsocketRails.setup do |config|
   # Start the standalone server with rake websocket_rails:start_server
   # * Requires Redis
   
-  if config.standalone = Rails.env.production?
-    config.thin_options[:daemonize] = false
-    config.standalone_port = 3001
+  config.standalone = true
+  config.thin_options[:daemonize] = false
+  config.standalone_port = 3001
+  if Rails.env.production?
     ENV['WS_ADDR'] = "web-01.hyperdock.io:3001" # Bypass cloudflare
+  else
+    ENV['WS_ADDR'] = "localhost:3001"
   end
 
   # Change to true to enable channel synchronization between

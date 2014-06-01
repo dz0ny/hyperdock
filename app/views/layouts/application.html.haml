@@ -9,7 +9,8 @@
   %body
     %script
       Page = { data: {} }
-      Page.socket = "#{ENV['WS_ADDR'] || 'localhost:3000'}/websocket"
+      Page.socket = "#{ENV['WS_ADDR']}/websocket"
+      Page.fqdn = "#{ENV['FQDN']}"
       - if user_signed_in?
         Page.user_token = "#{current_user.get_auth_token!}"
     %nav.navbar.navbar-inverse.navbar-static-top{:role => "navigation"}
