@@ -1,5 +1,6 @@
 class HostsController < AdminController
   before_action :set_host, only: [:show, :destroy, :healthcheck, :discard_zombie_container, :reclaim_zombie_container]
+  before_action :set_cloud_options, only: [:new]
 
   # GET /hosts
   # GET /hosts.json
@@ -14,8 +15,6 @@ class HostsController < AdminController
 
   # GET /hosts/new
   def new
-    @regions = Cloud.regions
-    @vm_sizes = Cloud.vm_sizes
     @host = Host.new
   end
 
@@ -29,9 +28,7 @@ class HostsController < AdminController
         format.html { redirect_to @host, notice: 'Host was successfully created.' }
         format.json { render :show, status: :created, location: @host }
       else
-
-    binding.pry
-        format.html { render :new }
+        format.html { set_cloud_options ; render :new }
         format.json { render json: @host.errors, status: :unprocessable_entity }
       end
     end
@@ -94,6 +91,11 @@ class HostsController < AdminController
     # Use callbacks to share common setup or constraints between actions.
     def set_host
       @host = Host.find(params[:id])
+    end
+
+    def set_cloud_options
+      @regions = Cloud.regions
+      @vm_sizes = Cloud.vm_sizes
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
