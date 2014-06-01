@@ -7,9 +7,10 @@ class ContainerWorker
   end
 
   def remove host_id, instance_id
+    return unless Host.exists?(host_id)
     logger.info "Removing docker container #{instance_id}"
     host = Host.find(host_id)
-    if host && host.online?
+    if host.online?
       host.docker.stop instance_id
       host.docker.rm instance_id
     end
