@@ -30,13 +30,18 @@ class ShowHostPage
       @socket.emit "host.reset_known_hosts", { id: @host.id }
 
     if @host.is_monitor
-      @terminal.commands['kibana_dashboard'] = =>
-        window.open "https://kibana.#{@host.name}.#{Page.fqdn}/index.html#/dashboard/file/logstash.json", "_blank"
-        return "OK"
+      @terminal.commands['kibana'] =
+        open: =>
+          url = "https://kibana.#{@host.name}.#{Page.fqdn}/index.html#/dashboard/file/logstash.json"
+          window.open url, "_blank" ; false
 
-      @terminal.commands['sensu_dashboard'] = =>
-        window.open "https://sensu.#{@host.name}.#{Page.fqdn}/", "_blank"
-        return "OK"
+      @terminal.commands['sensu'] =
+        open: =>
+          url = "https://sensu.#{@host.name}.#{Page.fqdn}/"
+          window.open url, "_blank" ; false
+
+        checks: =>
+          @socket.emit "monitor.list_checks", { id: @host.id }
 
     else
       @terminal.commands['containers'] = =>
