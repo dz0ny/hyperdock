@@ -23,7 +23,7 @@ module Hyperdock
     ##
     # Pass in full domain name or subdomain to remove it
     def remove_dns_record name
-      subdomain = name.gsub(ENV['FQDN'], '')
+      subdomain = name.gsub(".#{ENV['FQDN']}", '')
       name = "#{subdomain}.#{ENV['FQDN']}"
       cf = CloudFlare::connection(ENV['CLOUDFLARE_API_KEY'], ENV['CLOUDFLARE_EMAIL'])
       recs = cf.rec_load_all(ENV['FQDN'])["response"]["recs"]
