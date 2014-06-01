@@ -16,7 +16,12 @@ module Hyperdock
       if file_exists? '/usr/share/kibana3'
         remote_write '/usr/share/kibana3/config.js', Rails.root.join('config/logstash/kibana.config.json').read
         ssh.exec! "chmod 644 /usr/share/kibana3/config.js"
-        log ssh.exec! %{echo "#{ENV['KIBANA_PASSWORD']}" | htpasswd -ci /etc/nginx/conf.d/kibana.htpasswd #{ENV['KIBANA_USERNAME']}}
+        kibana_username = ENV['KIBANA_USERNAME']
+        kibana_password = ENV['KIBANA_PASSWORD']
+        log ssh.exec! %{echo "#{kibana_password}" | htpasswd -ci /etc/nginx/conf.d/kibana.htpasswd #{kibana_username}}
+        # Save into local env (pointless) but useful if we're hooking in
+        update_local_env "KIBANA_USER" => kibana_username
+        update_local_env "KIBANA_PASSWORD" => kibana_password
         setup_nginx_vhost({
           server_name: "kibana.#{@name}.#{ENV['FQDN']}",
           site_name: "kibana",

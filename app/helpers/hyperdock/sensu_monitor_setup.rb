@@ -80,6 +80,8 @@ module Hyperdock
       conf = JSON.parse RABBIT_CONF.read
       conf["rabbitmq"]["password"] = ENV["RABBITMQ_PASSWORD"]
       conf["rabbitmq"]["host"] = "localhost"
+      # Save into local env (pointless) but useful if we're hooking in
+      update_local_env "RABBITMQ_PASSWORD" => conf["rabbitmq"]["password"]
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/rabbitmq.json', conf
       update_local_env "RABBITMQ_HOST" => @host
@@ -89,6 +91,9 @@ module Hyperdock
       conf = JSON.parse API_CONF.read
       conf["api"]["user"] = ENV["SENSU_API_USER"]
       conf["api"]["password"] = ENV["SENSU_API_PASSWORD"]
+      # Save into local env (pointless) but useful if we're hooking in
+      update_local_env "SENSU_API_USER" => conf["api"]["user"]
+      update_local_env "SENSU_API_PASSWORD" => conf["api"]["password"]
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/api.json', conf
     end
@@ -97,6 +102,9 @@ module Hyperdock
       conf = JSON.parse DASHBOARD_CONF.read
       conf["dashboard"]["user"] = ENV["SENSU_DASHBOARD_USER"]
       conf["dashboard"]["password"] = ENV["SENSU_DASHBOARD_PASSWORD"]
+      # Save into local env (pointless) but useful if we're hooking in
+      update_local_env "SENSU_DASHBOARD_USER" => conf["dashboard"]["user"]
+      update_local_env "SENSU_DASHBOARD_PASSWORD" => conf["dashboard"]["password"]
       conf = JSON.pretty_generate(conf)
       remote_write '/etc/sensu/conf.d/dashboard.json', conf
     end
