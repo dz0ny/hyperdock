@@ -50,4 +50,3 @@ http://shipyard-project.com/
 
 * Jeanre Swanepoel
 * Keyvan Fatehi
- - Why I open-sourced Hyperdock http://keyvanfatehi.com/2014/06/01/hyperdock-io/
