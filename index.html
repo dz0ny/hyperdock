@@ -1,71 +1,129 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Hyperdock by hyperdock-io</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Hyperdock by hyperdock-io</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Hyperdock</h1>
-        <p>Docker Host, Image, and Container Management Platform</p>
+    <div id="container">
+      <div class="inner">
 
-        <p class="view"><a href="https://github.com/hyperdock-io/hyperdock">View the Project on GitHub <small>hyperdock-io/hyperdock</small></a></p>
+        <header>
+          <h1>Hyperdock</h1>
+          <h2>Docker Host, Image, and Container Management Platform</h2>
+        </header>
 
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/hyperdock-io/hyperdock/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/hyperdock-io/hyperdock/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/hyperdock-io/hyperdock" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-        <ul>
-          <li><a href="https://github.com/hyperdock-io/hyperdock/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/hyperdock-io/hyperdock/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/hyperdock-io/hyperdock">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <hr>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <section id="main_content">
+          <p>Docker Host, Image, and Container Management Platform</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+<p>Supported VPS Providers:</p>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<ul>
+<li>DigitalOcean</li>
+</ul><p>Image Management</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<ul>
+<li>Add images from the Docker index with predefined port bindings and default env-var configurations</li>
+</ul><p>Container Dashboard</p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<ul>
+<li>Show graphs on how client docker container is performing. (WIP)</li>
+<li>Provide docker top and inspect data</li>
+<li>Show exposed ports</li>
+<li>Websocket virtual console</li>
+</ul><p>Container Creation</p>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+<ul>
+<li>Choose a region</li>
+<li>Choose an image</li>
+<li>Fill dynamic envvars if any</li>
+</ul><p>Host Dashboard</p>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
+<ul>
+<li>Show graphs on how docker host is performing. (WIP)</li>
+<li>Allow (re)provisioning as a Docker Host</li>
+<li>Allow (re)provisioning as the Region Monitor</li>
+<li>Websocket virtual console</li>
+</ul><p>Monitor comes with Logstash, Kibana, ElasticSearch, Sensu</p>
 
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
+<ul>
+<li>Docker hosts provisioned in the same region auto-configure against the Monitor</li>
+</ul><h1>
+<a name="deployment" class="anchor" href="#deployment"><span class="octicon octicon-link"></span></a>Deployment</h1>
 
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
+<h2>
+<a name="configure" class="anchor" href="#configure"><span class="octicon octicon-link"></span></a>CONFIGURE</h2>
 
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
+<p>Make sure to edit the .env file with your Cloudflare and DigitalOcean API keys</p>
 
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/hyperdock-io">hyperdock-io</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+<h2>
+<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>INSTALL</h2>
+
+<p>See the Dockerfile (Not yet complete, really)</p>
+
+<p>The dockerfile/runner only runs <code>rails server</code> right now -- it needs to be modified to use Supervisor
+and run <code>rake websocket_rails:start_server</code> as well as <code>sidekiq</code></p>
+
+<h1>
+<a name="similar-projects" class="anchor" href="#similar-projects"><span class="octicon octicon-link"></span></a>Similar Projects</h1>
+
+<p><a href="http://shipyard-project.com/">http://shipyard-project.com/</a></p>
+
+<h1>
+<a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References</h1>
+
+<ul>
+<li>Why I open-sourced Hyperdock <a href="http://keyvanfatehi.com/2014/06/01/hyperdock-io/">http://keyvanfatehi.com/2014/06/01/hyperdock-io/</a>
+</li>
+<li>Does a nice job of explaining Docker <a href="http://3ofcoins.net/2013/09/22/flat-docker-images/">http://3ofcoins.net/2013/09/22/flat-docker-images/</a>
+</li>
+<li>Docker Remote API Docs: <a href="http://docs.docker.io/reference/api/docker_remote_api/">http://docs.docker.io/reference/api/docker_remote_api/</a>
+</li>
+<li>Securing Docker Remote API via Nginx Unix Proxy &amp; Client Certs <a href="http://java.dzone.com/articles/securing-docker%E2%80%99s-remote-api">http://java.dzone.com/articles/securing-docker%E2%80%99s-remote-api</a>
+</li>
+<li>Important Info about Docker Logs <a href="http://jasonwilder.com/blog/2014/03/17/docker-log-management-using-fluentd/">http://jasonwilder.com/blog/2014/03/17/docker-log-management-using-fluentd/</a>
+</li>
+<li>More info about logging <a href="https://blog.logentries.com/2014/03/the-state-of-logging-on-docker/">https://blog.logentries.com/2014/03/the-state-of-logging-on-docker/</a>
+</li>
+<li>Setup rails and postgres <a href="https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres">https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres</a>
+</li>
+<li>Setup unicorn and nginx <a href="https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5">https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5</a>
+</li>
+<li>Collecting container metrics <a href="http://blog.docker.io/2013/10/gathering-lxc-docker-containers-metrics/">http://blog.docker.io/2013/10/gathering-lxc-docker-containers-metrics/</a>
+</li>
+</ul><h1>
+<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h1>
+
+<ul>
+<li><a href="https://github.com/keyvanfatehi">Keyvan Fatehi</a></li>
+<li><a href="https://github.com/jeanres">Jeanre Swanepoel</a></li>
+</ul>
+        </section>
+
+        <footer>
+          Hyperdock is maintained by <a href="https://github.com/hyperdock-io">hyperdock-io</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
