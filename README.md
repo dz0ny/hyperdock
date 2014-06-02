@@ -1,7 +1,8 @@
-hyperdock
----
+**Docker Host, Image, and Container Management Platform**
 
-Docker Host, Image, and Container Management Platform
+*IRC Channel: #hyperdock on Freenode*
+
+---
 
 Supported VPS Providers:
  * DigitalOcean
