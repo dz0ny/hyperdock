@@ -1,7 +1,7 @@
 hyperdock
 ---
 
-Docker Monitoring (WIP), Hosting, and Container Management Platform
+Docker Host, Image, and Container Management Platform
 
 Supported VPS Providers:
  * DigitalOcean
