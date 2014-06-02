@@ -31,42 +31,51 @@
         <hr>
 
         <section id="main_content">
-          <p>Docker Host, Image, and Container Management Platform</p>
+          <p><strong>Docker Host, Image, and Container Management Platform</strong></p>
 
-<p>Supported VPS Providers:</p>
+<p><em>IRC Channel: #hyperdock on Freenode</em></p>
+
+<hr><h2>
+<a name="supported-vps-providers" class="anchor" href="#supported-vps-providers"><span class="octicon octicon-link"></span></a>Supported VPS Providers:</h2>
 
 <ul>
 <li>DigitalOcean</li>
-</ul><p>Image Management</p>
+</ul><h2>
+<a name="image-management" class="anchor" href="#image-management"><span class="octicon octicon-link"></span></a>Image Management</h2>
 
 <ul>
 <li>Add images from the Docker index with predefined port bindings and default env-var configurations</li>
-</ul><p>Container Dashboard</p>
+</ul><h2>
+<a name="container-management" class="anchor" href="#container-management"><span class="octicon octicon-link"></span></a>Container Management</h2>
 
 <ul>
 <li>Show graphs on how client docker container is performing. (WIP)</li>
 <li>Provide docker top and inspect data</li>
 <li>Show exposed ports</li>
 <li>Websocket virtual console</li>
-</ul><p>Container Creation</p>
+</ul><h3>
+<a name="simple-container-creation" class="anchor" href="#simple-container-creation"><span class="octicon octicon-link"></span></a>Simple Container Creation</h3>
 
 <ul>
 <li>Choose a region</li>
 <li>Choose an image</li>
-<li>Fill dynamic envvars if any</li>
-</ul><p>Host Dashboard</p>
+<li>Fill environment variables based on selected Image</li>
+</ul><h2>
+<a name="host-dashboard" class="anchor" href="#host-dashboard"><span class="octicon octicon-link"></span></a>Host Dashboard</h2>
 
 <ul>
 <li>Show graphs on how docker host is performing. (WIP)</li>
-<li>Allow (re)provisioning as a Docker Host</li>
-<li>Allow (re)provisioning as the Region Monitor</li>
 <li>Websocket virtual console</li>
+<li>Allow (re)provisioning as a Docker Host via virtual console</li>
+<li>Allow (re)provisioning as the Region Monitor via virtual console</li>
 </ul><p>Monitor comes with Logstash, Kibana, ElasticSearch, Sensu</p>
 
 <ul>
 <li>Docker hosts provisioned in the same region auto-configure against the Monitor</li>
 </ul><h1>
 <a name="deployment" class="anchor" href="#deployment"><span class="octicon octicon-link"></span></a>Deployment</h1>
+
+<p>Need better instructions...</p>
 
 <h2>
 <a name="configure" class="anchor" href="#configure"><span class="octicon octicon-link"></span></a>CONFIGURE</h2>
@@ -76,10 +85,7 @@
 <h2>
 <a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>INSTALL</h2>
 
-<p>See the Dockerfile (Not yet complete, really)</p>
-
-<p>The dockerfile/runner only runs <code>rails server</code> right now -- it needs to be modified to use Supervisor
-and run <code>rake websocket_rails:start_server</code> as well as <code>sidekiq</code></p>
+<p>See the Dockerfile Not yet complete, sorry, I think the dockerfile/runner only runs <code>rails server</code> right now -- but it needs to be modified to use supervisor, redis, and run <code>rake websocket_rails:start_server</code> as well as <code>sidekiq</code></p>
 
 <h1>
 <a name="similar-projects" class="anchor" href="#similar-projects"><span class="octicon octicon-link"></span></a>Similar Projects</h1>
@@ -87,33 +93,17 @@ and run <code>rake websocket_rails:start_server</code> as well as <code>sidekiq<
 <p><a href="http://shipyard-project.com/">http://shipyard-project.com/</a></p>
 
 <h1>
-<a name="references" class="anchor" href="#references"><span class="octicon octicon-link"></span></a>References</h1>
+<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h1>
+
+<ul>
+<li>Jeanre Swanepoel</li>
+<li>Keyvan Fatehi
 
 <ul>
 <li>Why I open-sourced Hyperdock <a href="http://keyvanfatehi.com/2014/06/01/hyperdock-io/">http://keyvanfatehi.com/2014/06/01/hyperdock-io/</a>
 </li>
-<li>Does a nice job of explaining Docker <a href="http://3ofcoins.net/2013/09/22/flat-docker-images/">http://3ofcoins.net/2013/09/22/flat-docker-images/</a>
+</ul>
 </li>
-<li>Docker Remote API Docs: <a href="http://docs.docker.io/reference/api/docker_remote_api/">http://docs.docker.io/reference/api/docker_remote_api/</a>
-</li>
-<li>Securing Docker Remote API via Nginx Unix Proxy &amp; Client Certs <a href="http://java.dzone.com/articles/securing-docker%E2%80%99s-remote-api">http://java.dzone.com/articles/securing-docker%E2%80%99s-remote-api</a>
-</li>
-<li>Important Info about Docker Logs <a href="http://jasonwilder.com/blog/2014/03/17/docker-log-management-using-fluentd/">http://jasonwilder.com/blog/2014/03/17/docker-log-management-using-fluentd/</a>
-</li>
-<li>More info about logging <a href="https://blog.logentries.com/2014/03/the-state-of-logging-on-docker/">https://blog.logentries.com/2014/03/the-state-of-logging-on-docker/</a>
-</li>
-<li>Setup rails and postgres <a href="https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres">https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres</a>
-</li>
-<li>Setup unicorn and nginx <a href="https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5">https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5</a>
-</li>
-<li>Collecting container metrics <a href="http://blog.docker.io/2013/10/gathering-lxc-docker-containers-metrics/">http://blog.docker.io/2013/10/gathering-lxc-docker-containers-metrics/</a>
-</li>
-</ul><h1>
-<a name="contributors" class="anchor" href="#contributors"><span class="octicon octicon-link"></span></a>Contributors</h1>
-
-<ul>
-<li><a href="https://github.com/keyvanfatehi">Keyvan Fatehi</a></li>
-<li><a href="https://github.com/jeanres">Jeanre Swanepoel</a></li>
 </ul>
         </section>
 
