@@ -1,109 +1,60 @@
-Domain name: hyperdock.io
+hyperdock
+---
 
-Hosted Application Platform built on Docket and cheap low cost VPS providers
-
-Offered Images:
- * Logstash
- * ElasticSearch
- * Kibana
- * Graphite
- * statsd
- * strider
- * postgresql
- * redis
- * mongodb
- * mysql
- * kandan (hipchat alternative)
- * gitlab
- * sinopia
- * geminabox
+Docker Monitoring (WIP), Hosting, and Container Management Platform
 
 Supported VPS Providers:
- * We support both virtual and dedicated servers, provider does not matter anymore.
+ * DigitalOcean
 
-Chooses Image
-Configures environment variables if necessary depending on image
-Selects a region and optionally a VPS Provider
-Pays
-We provision and send detials via email
+Image Management
+ - Add images from the Docker index with predefined port bindings and default env-var configurations
 
 Container Dashboard
- - Show graphs on how client docker container is performing. 
+ - Show graphs on how client docker container is performing. (WIP)
+ - Provide docker top and inspect data
+ - Show exposed ports
+ - Websocket virtual console
+
+Container Creation
+ - Choose a region
+ - Choose an image
+ - Fill dynamic envvars if any
 
 Host Dashboard
- - Show graphs on how docker host is performing. 
+ - Show graphs on how docker host is performing. (WIP)
+ - Allow (re)provisioning as a Docker Host
+ - Allow (re)provisioning as the Region Monitor
+ - Websocket virtual console
 
-You can access it using the following credentials:
-IP Address: 107.170.249.80
-Username: root
-Password: 1
+Monitor comes with Logstash, Kibana, ElasticSearch, Sensu
+ - Docker hosts provisioned in the same region auto-configure against the Monitor
 
-Username: app
-Password: 2
+# Deployment
 
-# Docker Test Host
-Linode
-domain: cry.li
-user: root
-password: 3
+## CONFIGURE
+
+Make sure to edit the .env file with your Cloudflare and DigitalOcean API keys
+
+## INSTALL
+
+See the Dockerfile (Not yet complete, really)
+
+The dockerfile/runner only runs `rails server` right now -- it needs to be modified to use Supervisor
+and run `rake websocket_rails:start_server` as well as `sidekiq`
+
+# Similar Projects
+
+http://shipyard-project.com/
 
 # References
 
+* Why I open-sourced Hyperdock http://keyvanfatehi.com/2014/06/01/hyperdock-io/
 * Does a nice job of explaining Docker http://3ofcoins.net/2013/09/22/flat-docker-images/
 * Docker Remote API Docs: http://docs.docker.io/reference/api/docker_remote_api/
-* Securing Docker Remote API via SSH Tunnel http://blog.tutum.co/2013/11/23/remote-and-secure-use-of-docker-api-with-python-part-ii/
 * Securing Docker Remote API via Nginx Unix Proxy & Client Certs http://java.dzone.com/articles/securing-docker%E2%80%99s-remote-api
 * Important Info about Docker Logs http://jasonwilder.com/blog/2014/03/17/docker-log-management-using-fluentd/
 * More info about logging https://blog.logentries.com/2014/03/the-state-of-logging-on-docker/
 * Setup rails and postgres https://www.digitalocean.com/community/articles/how-to-setup-ruby-on-rails-with-postgres
 * Setup unicorn and nginx https://www.digitalocean.com/community/articles/how-to-deploy-rails-apps-using-unicorn-and-nginx-on-centos-6-5
 * Collecting container metrics http://blog.docker.io/2013/10/gathering-lxc-docker-containers-metrics/
-* StatsD and Graphite, Matt Aimonetti http://matt.aimonetti.net/posts/2013/06/26/practical-guide-to-graphite-monitoring/
-
-# Notes
-
-Docker daemon logs are located at /var/log/upstart/docker.log
-
-# Deploy
-```
-apt-get install nginx postgresql libpq-dev supervisor redis-server
-
-\curl -sSL https://get.rvm.io | bash -s stable
-
-rvm install 2.1
-
-CREATE USER tom WITH PASSWORD 'myPassword';
-bundle install --without development test
-rvm wrapper $(cat .ruby-version) unicorn_rails
-rvm wrapper $(cat .ruby-version) sidekiq
-
-bin/rake db:create db:migrate db:seed RAILS_ENV=production
-
-bin/rake assets:precompile RAILS_ENV=production
-
-sudo ln -s /home/app/hyperdock/config/nginx/hyperdock /etc/nginx/sites-available/
-sudo ln -s /home/app/hyperdock/config/supervisor/hyperdock.conf /etc/supervisor/conf.d/
-sudo ln -s /etc/nginx/sites-available/hyperdock /etc/nginx/sites-enabled/
-```
-
-```
-sudo ufw enable
-```
-
-```
-git remote add production "app@hyperdock.io:/home/app/hyperdock"
-```
-
-```
-git push production master
-```
-
-
-## Host Setup
-
-First prepare the host or double check the configuration with the rake task:
-
-`bin/rake docker:setup host="198.199.112.194" password="awefawef"`
-
-Next login as admin and add it to the region
 
